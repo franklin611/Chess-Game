@@ -118,7 +118,8 @@ int main() {
                     int x = convertToInt(piece.substr(0,1));
                     int y = (int) piece.substr(1);
                     // How do we want to remove pieces. I guess we can signify by passing empty to Piece?
-                    cb.setup('', Vec{x,y});
+
+                    // cb.setup('', Vec{x,y}); Might not even need setup, We could use the empty board to crossreference? TO DO
 
                 } else if (cmd2 == "=") { 
                     // From my understanding, "makes it colors turn to go next" means when the game start, it is their turn
