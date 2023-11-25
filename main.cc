@@ -26,6 +26,7 @@ int main() {
     Xwindow xw;
 
     while (cin >> cmd) {
+        // I would outpu to the user 1. What the game in a cool design 2. The rules of the game 
         
         if(cmd == "game") {
             //To setup a new game, we take two input playerWhite playerBlack.
@@ -106,12 +107,13 @@ int main() {
                     // Place piece on coord. Piece is char
                     int x = convertToInt(piece.substr(0,1));
                     int y = (int) piece.substr(1);
+                    Vec coordinate = Vec{x,y};
                     if (x == -1 ||(y <= 8 && y >= 1)) {
                         // Invalid input was pased. Do re-run the loop
                         cout << "Invalid Input" << endl;
                         break;
                     }
-                    cb.setupWithChar(piece, Vec{x, y});
+                    cb.setupWithChar(piece, coordinate);
                     // Can't think of anything else here
                 } else if (cmd2 == "-") {
                     cin >> coord;
@@ -147,12 +149,12 @@ int main() {
                         }
                     }
                     
-
-
-
                 } else { // User has entered "done" to leave setup mode. 
                 // 1. Need to check the current state of the board to see if it is valid. If not,  make them re-set up?  TO DO ASKED PIAZZA
-
+                // Piazza said we had creative freedom. I personally think it is better to have a resetBoard. 
+                // resetBoard();
+                // break; 
+                // Prompt the user with the rules and ask to start and try again.
 
                     if(ValidBoard()) { //
                         break;
