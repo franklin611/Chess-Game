@@ -118,6 +118,11 @@ int main() {
                     int x = convertToInt(piece.substr(0,1));
                     int y = (int) piece.substr(1);
                     // How do we want to remove pieces. I guess we can signify by passing empty to Piece?
+                    // We need to place an empty piece there.
+                    // Even if we get the empty piece at this vec Coord, how do we actually put this piece on the chessboard. 
+                    // I think we have to be able to pass a _ and a " " to setup to set up a white or black piece. 
+                    
+
 
                     // cb.setup('', Vec{x,y}); Might not even need setup, We could use the empty board to crossreference? TO DO
 
