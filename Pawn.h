@@ -6,8 +6,8 @@ class Pawn : public Piece {
 	public: 
 		void resetMoves() override; 
 		Pawn(); 
-		vector<Vec> passant(); 
-		vector<Vec> pawnCaptureMoves(); 
-		vector<Vec> pawnMove();
-		vector<Vec> pawnTwoStep(); 
+		vector<Vec> pawnMoves();
+		bool canPassant();
+		bool getMovedTwo();
+		bool getMoved();
 }; 

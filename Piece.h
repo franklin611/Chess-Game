@@ -8,7 +8,7 @@ class Vec;
 class Observer;
 
 class Piece{
-		protected: // not sure if this needs to be protected
+		// not sure if this needs to be protected **** 
 			Observer* cb;
 			ChessBoard* game;
 			Vec coordinate; 
@@ -21,9 +21,10 @@ class Piece{
 		public: 
 			// this will respond according to how p moved
 			virtual void resetMoves();
+			char getType();
 			Piece() = default;
-			Piece(struct Vec coordinate, char type, bool white); 
-			Piece(Piece& p);
+			Piece(Vec coordinate, char type, bool white); 
+			Piece(Piece& p) 
 			// when you construct the chessBoard, add the chessBoard as the observer* 
 			void attach(Observer *o);
 			bool isMoveValid(Vec v);
@@ -33,4 +34,6 @@ class Piece{
 			void setCoordinate(Vec coord);
 }; 
 
-bool moveExists(Vec v, vector<Vec> moves);
+
+
+			
