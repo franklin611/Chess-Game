@@ -111,7 +111,7 @@ int main() {
                         cout << "Invalid Input" << endl;
                         break;
                     }
-                    cb.setup(piece, Vec{x, y});
+                    cb.setupWithChar(piece, Vec{x, y});
                     // Can't think of anything else here
                 } else if (cmd2 == "-") {
                     cin >> coord;
@@ -121,7 +121,8 @@ int main() {
                     // We need to place an empty piece there.
                     // Even if we get the empty piece at this vec Coord, how do we actually put this piece on the chessboard. 
                     // I think we have to be able to pass a _ and a " " to setup to set up a white or black piece. 
-                    
+                    Vec coordinate = Vec{x,y};
+                    cb.setupWithPiece(getEmptyPiece(coordinate), coordinate);
 
 
                     // cb.setup('', Vec{x,y}); Might not even need setup, We could use the empty board to crossreference? TO DO
