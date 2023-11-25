@@ -27,6 +27,7 @@ int main() {
 
     while (cin >> cmd) {
         // I would outpu to the user 1. What the game in a cool design 2. The rules of the game 
+        // 
         
         if(cmd == "game") {
             //To setup a new game, we take two input playerWhite playerBlack.
@@ -94,7 +95,6 @@ int main() {
 
 
 
-
         } else if (cmd == "setup") { // Enters setup mode TO DO : Where do we get user input for players?
             string cmd2, coord, colour;
             char piece;
@@ -112,8 +112,12 @@ int main() {
                         // Invalid input was pased. Do re-run the loop
                         cout << "Invalid Input" << endl;
                         break;
+                    
                     }
                     cb.setupWithChar(piece, coordinate);
+                    _ 
+                    ' '
+
                     // Can't think of anything else here
                 } else if (cmd2 == "-") {
                     cin >> coord;
@@ -156,8 +160,13 @@ int main() {
                 // break; 
                 // Prompt the user with the rules and ask to start and try again.
 
-                    if(ValidBoard()) { //
+                    if(cb.ValidBoard()) { //
                         break;
+                    } else {
+                        // output invalid board and explain why it was
+                        // Resetboard aned start from the very beginnign. Instef of very beginnign of "Welcome"
+                        // Just to the point wher tehy were setting up the board again. But we have to start witha fresh board
+
                     }
                 }
 
