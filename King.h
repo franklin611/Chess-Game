@@ -8,3 +8,4 @@ class King : public Piece {
         vector<Vec> bishopMoves();
         bool getMoved();
 };
+

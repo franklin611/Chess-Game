@@ -6,3 +6,4 @@ class Queen : public Piece {
         Queen();
         vector<Vec> queenMoves();
 };
+

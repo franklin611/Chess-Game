@@ -6,3 +6,4 @@ class Bishop : public Piece {
         Bishop();
         vector<Vec> bishopMoves();
 };
+

@@ -6,3 +6,4 @@ class Knight : public Piece {
         Knight();
         vector<Vec> knightMoves();
 };
+

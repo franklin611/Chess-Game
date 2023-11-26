@@ -11,3 +11,4 @@ class Pawn : public Piece {
 		bool getMovedTwo();
 		bool getMoved();
 }; 
+

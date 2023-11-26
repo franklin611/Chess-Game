@@ -6,3 +6,4 @@ class Empty : public Piece {
         Empty();
         vector<Vec> queenMoves();
 };
+
