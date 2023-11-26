@@ -459,3 +459,14 @@ void ChessBoard::setupWithPiece(Piece &p, Vec coordinate) {
     gb[row][col] = p;
 }
 
+void ChessBoard::defaultBoard() {
+
+    // First setup pawns for white side
+    for (int i = 0; i < 8; ++i) {
+        setupByChar('p', Vec{1, i});
+    }
+
+    // Pawns for black side
+    for (int i = 0; i < )
+
+}
