@@ -83,7 +83,7 @@ int main() {
 
                     } else if(cmd2 == "move" && player1 == "computer") {
                         // Make Computer Move
-                        Vec end = cb.makeComputerMove(&playerWhite);
+                        Vec end = cb.makeComputerMove(1, level);
                         if(cb.upgradePawn(end)){
                             cb.setupWithChar(newPiece, end);
                         }
@@ -118,7 +118,7 @@ int main() {
                                 cb.setupWithChar(newPiece, coordinate2);
                             }
                     } else if (cmd == "move" && player2 == "computer") {
-                        Vec end = cb.makeComputerMove(&playerBlack);
+                        Vec end = cb.makeComputerMove(0, level);
                         if(cb.upgradePawn(end)){
                             cb.setupWithChar(newPiece, end);
                         }
