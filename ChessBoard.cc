@@ -1,5 +1,6 @@
 #include "ChessBoard.h"
 #include "Piece.h"
+using namespace std;
 #include "Player.h"
 #include "TextDisplay.h"
 #include "GraphicsDisplay.h"
@@ -231,6 +232,153 @@ Piece* ChessBoard::getEmptyPiece(Vec coord){
     return emptyPiece;
 }
 
+vector<vector<Vec>> generateAllLevelMoves(vector<vector<Vec>> possibleMoves, int level) {
+    vector<vector<Vec>> levelMoves;
+    vector<vector<Vec>> checkmateMoves = generateCheckmateMoves(possibleMoves);
+    vector<vector<Vec>> checkMoves = generateCheckMoves(possibleMoves);
+    vector<vector<Vec>> captureMoves = generateCaptureMoves(possibleMoves);
+    vector<vector<Vec>> avoidCaptureMoves = generateAvoidCaptureMoves(possibleMoves);
+
+    if(level == 1) {
+        return possibleMoves;
+    } else if (level == 2) {
+        levelMoves.insert(levelMoves.end(), checkMoves.start(), checkMoves.end());
+        levelMoves.insert(levelMoves.end(), captureMoves.start(), captureMoves.end());
+    } else if (level == 3) {
+        levelMoves.insert(levelMoves.end(), checkMoves.start(), checkMoves.end());
+        levelMoves.insert(levelMoves.end(), captureMoves.start(), captureMoves.end());
+        levelMoves.insert(levelMoves.end(), avoidCaptureMoves.start(), avoidCaptureMoves.end());    
+    } else if (level == 4) {
+        if(!checkmateMoves.empty()) {
+            return checkmateMoves;
+        } else {
+            levelMoves.insert(levelMoves.end(), checkMoves.start(), checkMoves.end());
+            levelMoves.insert(levelMoves.end(), captureMoves.start(), captureMoves.end());
+            levelMoves.insert(levelMoves.end(), avoidCaptureMoves.start(), avoidCaptureMoves.end());
+        }
+    }
+    return levelMoves;
+}
+
+vector<vector<Vec>> generateCheckmateMoves(vector<vector<Vec>> possibleMoves) {
+    vector<vector<Vec>> levelMoves;
+    for (int i = 0; !possibleMoves.empty(); ++i) {
+        Vec start = possibleMoves[i][0];
+        Vec end = possibleMoves[i][1];
+        if(isValid(start, end)) {
+            // Asumption: Before we reach this point, the game is not in a "isEnd()" state. Is this valid?
+            vector<vector<unique_ptr<Piece>>> copyBoard = gb;
+            notify(start, end);
+            // Now need to check if this is a check/checkmate Move. But we run into the same issue of we have to make sure that being in checkmate
+            // Doesn't end the game. From my understanding, I will be calling isEnd() after every move made in main.
+            // And ending the game if true. If i do this simulation in a function, as long as I revert the move before reaching the isEnd in main
+            // No issues?
+
+            if(isEnd()) levelMoves.emplace_back(vector<Vec>{start, end});  // Checks to see if after such a move, if the game is voer. 
+
+            revertBoard(copyBoard, !turn);
+        }
+    }
+    return levelMoves;
+}
+
+vector<vector<Vec>> generateCheckMoves(vector<vector<Vec>> possibleMoves) {
+    vector<vector<Vec>> levelMoves;
+    for (int i = 0; !possibleMoves.empty(); ++i) {
+        Vec start = possibleMoves[i][0];
+        Vec end = possibleMoves[i][1];
+        if(isValid(start, end)) {
+            vector<vector<unique_ptr<Piece>>> copyBoard = gb;
+            notify(start, end);
+            // Now need to check if this is a check/checkmate Move. But we run into the same issue of we have to make sure that being in checkmate
+            // Doesn't end the game
+            // void revertBoard(vector<vector<unique_ptr<Piece>>> oldPieces, bool oldTurn);
+            if(isCheck(turn)) levelMoves.emplace_back(vector<Vec>{start, end}); // It is turn, not !turn because if it was white before, calling notify sets turn to black now which is what we wanted to check anyways
+            revertBoard(copyBoard, !turn);
+        }
+    }
+    return levelMoves;
+}
+
+vector<vector<Vec>> generateCaptureMoves(vector<vector<Vec>> possibleMoves) {
+    vector<vector<Vec>> levelMoves;
+    for (int i = 0; !possibleMoves.empty(); ++i) {
+        Vec start = possibleMoves[i][0];
+        Vec end = possibleMoves[i][1];
+        if(isValid(start, end)) {
+            if(isThere(end)) levelMoves.emplace_back(vector<Vec>{start, end});
+            // No need to simulate any moves because if it is a valid move and there is a piece at end, then it is a capture move
+        }
+    }
+    return levelMoves;
+}
+
+vector<vector<Vec>> generateAvoidCaptureMoves(vector<vector<Vec>> possibleMoves) {
+// 1. We need to know the enemy moves firstly, not our piece’s move. We need to use the enemy piece’s end coordinates
+// 2. Check compare all of the enemy piece’s capture move’s end points. Compare those end points to our our pieces current pieces start points. 
+// 3. If they match, check if these piece’s end points are outside/dont exist in the enemy’s move’s end points.
+// I am going to classify as an avoidCapture move as singular. If it avoids atleast 1 piece's capture/end point
+// wherever I land after make ssaid avoidCapture move, I dont care whether it puts me in another capture spot or not. ()
+// Technically, the move itself is already avoiding A capture, I will still code the idea for avoiding both captuyres.
+    vector<vector<Vec>> enemyMoves = cb->getLegalMoves(!turn);
+    vector<vector<Vec>> levelMoves;
+    for(int i = 0; !possibleMoves.empty(); ++i) {
+        bool check1 = false;
+        bool check2 = false;
+        Vec start = possibleMoves[i][0];
+        Vec end = possibleMoves[i][1];
+
+        // Simple Avoid Capture
+        for (int j = 0; !enemyMoves.empty(); ++j) {
+            if (enemyMoves[j][1] == start) {
+                levelMoves.emplace_back(start, end);
+                break; // Simple avoid capture move
+            }
+        }
+
+        // // More complicated Avoid Capture
+        // // We can use this for higher levels of computer instead
+        // // Avoids not only capture of their stard coordinate, but also their end coordinate
+        // for (int k = 0; !enemyMoves.empty(); ++k) {
+        //     if(enemyMoves[k][1] == start) check1 = true;
+        // }
+        // for(int l = 0; !enemyMoves.empty(); ++l) {
+        //     if(enemyMoves[l][1] == end) break;
+        //     // This means the move's end position is also in danger of being captured. 
+        // }
+        // if(check! && check2) levelMoves.emplace_back(vector<Vec>{start, end});
+    }
+}
+
+void ChessBoard::makeComputerMove(Player *p){
+    // based on level, makeComputerMove 
+    int level = p.getLevel();
+
+    // get the legal moves for the player
+    vector<vector<Vec>> legalMoves = cb->getLegalMoves(turn);
+    vector<Vec> move; // there are two Vecs [start, end]
+    vector<vector<Vec>> levelMoves = generateAllLevelMoves(legalMoves, level);
+
+    if (turn){
+        move = cb->playerWhite->selectMove(levelMoves);
+    } else {
+        move = cb->playerBlack->selectMove(legalMoves);
+    }
+    notify(move[0], move[1]);
+}
+
+
+// this is for a human player 
+bool ChessBoard::makeHumanMove(Vec start, Vec end){
+    // validate that the move is valid -> if not valid return false 
+    if (isValid(start, end)){
+        // call notify and return true 
+        notify(start, end);
+        return true;
+    } 
+    return false;
+
+}
 
 bool ChessBoard::isValid(Vec start, Vec end){
     // use start to get piece
@@ -278,6 +426,26 @@ bool ChessBoard::isEnd() {
         if (getLegalMoves(turn).empty()) { 
             game.updateBlack();
             return true;
-        }
     }
 }
+
+void ChessBoard::setupWithChar(char type, Vec coordinate) {
+    int row = coordinate.getX();
+    int col = coordinate.getY();
+    
+    if(type >= 'A' && type <= 'Z' || type == ' ') { //White Colour
+        gb[row][col] = Piece{coordinate, type, white};
+    } else if (type >= 'a' && type <= 'z' || type == '_') {
+        gb[row][col] = Piece{coordinate, type, black};
+    }
+    // So creates white pieces for upper cases and ' '
+    // Creates black pieces for lower case and _
+    // I dont think I even need to have the ' ' and _, but keeping it for now!!
+}
+void ChessBoard::setupWithPiece(Piece &p, Vec coordinate) {
+    int row = coordinate.getX();
+    int col = coordinate.getY();
+
+    gb[row][col] = p;
+}
+

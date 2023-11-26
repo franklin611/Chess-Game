@@ -113,6 +113,11 @@ class ChessBoard: public Observer{
 
         // set black king
         void setBlackKing(Vec coordinate);
+
+        // Setup functions for char and piece
+        void setupWithChar(char type, Vec coordinate);
+        void setupWithPiece(Piece &p, Vec coordinate);
+    
 };
 
 ostream& operator<<(ChessBoard& cb, ostream& out);
