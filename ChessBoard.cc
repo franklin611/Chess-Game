@@ -219,6 +219,7 @@ vector<vector<Vec>> generateAvoidCaptureMoves(vector<vector<Vec>> possibleMoves)
         }
 
         // // More complicated Avoid Capture
+        // // We can use this for higher levels of computer instead
         // // Avoids not only capture of their stard coordinate, but also their end coordinate
         // for (int k = 0; !enemyMoves.empty(); ++k) {
         //     if(enemyMoves[k][1] == start) check1 = true;
