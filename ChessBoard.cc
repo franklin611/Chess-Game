@@ -84,17 +84,17 @@ void ChessBoard::replacePiece(Vec coordinate, shared_ptr<Piece> replacement){
 }
 
 // DONE
-// we know that is was a valid pawn move at this point 
+// we know that is was a valid pawn move at this point
 bool twoStep(Vec start, Vec end){
-    int startY = start.getY(); 
-    int endY = end.getY(); 
+    int startY = start.getY();
+    int endY = end.getY();
     if (startY = endY - 2 || startY == endY + 2){ return true; }
     return false;
 }
 
 // CHIARA
-// reset moves AFTER you castle !! 
-// add castle move -> king moves two spaces 
+// reset moves AFTER you castle !!
+// add castle move -> king moves two spaces
 void ChessBoard::notify(Vec start, Vec end){
 
     shared_ptr<Piece> startPiece = getPiece(start);
@@ -117,10 +117,10 @@ void ChessBoard::notify(Vec start, Vec end){
     replacePiece(start, emptyPiece);
 
     // ------ at this point we want to check if the move was a castle move and move the rook accordingly
-    // validate if the piece is a king and it wants to move two spaces to the left or right 
+    // validate if the piece is a king and it wants to move two spaces to the left or right
     // assume that is true then we want ALREADY moved that king
-        // if it moved to the right -> get the rook to the right and move it to the left 
-        // if it moved to the left -> get the rook to the left and move it to the right 
+        // if it moved to the right -> get the rook to the right and move it to the left
+        // if it moved to the left -> get the rook to the left and move it to the right
 
 
     // 4 Castle Move Cases 
@@ -135,24 +135,25 @@ void ChessBoard::notify(Vec start, Vec end){
     
     // I WAS CHANGED HERE 
     
+
     // ------ at this point we know the move is valid then we can change its booleans -------
 
     // check if the piece that moved is a king
     if (startType == 'K' || startType == 'k'){
         shared_ptr<King> king = dynamic_pointer_cast<King>(endPiece);
         king->hasMoved();
-        // now the endpiece is the king, we want to update the kings cooordinates to end 
+        // now the endpiece is the king, we want to update the kings cooordinates to end
         if (startType == 'K') { wKing == end; }
         if (startType == 'k') { bKing == end; }
 
-        // check if the move was a castle move 
-        int startX = start.getX(); 
+        // check if the move was a castle move
+        int startX = start.getX();
         int endX = end.getX();
 
 
     }
 
-    // check if the piece that moved is a pawn -> also if it moved 2 spaces forward 
+    // check if the piece that moved is a pawn -> also if it moved 2 spaces forward
     if (startType == 'P' || startType == 'p'){
         shared_ptr<Pawn> pawn = dynamic_pointer_cast<Pawn>(endPiece);
         pawn->hasMoved();
@@ -169,8 +170,8 @@ void ChessBoard::notify(Vec start, Vec end){
     // update if the YOU or THE OTHER TEAM are in check
     wCheck = isCheck(true);
     bCheck = isCheck(false);
-    
-    // change the turn 
+
+    // change the turn
     turn? false : true;
 
     // notify the 
@@ -234,7 +235,7 @@ void ChessBoard::revertBoard(vector<vector<Piece>> boardCopy, bool oldTurn){
     turn = oldTurn;
 }
 
-// make sure that the empty piece is a deep copy 
+// make sure that the empty piece is a deep copy
 Piece* ChessBoard::getEmptyPiece(Vec coord){
     // access the empty board and get the Piece* we want
     int row = coord.getY();
@@ -260,7 +261,7 @@ vector<vector<Vec>> generateAllLevelMoves(vector<vector<Vec>> possibleMoves, int
     } else if (level == 3) {
         levelMoves.insert(levelMoves.end(), checkMoves.start(), checkMoves.end());
         levelMoves.insert(levelMoves.end(), captureMoves.start(), captureMoves.end());
-        levelMoves.insert(levelMoves.end(), avoidCaptureMoves.start(), avoidCaptureMoves.end());    
+        levelMoves.insert(levelMoves.end(), avoidCaptureMoves.start(), avoidCaptureMoves.end());
     } else if (level == 4) {
         if(!checkmateMoves.empty()) {
             return checkmateMoves;
@@ -287,7 +288,7 @@ vector<vector<Vec>> generateCheckmateMoves(vector<vector<Vec>> possibleMoves) {
             // And ending the game if true. If i do this simulation in a function, as long as I revert the move before reaching the isEnd in main
             // No issues?
 
-            if(isEnd()) levelMoves.emplace_back(vector<Vec>{start, end});  // Checks to see if after such a move, if the game is voer. 
+            if(isEnd()) levelMoves.emplace_back(vector<Vec>{start, end});  // Checks to see if after such a move, if the game is voer.
 
             revertBoard(copyBoard, !turn);
         }
@@ -328,7 +329,7 @@ vector<vector<Vec>> generateCaptureMoves(vector<vector<Vec>> possibleMoves) {
 
 vector<vector<Vec>> generateAvoidCaptureMoves(vector<vector<Vec>> possibleMoves) {
 // 1. We need to know the enemy moves firstly, not our piece’s move. We need to use the enemy piece’s end coordinates
-// 2. Check compare all of the enemy piece’s capture move’s end points. Compare those end points to our our pieces current pieces start points. 
+// 2. Check compare all of the enemy piece’s capture move’s end points. Compare those end points to our our pieces current pieces start points.
 // 3. If they match, check if these piece’s end points are outside/dont exist in the enemy’s move’s end points.
 // I am going to classify as an avoidCapture move as singular. If it avoids atleast 1 piece's capture/end point
 // wherever I land after make ssaid avoidCapture move, I dont care whether it puts me in another capture spot or not. ()
@@ -357,14 +358,14 @@ vector<vector<Vec>> generateAvoidCaptureMoves(vector<vector<Vec>> possibleMoves)
         // }
         // for(int l = 0; !enemyMoves.empty(); ++l) {
         //     if(enemyMoves[l][1] == end) break;
-        //     // This means the move's end position is also in danger of being captured. 
+        //     // This means the move's end position is also in danger of being captured.
         // }
         // if(check! && check2) levelMoves.emplace_back(vector<Vec>{start, end});
     }
 }
 
 void ChessBoard::makeComputerMove(Player *p){
-    // based on level, makeComputerMove 
+    // based on level, makeComputerMove
     int level = p.getLevel();
 
     // get the legal moves for the player
@@ -381,14 +382,14 @@ void ChessBoard::makeComputerMove(Player *p){
 }
 
 
-// this is for a human player 
+// this is for a human player
 bool ChessBoard::makeHumanMove(Vec start, Vec end){
-    // validate that the move is valid -> if not valid return false 
+    // validate that the move is valid -> if not valid return false
     if (isValid(start, end)){
-        // call notify and return true 
+        // call notify and return true
         notify(start, end);
         return true;
-    } 
+    }
     return false;
 
 }
@@ -416,37 +417,45 @@ bool ChessBoard::isThere(Vec coordinate){
 }
 
 // we assume that main calls this function because the user decided they want to forfeit in their current turn
-// we can think of this as an alternate end? 
-// UPDATE THE SCORE 
+// we can think of this as an alternate end?
+// UPDATE THE SCORE
 void ChessBoard::forfeit(){
     if (turn){
         // update score +1 for black
-        game.updateBlack();
+        game.updateBlack(false);
     } else {
         // update score +1 for white
-        game.updateWhite();
+        game.updateWhite(false);
     }
     // restart game
 }
 
 bool ChessBoard::isEnd() {
     if (turn) {
-        if (getLegalMoves(turn).empty()) {
-            game.updateWhite();
+        if (wCheck && getLegalMoves(turn).empty()) {
+            game.updateWhite(false);
+            return true;
+        }
+        else if (getLegalMoves(turn).empty()) {
+            game.updateWhite(true);
             return true;
         }
     } else {
-        if (getLegalMoves(turn).empty()) { 
-            game.updateBlack();
+        if (bCheck && getLegalMoves(turn).empty()) {
+            game.updateBlack(false);
+            return true;
+        }
+        else if (getLegalMoves(turn).empty()) {
+            game.updateBlack(true);
             return true;
         }
     }
 }
 
 void ChessBoard::setupWithChar(char type, Vec coordinate) {
-    int row = coordinate.getX();
-    int col = coordinate.getY();
-    
+    int row = coordinate.getY();
+    int col = coordinate.getX();
+
     if(type >= 'A' && type <= 'Z' || type == ' ') { //White Colour
         gb[row][col] = Piece{coordinate, type, white};
     } else if (type >= 'a' && type <= 'z' || type == '_') {
@@ -457,9 +466,24 @@ void ChessBoard::setupWithChar(char type, Vec coordinate) {
     // I dont think I even need to have the ' ' and _, but keeping it for now!!
 }
 void ChessBoard::setupWithPiece(Piece &p, Vec coordinate) {
-    int row = coordinate.getX();
-    int col = coordinate.getY();
+    int row = coordinate.getY();
+    int col = coordinate.getX();
 
     gb[row][col] = p;
 }
 
+void ChessBoard::restartGame() {
+     gb = eb;// Set gameboard back to empty board
+     for(size_t i = 0; i < eb.size(); ++i) {
+        for (size_t j = 0; j < eb[0].size(); ++j) {
+            gb[i][j] = eb[i][j];
+        }
+     }
+    turn = true; // Default turn is always white   
+    bCheck = false;
+    wCheck = false;
+    
+    // We don't need to reset bKing and wKing because it will be reset in next
+    // game or if not, will just be destroyed.
+
+}
