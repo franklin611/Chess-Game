@@ -461,12 +461,38 @@ void ChessBoard::setupWithPiece(Piece &p, Vec coordinate) {
 
 void ChessBoard::defaultBoard() {
 
-    // First setup pawns for white side
+    // First setup pawns 
     for (int i = 0; i < 8; ++i) {
-        setupByChar('p', Vec{1, i});
+        setupByChar('P', Vec{i, 1}); // White pawns
+        setupByChar('p', Vec{i, 7}); // Black
+        // x, y. This corresponds to second row
     }
 
-    // Pawns for black side
-    for (int i = 0; i < )
+    // Whites are the top side of the board. 0,0 
 
+    // Setup Rooks
+    setupByChar('R', Vec{0,0});
+    setupByChar('R', Vec{0, 7}); // Whites
+    setupByChar('r', Vec{7,0});
+    setupByChar('r', Vec{7, 7}); // Whites
+
+    // Setup Knights
+    setupByChar('K', Vec{1,0});
+    setupByChar('K', Vec{6, 0}); // Whites
+    setupByChar('k', Vec{1,7});
+    setupByChar('k', Vec{6, 7}); // Black
+
+    // Setup Bishops
+    setupByChar('B', Vec{2,0});
+    setupByChar('B', Vec{5, 0}); // Whites
+    setupByChar('b', Vec{2,7});
+    setupByChar('b', Vec{5, 7}); // Black
+
+    // Setup Kings
+    setupByChar('K', Vec{0,3}); // White King
+    setupByChar('k', Vec{7, 3}); // Black King
+
+    // Setup Queens
+    setupByChar('K', Vec{0,4}); // White Queen
+    setupByChar('k', Vec{7, 4}); // Black Queen
 }
