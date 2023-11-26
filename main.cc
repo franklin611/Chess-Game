@@ -128,6 +128,7 @@ int main() {
                             // Ignore the single next character input by the user. 
 
                         } else {
+                            cout << "Invalid move. Please retry" << endl;
                             // Invalid Move, try again!
                         }
                         // In makeHumanMove, we already check if move is valid. All we do inmain is just pass it.
@@ -171,7 +172,10 @@ int main() {
                                 cin >> newPiece;
                                 cb.setupWithChar(newPiece, coordinate2);
                             } else cin.ignore();
+                        } else {
+                            cout << "Invalid move. Please retry" << endl;
                         }
+
                     } else if (cmd == "move" && player2 == "computer") {
                         Vec end = cb.makeComputerMove(0, level);
                         if(cb.upgradePawn(end)){
