@@ -1,10 +1,73 @@
 #include "ChessBoard.h"
 #include "Piece.h"
+#include "Player.h"
+#include "TextDisplay.h"
+#include "GraphicsDisplay.h"
+#include "Pawn.h"
 
-// the players need to be unique pointers 
-// the pieces need to be shared pointers 
+// DONE 
+bool ChessBoard::makeHumanMove(Vec start, Vec end){
+    // validate that the move is valid -> if not valid return false 
+    if (isValid(start, end)){
+        // call notify and return true 
+        notify(start, end);
+        return true;
+    } 
+    return false;
+
+}
+
+// FRANKLIN
+// Vec ChessBoard::makeComputerMove(unique_ptr<Player> p){
+//     // based on level, makeComputerMove 
+//     // get the legal moves for the player
+//     vector<vector<Vec>> legalMoves = getLegalMoves(turn);
+//     // pick a random legal move 
+//     vector<Vec> move; // there are two Vecs [start, end]
+//     if (turn){
+//         move = playerWhite->selectMove(legalMoves);
+//     } else {
+//         move = playerBlack->selectMove(legalMoves);
+//     }
+//     notify(move[0], move[1]);
+// }
 
 
+// DONE 
+char ChessBoard::getType(Vec coordinate){
+    shared_ptr<Piece> p = getPiece(coordinate);
+    char type = p->getType();
+    return type;
+}
+
+shared_ptr<Piece> ChessBoard::getPiece(Vec coordinate){
+    int row = coordinate.getY(); 
+    int col = coordinate.getX();
+    return gb[row][col];
+}
+
+
+// CHIARA 
+// returns true if a the specified piece at that coordinate is 1. a pawn and 2. on the opposite team
+// we don't know what piece is at coordinate
+bool ChessBoard::pawnMovedTwo(Vec coordinate, bool white){
+
+    char type = getType(coordinate);
+    shared_ptr<Piece> p = getPiece(coordinate);
+    std::shared_ptr<Pawn> pawn;
+    if (type == 'P' || type == 'p'){ std::shared_ptr<Pawn> pawn = std::dynamic_pointer_cast<Pawn>(p); }
+    else { return false; }
+
+    if (((white && type == 'p') || (!white && type == 'P')) && pawn->getMovedTwo()){ return true; }
+
+    return false;
+    
+
+    
+
+}
+
+// CHIARA
 // at this point we know this move is valid -> in main you would have to call piece->isValid() and ask for input again if it is not valid
 // need to validate if the king is in check 
 // add castle move -> king moves two spaces 
@@ -32,11 +95,6 @@ void ChessBoard::notify(Vec start, Vec end){
     // replace the vector at start with the empty piece 
     startPiece = getEmptyPiece(start);
 
-    // is my king in check ****
-    if (isCheck(turn)){
-        // update turn's player to be in check 
-    }
-
     // reset the legal moves of every piece 
     for (vector<Piece*> vec : gb){
 		for (Piece* p : vec){
@@ -48,6 +106,11 @@ void ChessBoard::notify(Vec start, Vec end){
 
     // change the turn 
     turn? false : true;
+
+    // is my king in check ****
+    if (isCheck(turn)){
+        // update turn's player to be in check 
+    }
 }
 
 bool ChessBoard::isCheck(bool white){
@@ -113,36 +176,6 @@ Piece* ChessBoard::getEmptyPiece(Vec coord){
     return emptyPiece;
 }
 
-void ChessBoard::makeComputerMove(Player* p){
-    // based on level, makeComputerMove 
-
-
-
-
-    // get the legal moves for the player
-    vector<vector<Vec>> legalMoves = cb->getLegalMoves(turn);
-    // pick a random legal move 
-    vector<Vec> move; // there are two Vecs [start, end]
-    if (turn){
-        move = cb->playerWhite->selectMove(legalMoves);
-    } else {
-        move = cb->playerBlack->selectMove(legalMoves);
-    }
-    notify(move[0], move[1]);
-}
-
-
-// this is for a human player 
-bool ChessBoard::makeHumanMove(Vec start, Vec end){
-    // validate that the move is valid -> if not valid return false 
-    if (isValid(start, end)){
-        // call notify and return true 
-        notify(start, end);
-        return true;
-    } 
-    return false;
-
-}
 
 bool ChessBoard::isValid(Vec start, Vec end){
     // use start to get piece 
@@ -166,20 +199,15 @@ bool ChessBoard::isThere(Vec coordinate){
 	return false;
 }
 
-bool ChessBoard::pawnMovedTwo(Vec coordinate, bool white){
-    int row = coordinate.getY(); 
-    int col = coordinate.getX();
-
-    Piece p = gb[row][col];
-
-    // double check lower case is black 
-    // we are checking at the passant coordinate if there is a piece that is an opposite team pawn
-    // can't check if the pawn moved two places because its not a dynamic type. *************
-    if ((white && p.getType() == 'p') || 
-        (!white && p.getType() == 'P') && p.get){
-            return true;
+// we assume that main calls this function because the user decided they want to forfeit in their current turn
+// we can think of this as an alternate end? 
+void ChessBoard::forfeit(){
+    if (turn){
+        // update score +1 for black
+        game.updateBlack();
+    } else {
+        // update score +1 for white
+        game.updateWhite();
     }
-
-    return false;
-
+    // restart game 
 }
