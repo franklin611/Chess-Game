@@ -426,6 +426,7 @@ bool ChessBoard::isEnd() {
         if (getLegalMoves(turn).empty()) { 
             game.updateBlack();
             return true;
+        }
     }
 }
 
