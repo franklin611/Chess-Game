@@ -125,11 +125,16 @@ void ChessBoard::notify(Vec start, Vec end){
 
     // 4 Castle Move Cases 
     // Case 1: White -> Right 
+        // 
     // Case 2: White -> Left 
+        //
     // Case 3: Black -> Right 
+        //
     // Case 4: Black -> Left
+        //
     
-
+    // I WAS CHANGED HERE 
+    
     // ------ at this point we know the move is valid then we can change its booleans -------
 
     // check if the piece that moved is a king
@@ -167,6 +172,13 @@ void ChessBoard::notify(Vec start, Vec end){
     
     // change the turn 
     turn? false : true;
+
+    // notify the 
+    // char startChar = emptyPiece->getType();
+    // char endChar = endPiece->getType(); 
+    // // add coordinate 
+    // td->notify(startChar, endChar); 
+    // gd->notify(startChar, endChar);
 
 }
 
