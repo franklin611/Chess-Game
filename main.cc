@@ -57,7 +57,7 @@ int main() {
     Game game;
     bool usedSetup = false;
     ChessBoard cb = ChessBoard{};
-    // Creates a default empty gameBoard. 
+    // Creates a default empty gameBoard. With just empty pieces 
     outputRules();
 
     while (cin >> cmd) {   
@@ -92,9 +92,10 @@ int main() {
                 playerBlack = make_unique<Computer>(0, level);
             }
 
-            if(usedSetup) cb.setupPlayers(playerWhite, playerBlack);
+            // We are always gonna have to setup players anyways
+            cb.setupPlayers(playerWhite, playerBlack);
+            if(!usedSetup()) cb.defaultBoard();
             // At this point, we have edited cb's game board already 
-            else cb.defaultBaord();
             // This set's cb's gameboard to a default baord. 
         
             string cmd2;
@@ -168,6 +169,7 @@ int main() {
                                 cin >> newPiece;
                                 cb.setupWithChar(newPiece, coordinate2);
                             } else cin.ignore();
+                        }
                     } else if (cmd == "move" && player2 == "computer") {
                         Vec end = cb.makeComputerMove(0, level);
                         if(cb.upgradePawn(end)){
@@ -177,12 +179,14 @@ int main() {
                         cb.forfeit(0);
                     } 
                 }
+
                 // 1. Check if game is over
                 if(cb.isEnd()) {
                     // isEnd has to also update black and white score
-                    cb.resetGameboard();
-                    cb.resetPlayers();\
+                    cb.restartGame();
+                    // Does both reset gameboard and players
                     usedSetup = false;
+                    break;
                 }
                 // If not, just continue prompting the user for input
 
@@ -233,36 +237,22 @@ int main() {
                             cout << "Invalid input, please try again." << endl;
                         }
                     } 
-                } else { 
-                    // User has entered "done" to leave setup mode. 
-                    // 1. Need to check the current state of the board to see if it is valid. If not,  make them re-set up?  TO DO ASKED PIAZZA
-                    // Piazza said we had creative freedom. I personally think it is better to have a resetBoard. 
-                    // resetBoard();
-                    // break; 
-                    // Prompt the user with the rules and ask to start and try again.
-            
-                    cout << "Invalid Board Setup. Please re-setup again." << endl;
-                    cout << "You had an extra blah blah" << endl; // Create logic for determining where it went wrong. We can do this in main or Chessboard -TO DO
-                    // output invalid board and explain why it was
-                    // Resetboard aned start from the very beginnign. Instef of very beginnign of "Welcome"
-                    // Just to the point wher tehy were setting up the board again. But we have to start witha fresh board
-
-                    // No break
-                    // After they have setup a board, they go back to the very top and prompt he user to enter setup or game. 
-
-                    // cb.restartGame();
-
-                    if(cb.isValid()) break;  
+                } else if (cmd == "done") { 
+                    if(cb.isValid()) {
+                        usedSetup = true;
+                        break;
+                        // Now a flag has been raised telling the main that the game has been setup with a gameboard.
+                    }
+                    cout << "Invalid Board Setup" << endl;
+                    // Now we have to reset the board (as well as Players) and bring the uer all the way back up again. 
+                    cb.restartGame();
+                    break;
                 }
             }
-            usedSetup = true;
-            // Now a flag has been raised telling the main that the game has been setup with a gameboard.
         } else { // Invalid Input
             cout << "Invalid Input, try Again" << endl;
             // At the beginning of the game, do we want to output to the user how to the game works/rules!!!! TO DO
         }
-    }
-    }
-    
+    } 
 }
 
