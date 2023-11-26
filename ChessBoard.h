@@ -28,7 +28,7 @@ class ChessBoard: public Observer{
         bool makeHumanMove(Vec start, Vec end);
 
         // makes a computer move -> we need to return the end move to check if a pawn has reached the end 
-        Vec makeComputerMove();
+        Vec makeComputerMove(Player *p);
 
         // check at that coordinate if a piece is a pawn and it has moved two -> here white represents the CURRENT PLAYER
         bool pawnMovedTwo(Vec coordinate, bool white);
