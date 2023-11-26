@@ -179,12 +179,10 @@ int main() {
                 }
                 // 1. Check if game is over
                 if(cb.isEnd()) {
-                    // Call Chessboards Game to update the score and everything
-                    // delete player instances and gaemboard instance, but keep chessboard and game.
-                    if(cb.getTurn()) game.updateBlack(); // This is because if its now whites turn, that means black made the mode that put white in checkmate
-                    else game.updateWhite();
+                    // isEnd has to also update black and white score
                     cb.resetGameboard();
-                    cb.resetPlayers();
+                    cb.resetPlayers();\
+                    usedSetup = false;
                 }
                 // If not, just continue prompting the user for input
 
@@ -194,8 +192,6 @@ int main() {
         } else if (cmd == "setup") { // Input from players is solved by making the user enter game .
             string cmd2, coord, colour;
             char piece;
-            // I am pretty sure I can just pass usedSetup but that will mean we need to default construct in ChessBoard.h so no diffeence. 
-            Chessboard cb = ChessBoard{null, null, usedSetup};
 
             cin >> cmd2;
             while(cin >> cmd2) {
@@ -211,6 +207,10 @@ int main() {
                         break;
                     
                     }
+
+                    if(piece == 'k') cb.setBlackKing(coordinate);
+                    if(piece == 'K') cb.setWhiteKing(coordinate);
+
                     cb.setupWithChar(piece, coordinate); 
                 } else if (cmd2 == "-") {
                     cin >> coord;
@@ -233,28 +233,30 @@ int main() {
                             cout << "Invalid input, please try again." << endl;
                         }
                     } 
-                } else { // User has entered "done" to leave setup mode. 
-                // 1. Need to check the current state of the board to see if it is valid. If not,  make them re-set up?  TO DO ASKED PIAZZA
-                // Piazza said we had creative freedom. I personally think it is better to have a resetBoard. 
-                // resetBoard();
-                // break; 
-                // Prompt the user with the rules and ask to start and try again.
-                
+                } else { 
+                    // User has entered "done" to leave setup mode. 
+                    // 1. Need to check the current state of the board to see if it is valid. If not,  make them re-set up?  TO DO ASKED PIAZZA
+                    // Piazza said we had creative freedom. I personally think it is better to have a resetBoard. 
+                    // resetBoard();
+                    // break; 
+                    // Prompt the user with the rules and ask to start and try again.
+            
+                    cout << "Invalid Board Setup. Please re-setup again." << endl;
+                    cout << "You had an extra blah blah" << endl; // Create logic for determining where it went wrong. We can do this in main or Chessboard -TO DO
+                    // output invalid board and explain why it was
+                    // Resetboard aned start from the very beginnign. Instef of very beginnign of "Welcome"
+                    // Just to the point wher tehy were setting up the board again. But we have to start witha fresh board
 
-                    
-                        cout << "Invalid Board Setup. Please re-setup again." << endl;
-                        cout << "You had an extra blah blah" << endl; // Create logic for determining where it went wrong. We can do this in main or Chessboard -TO DO
-                        // output invalid board and explain why it was
-                        // Resetboard aned start from the very beginnign. Instef of very beginnign of "Welcome"
-                        // Just to the point wher tehy were setting up the board again. But we have to start witha fresh board
+                    // No break
+                    // After they have setup a board, they go back to the very top and prompt he user to enter setup or game. 
 
-                        // No break
-                        // After they have setup a board, they go back to the very top and prompt he user to enter setup or game. 
+                    // cb.restartGame();
 
-                        // cb.restartGame();
-                    }
+                    if(cb.isValid()) break;  
                 }
             }
+            usedSetup = true;
+            // Now a flag has been raised telling the main that the game has been setup with a gameboard.
         } else { // Invalid Input
             cout << "Invalid Input, try Again" << endl;
             // At the beginning of the game, do we want to output to the user how to the game works/rules!!!! TO DO
