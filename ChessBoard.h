@@ -27,8 +27,8 @@ class ChessBoard: public Observer{
     bool BCheck; 
     bool WCheck; 
     bool turn; // true is for white, false is for black
-    Vec Bking; 
-    Vec Wking; 
+    Vec bKing; 
+    Vec wKing; 
     public:
         // makes a Human move 
         bool makeHumanMove(Vec start, Vec end);
@@ -108,10 +108,10 @@ class ChessBoard: public Observer{
         void defaultBoard();
 
         // set white king 
-        void setWhiteKing();
+        void setWhiteKing(Vec coordinate);
 
         // set black king 
-        void setBlackKing(); 
+        void setBlackKing(Vec coordinate); 
 };
 
 ostream& operator<<(ChessBoard& cb, ostream& out);
