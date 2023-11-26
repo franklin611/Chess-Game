@@ -459,3 +459,17 @@ void ChessBoard::setupWithPiece(Piece &p, Vec coordinate) {
     gb[row][col] = p;
 }
 
+void ChessBoard::restartGame() {
+    gb = cb; // Set gameboard back to empty board
+
+    playerWhite.reset();
+    playerBlack.reset();  // Reset the players
+
+    turn = true; // Default turn is always white   
+    bCheck = false;
+    wCheck = false;
+    
+    // We don't need to reset bKing and wKing because it will be reset in next
+    // game or if not, will just be destroyed.
+
+}
