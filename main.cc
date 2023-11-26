@@ -54,11 +54,22 @@ void outputRules() {
 int main() {
     string cmd;
     // Xwindow xw;
+    Game game;
     bool usedSetup = false;
-    chessBoard cb = chessboard{};
+    ChessBoard cb = ChessBoard{};
+    // Creates a default empty gameBoard. 
     outputRules();
 
     while (cin >> cmd) {   
+        // Make a prompt output to get enter game or setup
+        // We prompt the user to enter game or setup
+        // If they enter game, they immediately start a game. THey are prompted for player 1 and player 2
+        // After that, we check whether they inputted setup before this (inputting setup before this meant they setup a custom board). If false
+        // use the default board. If true, that means they used setup beforehand so we use that custome board.
+        // If we are to use the default board, we simply default construct that gameboard and get players
+        // If we we are to use the custom board, we just get players cuz we already created this custom board in setup.
+        // On top of this, we have a isEnd that resets the gameBoard and players. 
+
          
         if(cmd == "game") {
             // Once the user has entered game, they should not be able to exit the below while loop until the game is over. 
@@ -82,11 +93,11 @@ int main() {
             }
 
             if(usedSetup) cb.setupPlayers(playerWhite, playerBlack);
-            else cb = ChessBoard{playerWhite, playerBlack, usedSetup};
-            // Use a default board
+            // At this point, we have edited cb's game board already 
+            else cb.defaultBaord();
+            // This set's cb's gameboard to a default baord. 
         
             string cmd2;
-            // Should not be able to exit this while loop until game is over and ctrl d is run. 
             while(cin >> cmd2) {
 
                 if(cb.getTurn()) { //If passes means playerWhite turn
@@ -169,6 +180,11 @@ int main() {
                 // 1. Check if game is over
                 if(cb.isEnd()) {
                     // Call Chessboards Game to update the score and everything
+                    // delete player instances and gaemboard instance, but keep chessboard and game.
+                    if(cb.getTurn()) game.updateBlack(); // This is because if its now whites turn, that means black made the mode that put white in checkmate
+                    else game.updateWhite();
+                    cb.resetGameboard();
+                    cb.resetPlayers();
                 }
                 // If not, just continue prompting the user for input
 
@@ -223,10 +239,9 @@ int main() {
                 // resetBoard();
                 // break; 
                 // Prompt the user with the rules and ask to start and try again.
+                
 
-                    if(cb.ValidBoard()) { //
-                        break;
-                    } else {
+                    
                         cout << "Invalid Board Setup. Please re-setup again." << endl;
                         cout << "You had an extra blah blah" << endl; // Create logic for determining where it went wrong. We can do this in main or Chessboard -TO DO
                         // output invalid board and explain why it was
@@ -234,7 +249,9 @@ int main() {
                         // Just to the point wher tehy were setting up the board again. But we have to start witha fresh board
 
                         // No break
-                        cb.restartGame();
+                        // After they have setup a board, they go back to the very top and prompt he user to enter setup or game. 
+
+                        // cb.restartGame();
                     }
                 }
             }
