@@ -1,6 +1,5 @@
-#include <vector>
-#include "Player.h"
 #include "Game.h"
+#include <vector>
 #include <iostream>
 #include <memory>
 using namespace std;
@@ -8,17 +7,21 @@ using namespace std;
 class Piece;
 class Vec;
 class Player;
+class TextDisplay;
+class GraphicsDisplay;
+
+// CASTLE MOVE 
+// to make a castle move -> validate that we are moving a king two spaces to the left or right -> have a function that returns true or false so if it is a castle move we know to move the rook as well 
 
 // remember that we want to make DEEP copies of pieces so then we need UNIQUE pointers to make sure that we don't accidentally make shallow copies 
 
 class ChessBoard: public Observer{
-    vector<vector<unique_ptr<Piece>>> gb;
+    vector<vector<shared_ptr<Piece>>> gb;
     vector<vector<unique_ptr<Player>>> eb;
-
     Vec wKing;
     Vec bKing;
-    // unique_ptr<TextDisplay> td;
-    // unique_ptr<GraphicsDisplay> gd;
+    unique_ptr<TextDisplay> td;
+    unique_ptr<GraphicsDisplay> gd;
     unique_ptr<Player> playerWhite;
     unique_ptr<Player> playerBlack;
     Game game;
@@ -28,7 +31,13 @@ class ChessBoard: public Observer{
         bool makeHumanMove(Vec start, Vec end);
 
         // makes a computer move -> we need to return the end move to check if a pawn has reached the end 
-        Vec makeComputerMove();
+        Vec makeComputerMove(unique_ptr<Player> p);
+
+        // returns the type of a piece at that coordinate 
+        char getType(Vec coordinate);
+
+        // returns a piece pointer 
+        shared_ptr<Piece> getPiece(Vec coordinate);
 
         // check at that coordinate if a piece is a pawn and it has moved two -> here white represents the CURRENT PLAYER
         bool pawnMovedTwo(Vec coordinate, bool white);
@@ -40,25 +49,23 @@ class ChessBoard: public Observer{
         bool isValid(Vec start, Vec end);
 
         // chessboard ctor
-        ChessBoard(unique_ptr<Player> white, unique_ptr<Player> black);
+        ChessBoard(unique_ptr<Player> playerWhite, unique_ptr<Player> playerBlack, bool setup);
+
+        // setUp players
+        void setupPlayers(unique_ptr<Player> playerWhite, unique_ptr<Player> playerBlack);
+
 
         // ----------------------------------------------------------------------
 
         // change the gameboard based on validated move 
         void notify(Vec start, Vec end) override;
 
-        // creates a copy of the board that will eventually pop off the stack 
-        void testMove() override;
-
-        // ----------------------------------------------------------------------
-
-
         // ----------------------------------------------------------------------
 
         // undos a notification 
         void revertBoard(vector<vector<unique_ptr<Piece>>> oldPieces, bool oldTurn);
 
-         // access the gameboard (might not need this if we just do notifications)
+         // access the gameboard 
         vector<vector<unique_ptr<Piece>>> getGameBoard();
 
         // ----------------------------------------------------------------------
@@ -89,6 +96,9 @@ class ChessBoard: public Observer{
 
         // at this point, the move/turn is finished, we want to check if the piece at end is a pawn and return true/false accordingly 
         bool upgradePawn(Vec end);
+
+        // this will return all the legal moves of a team
+        vector<vector<Vec>> getLegalMoves(bool white);
 };
 
 ostream& operator<<(ChessBoard& cb, ostream& out);
