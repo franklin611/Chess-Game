@@ -144,8 +144,10 @@ int main() {
                         // Create a chessboard function called forfeit that passes a bool. This function calls updateWhite or updateBlack depending on who won
                         // We pass who lost
 
-                        cb.forfeit(1);
-                        // This function will update the white and black score and restart the chesboard.                   
+                        cb.forfeit();
+                        cb.restartGame();
+                        // This function will update the white and black score and restart the chesboard.   
+                        // I will then also restart the game
                     } 
                 } else {
                     if (cmd2 == "move" && player2 == "human") {
@@ -176,7 +178,8 @@ int main() {
                             cb.setupWithChar(newPiece, end);
                         }
                     } else if(cmd2 == "resign") {
-                        cb.forfeit(0);
+                        cb.forfeit();
+                        cb.restartGame();
                     } 
                 }
 
