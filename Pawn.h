@@ -10,5 +10,7 @@ class Pawn : public Piece {
 		bool canPassant();
 		bool getMovedTwo();
 		bool getMoved();
+		void hasMovedTwo(); 
+		void hasMoved();
 }; 
 

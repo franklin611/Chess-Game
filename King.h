@@ -5,7 +5,8 @@ class King : public Piece {
     public: 
         void resetMoves() override; 
         King();
-        vector<Vec> bishopMoves();
+        vector<Vec> kingMoves();
         bool getMoved();
+        void hasMoved();
 };
 

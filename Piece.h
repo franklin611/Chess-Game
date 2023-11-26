@@ -15,11 +15,9 @@ class Piece{
 			Vec coordinate;
 			char type;
 			vector<Vec> legalMoves;
-			bool white;
-			// static bool BCheck;
-			// static bool WCheck; // moved to chessboard.cc
-			bool emptyMoves; // this is true if the piece is empty so we can skip over them
-		public:
+			bool white; 
+			bool emptyMoves; // this is true if the piece is empty so we can skip over them 
+		public: 
 			// this will respond according to how p moved
 			virtual void resetMoves();
 			char getType();

@@ -4,6 +4,7 @@
 #include "TextDisplay.h"
 #include "GraphicsDisplay.h"
 #include "Pawn.h"
+#include "King.h"
 #include <map>
 
 // YOU CANNOT CASTLE WHILE IN CHECK
@@ -87,14 +88,17 @@ void ChessBoard::replacePiece(Vec coordinate, shared_ptr<Piece> replacement){
     gb[row][col] = replacement;
 }
 
+// DONE
+// we know that is was a valid pawn move at this point 
+bool twoStep(Vec start, Vec end){
+    int startY = start.getY(); 
+    int endY = end.getY(); 
+    if (startY = endY - 2){ return true; }
+    return false;
+}
 
 // CHIARA
-// at this point we know this move is valid -> in main you would have to call piece->isValid() and ask for input again if it is not valid
-// need to validate if the king is in check
-// add castle move -> king moves two spaces
-// make sure that the empty piece is a deep copy
-// make sure that the endpiece is deleted from memory
-// smart pointers YES
+// add castle move -> king moves two spaces 
 void ChessBoard::notify(Vec start, Vec end){
 
     shared_ptr<Piece> startPiece = getPiece(start);
@@ -122,39 +126,53 @@ void ChessBoard::notify(Vec start, Vec end){
             p->resetMoves();
         }
     }
+    // ------ at this point we want to check if the move was a castle move and move the rook accordingly
+    // validate if the piece is a king and it wants to move two spaces to the left or right 
+    // assume that is true then we want ALREADY moved that king
+        // if it moved to the right -> get the rook to the right and move it to the left 
+        // if it moved to the left -> get the rook to the left and move it to the right 
+    
 
     // ------ at this point we know the move is valid then we can change its booleans -------
 
     // check if the piece that moved is a king
     if (startType == 'K' || startType == 'k'){
-        shared_ptr<Pawn> king = dynamic_pointer_cast<King>(endPiece);
-
+        shared_ptr<King> king = dynamic_pointer_cast<King>(endPiece);
+        king->hasMoved();
+        // now the endpiece is the king, we want to update the kings cooordinates to end 
+        if (startType == 'K') { wKing == end; }
+        if (startType == 'k') { bKing == end; }
     }
 
+    // check if the piece that moved is a pawn -> also if it moved 2 spaces forward 
+    if (startType == 'P' || startType == 'p'){
+        shared_ptr<Pawn> pawn = dynamic_pointer_cast<Pawn>(endPiece);
+        pawn->hasMoved();
+        if (twoStep){ pawn->hasMovedTwo(); }
+    }
 
-    // check if the piece that moved is a pawn -> also if it moved 2 spaces forward
-
-    // update if the OTHER team is in check
-
-    // change the turn
+    // update if the YOU or THE OTHER TEAM are in check
+    wCheck = isCheck(true);
+    bCheck = isCheck(false);
+    
+    // change the turn 
     turn? false : true;
 
 }
 
 bool ChessBoard::isCheck(bool white){
     // decide who's king we want to see is in check
-    Piece* king;
+    Vec kingCoord;
     if (white){
-        king = wKing;
+        kingCoord = wKing;
     } else {
-        king = bKing;
+        kingCoord = bKing;
     }
-    Vec kingCoord = king->getCoordinate();
 
     // compare the legal moves of each piece with the king's coordinates
-    for(vector<Piece> vec : gb){
-        for(Piece p : vec){
-            for(Vec move : p.getLegalMoves()){
+    for(vector<shared_ptr<Piece>> vec : gb){
+        for(shared_ptr<Piece> p : vec){
+            for(Vec move : p->getLegalMoves()){
                 if (move == kingCoord){
                     return true;
                 }
@@ -194,6 +212,7 @@ void ChessBoard::revertBoard(vector<vector<Piece>> boardCopy, bool oldTurn){
     turn = oldTurn;
 }
 
+// make sure that the empty piece is a deep copy 
 Piece* ChessBoard::getEmptyPiece(Vec coord){
     // access the empty board and get the Piece* we want
     int row = coord.getY();
@@ -228,7 +247,8 @@ bool ChessBoard::isThere(Vec coordinate){
 }
 
 // we assume that main calls this function because the user decided they want to forfeit in their current turn
-// we can think of this as an alternate end?
+// we can think of this as an alternate end? 
+// UPDATE THE SCORE 
 void ChessBoard::forfeit(){
     if (turn){
         // update score +1 for black
