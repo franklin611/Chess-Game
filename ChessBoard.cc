@@ -301,3 +301,32 @@ bool ChessBoard::pawnMovedTwo(Vec coordinate, bool white){
     return false;
 
 }
+
+void ChessBoard::setupWithChar(char type, Vec coordinate) {
+    int row = coordinate.getX();
+    int col = coordinate.getY();
+    
+    if(type >= 'A' && type <= 'Z' || type == ' ') { //White Colour
+        gb[row][col] = Piece{coordinate, type, white};
+    } else if (type >= 'a' && type <= 'z' || type == '_') {
+        gb[row][col] = Piece{coordinate, type, black};
+    }
+    // So creates white pieces for upper cases and ' '
+    // Creates black pieces for lower case and _
+    // I dont think I even need to have the ' ' and _, but keeping it for now!!
+}
+void ChessBoard::setupWithPiece(Piece &p, Vec coordinate) {
+    int row = coordinate.getX();
+    int col = coordinate.getY();
+    
+    // if(type >= 'A' && type <= 'Z' || type == ' ') { //White Colour
+    //     gb[row][col] = Piece{coordinate, type, white};
+    // } else if (type >= 'a' && type <= 'z' || type == '_') {
+    //     gb[row][col] = Piece{coordinate, type, black};
+    // }
+
+    gb[row][col] = p;
+    // So creates white pieces for upper cases and ' '
+    // Creates black pieces for lower case and _
+    // I dont think I even need to have the ' ' and _, but keeping it for now!!
+}

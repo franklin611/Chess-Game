@@ -89,6 +89,11 @@ class ChessBoard: public Observer{
 
         // at this point, the move/turn is finished, we want to check if the piece at end is a pawn and return true/false accordingly 
         bool upgradePawn(Vec end);
+
+        // Setup functions for char and piece
+        void setupWithChar(char type, Vec coordinate);
+        void setupWithPiece(Piece &p, Vec coordinate);
+    
 };
 
 ostream& operator<<(ChessBoard& cb, ostream& out);
