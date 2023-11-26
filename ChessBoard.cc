@@ -58,9 +58,7 @@ shared_ptr<Piece> ChessBoard::getPiece(Vec coordinate){
 }
 
 
-// CHIARA
-// returns true if a the specified piece at that coordinate is 1. a pawn and 2. on the opposite team
-// we don't know what piece is at coordinate
+// DONE
 bool ChessBoard::pawnMovedTwo(Vec coordinate, bool white){
     char type = getType(coordinate);
     shared_ptr<Piece> p = getPiece(coordinate);
@@ -71,10 +69,6 @@ bool ChessBoard::pawnMovedTwo(Vec coordinate, bool white){
     if (((white && type == 'p') || (!white && type == 'P')) && pawn->getMovedTwo()){ return true; }
 
     return false;
-
-
-
-
 }
 
 // convert Piece pointer type
@@ -93,11 +87,12 @@ void ChessBoard::replacePiece(Vec coordinate, shared_ptr<Piece> replacement){
 bool twoStep(Vec start, Vec end){
     int startY = start.getY(); 
     int endY = end.getY(); 
-    if (startY = endY - 2){ return true; }
+    if (startY = endY - 2 || startY == endY + 2){ return true; }
     return false;
 }
 
 // CHIARA
+// reset moves AFTER you castle !! 
 // add castle move -> king moves two spaces 
 void ChessBoard::notify(Vec start, Vec end){
 
@@ -142,6 +137,19 @@ void ChessBoard::notify(Vec start, Vec end){
         // now the endpiece is the king, we want to update the kings cooordinates to end 
         if (startType == 'K') { wKing == end; }
         if (startType == 'k') { bKing == end; }
+
+        // check if the move was a castle move 
+        int startX = start.getX(); 
+        int endX = end.getX();
+        if (startX == endX - 2 || startX == endX + 2) {
+            if (startX > endX){ // moved to the left
+                Vec rookCoord;
+                
+            } else { // moved to the right 
+
+            }
+        }
+
     }
 
     // check if the piece that moved is a pawn -> also if it moved 2 spaces forward 
