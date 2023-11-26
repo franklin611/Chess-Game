@@ -466,12 +466,6 @@ void ChessBoard::restartGame() {
             gb[i][j] = eb[i][j];
         }
      }
-
-    playerWhite.reset();
-    playerBlack.reset();  // Reset the players
-
-    playerBlack = nullptr;
-
     turn = true; // Default turn is always white   
     bCheck = false;
     wCheck = false;
