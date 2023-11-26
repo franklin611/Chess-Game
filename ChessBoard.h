@@ -2,6 +2,8 @@
 #include <vector>
 #include <iostream>
 #include <memory>
+#include "King.h"
+#include "Pawn.h"
 using namespace std;
 
 class Piece;
@@ -22,7 +24,11 @@ class ChessBoard: public Observer{
     unique_ptr<GraphicsDisplay> gd;
     unique_ptr<Player> playerWhite;
     unique_ptr<Player> playerBlack;
+    bool BCheck; 
+    bool WCheck; 
     bool turn; // true is for white, false is for black
+    Vec Bking; 
+    Vec Wking; 
     public:
         // makes a Human move 
         bool makeHumanMove(Vec start, Vec end);
@@ -97,6 +103,15 @@ class ChessBoard: public Observer{
 
         // this will return all the legal moves of a team
         vector<vector<Vec>> getLegalMoves(bool white);
+        
+        // set the default board 
+        void defaultBoard();
+
+        // set white king 
+        void setWhiteKing();
+
+        // set black king 
+        void setBlackKing(); 
 };
 
 ostream& operator<<(ChessBoard& cb, ostream& out);
