@@ -116,17 +116,18 @@ void ChessBoard::notify(Vec start, Vec end){
     // put the endPiece at start
     replacePiece(start, emptyPiece);
 
-    // reset the legal moves of every piece
-    for (vector<shared_ptr<Piece>> vec : gb){
-		for (shared_ptr<Piece> p : vec){
-            p->resetMoves();
-        }
-    }
     // ------ at this point we want to check if the move was a castle move and move the rook accordingly
     // validate if the piece is a king and it wants to move two spaces to the left or right 
     // assume that is true then we want ALREADY moved that king
         // if it moved to the right -> get the rook to the right and move it to the left 
         // if it moved to the left -> get the rook to the left and move it to the right 
+
+
+    // 4 Castle Move Cases 
+    // Case 1: White -> Right 
+    // Case 2: White -> Left 
+    // Case 3: Black -> Right 
+    // Case 4: Black -> Left
     
 
     // ------ at this point we know the move is valid then we can change its booleans -------
@@ -142,14 +143,7 @@ void ChessBoard::notify(Vec start, Vec end){
         // check if the move was a castle move 
         int startX = start.getX(); 
         int endX = end.getX();
-        if (startX == endX - 2 || startX == endX + 2) {
-            if (startX > endX){ // moved to the left
-                Vec rookCoord;
-                
-            } else { // moved to the right 
 
-            }
-        }
 
     }
 
@@ -158,6 +152,13 @@ void ChessBoard::notify(Vec start, Vec end){
         shared_ptr<Pawn> pawn = dynamic_pointer_cast<Pawn>(endPiece);
         pawn->hasMoved();
         if (twoStep){ pawn->hasMovedTwo(); }
+    }
+
+     // reset the legal moves of every piece
+    for (vector<shared_ptr<Piece>> vec : gb){
+		for (shared_ptr<Piece> p : vec){
+            p->resetMoves();
+        }
     }
 
     // update if the YOU or THE OTHER TEAM are in check
