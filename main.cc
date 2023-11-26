@@ -60,7 +60,6 @@ int main() {
 
     while (cin >> cmd) {   
          
-        
         if(cmd == "game") {
             // Once the user has entered game, they should not be able to exit the below while loop until the game is over. 
             //To setup a new game, we take two input playerWhite playerBlack.
@@ -73,13 +72,13 @@ int main() {
                 playerWhite = make_unique<Human>(1)
             } else {
                 int level = stoi(player1.substr(9));
-                playerWhite = make_unique<Human>(1, level);
+                playerWhite = make_unique<Computer>(1, level);
             }
             if(player2 == "human") {
                 playerBlack = make_unique<Human>(0)
             } else {
                 int level = stoi(player2.substr(9)); // The number
-                playerBlack = make_unique<Human>(0, level);
+                playerBlack = make_unique<Computer>(0, level);
             }
 
             if(usedSetup) cb.setupPlayers(playerWhite, playerBlack);
@@ -168,9 +167,10 @@ int main() {
                     } 
                 }
                 // 1. Check if game is over
-                if(isEnd()) {
-                    
+                if(cb.isEnd()) {
+                    // Call Chessboards Game to update the score and everything
                 }
+                // If not, just continue prompting the user for input
 
             }
           // This for loop continuously gets input from the user regarding moves. 
@@ -244,5 +244,6 @@ int main() {
         }
     }
     }
+    
 }
 
