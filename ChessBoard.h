@@ -40,7 +40,7 @@ class ChessBoard: public Observer{
         bool isValid(Vec start, Vec end);
 
         // chessboard ctor
-        ChessBoard(unique_ptr<Player> white, unique_ptr<Player> black);
+        ChessBoard(unique_ptr<Player> white, unique_ptr<Player> black, bool usedSetup);
 
         // ----------------------------------------------------------------------
 
