@@ -9,6 +9,7 @@ class Observer;
 
 class Piece{
 		// not sure if this needs to be protected **** 
+		protected:
 			Observer* cb;
 			ChessBoard* game;
 			Vec coordinate; 
@@ -24,7 +25,7 @@ class Piece{
 			char getType();
 			Piece() = default;
 			Piece(Vec coordinate, char type, bool white); 
-			Piece(Piece& p) 
+			Piece(Piece& p);
 			// when you construct the chessBoard, add the chessBoard as the observer* 
 			void attach(Observer *o);
 			bool isMoveValid(Vec v);

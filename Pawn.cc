@@ -1,6 +1,13 @@
 #include "Pawn.h"
 #include "ChessBoard.h"
 
+bool Pawn::getMoved(){
+	return moved; 
+}
+
+bool Pawn::getMovedTwo(){
+	return movedTwo;
+}
 
 // MAKE SURE THE PIECE DOESNT GO OUTSIDE THE BOARD LIMIT
 // make sure you check there is actually a piece to capture 
@@ -45,6 +52,9 @@ vector<Vec> Pawn::pawnMoves() {
 bool Pawn::canPassant(){
 	Vec passantLeft = Vec(coordinate.getX() - 1, coordinate.getY());
 	Vec passantRight = Vec(coordinate.getX() + 1, coordinate.getY());
+
+	char leftType = game->getType(passantLeft);
+	char rightType = game->getType
 
 	// if white and my y coordinate is 4 
 	if (white && coordinate.getY() == 4 && game->pawnMovedTwo(passantLeft, white)){

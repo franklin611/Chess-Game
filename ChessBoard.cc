@@ -4,6 +4,15 @@
 #include "TextDisplay.h"
 #include "GraphicsDisplay.h"
 #include "Pawn.h"
+#include <map>
+
+// YOU CANNOT CASTLE WHILE IN CHECK 
+// YOU CANNOT CASTLE WHILE IN CHECK 
+// YOU CANNOT CASTLE WHILE IN CHECK 
+// YOU CANNOT CASTLE WHILE IN CHECK 
+// YOU CANNOT CASTLE WHILE IN CHECK 
+// YOU CANNOT CASTLE WHILE IN CHECK 
+// YOU CANNOT CASTLE WHILE IN CHECK 
 
 // DONE 
 bool ChessBoard::makeHumanMove(Vec start, Vec end){
@@ -32,7 +41,6 @@ bool ChessBoard::makeHumanMove(Vec start, Vec end){
 //     notify(move[0], move[1]);
 // }
 
-
 // DONE 
 char ChessBoard::getType(Vec coordinate){
     shared_ptr<Piece> p = getPiece(coordinate);
@@ -40,18 +48,15 @@ char ChessBoard::getType(Vec coordinate){
     return type;
 }
 
+// DONE
 shared_ptr<Piece> ChessBoard::getPiece(Vec coordinate){
     int row = coordinate.getY(); 
     int col = coordinate.getX();
     return gb[row][col];
 }
 
-
-// CHIARA 
-// returns true if a the specified piece at that coordinate is 1. a pawn and 2. on the opposite team
-// we don't know what piece is at coordinate
+// DONE
 bool ChessBoard::pawnMovedTwo(Vec coordinate, bool white){
-
     char type = getType(coordinate);
     shared_ptr<Piece> p = getPiece(coordinate);
     std::shared_ptr<Pawn> pawn;
@@ -60,12 +65,20 @@ bool ChessBoard::pawnMovedTwo(Vec coordinate, bool white){
 
     if (((white && type == 'p') || (!white && type == 'P')) && pawn->getMovedTwo()){ return true; }
 
-    return false;
-    
-
-    
-
+    return false; 
 }
+
+// convert Piece pointer type 
+// MAYBE ADD THIS FUNCTION
+
+
+// DONE
+void ChessBoard::replacePiece(Vec coordinate, shared_ptr<Piece> replacement){
+    int row = coordinate.getY(); 
+    int col = coordinate.getX();
+    gb[row][col] = replacement;
+}
+
 
 // CHIARA
 // at this point we know this move is valid -> in main you would have to call piece->isValid() and ask for input again if it is not valid
@@ -75,42 +88,49 @@ bool ChessBoard::pawnMovedTwo(Vec coordinate, bool white){
 // make sure that the endpiece is deleted from memory 
 // smart pointers YES 
 void ChessBoard::notify(Vec start, Vec end){
-    int endRow = end.getY(); 
-    int endCol = end.getX();
 
-    int startRow = start.getY();
-    int startCol = start.getX(); 
-
-    Piece* startPiece = gb[startRow][startCol];
-    // get the piece type here 
-    Piece* endPiece = gb[endRow][endCol];
-    // get the piece type here 
+    shared_ptr<Piece> startPiece = getPiece(start);
+    char startType = getType(start);
+    shared_ptr<Piece> endPiece = getPiece(end);
 
     // find the piece at start and change the coordinates of the piece to end
     startPiece->setCoordinate(end);
 
-    // move the start to the end in gb
-    endPiece = startPiece;
+    // move the startPiece to end -> now the piece at end is pointing to the address of startPiece 
+    replacePiece(end, startPiece);
+    endPiece = startPiece; // now the endPiece points at the (start)piece that we just moved to the end 
 
-    // replace the vector at start with the empty piece 
-    startPiece = getEmptyPiece(start);
+    // ------ now only endPiece is pointing to the piece that was originally at end -> once endPiece goes out of scope the memory is automatically deallocated ----------
+
+    // replace the vector at start with the empty piece -> getEmptyPiece needs to return a shared pointer but UNIQUE copy 
+    shared_ptr<Piece> emptyPiece = getEmptyPiece(start);
+
+    // put the endPiece at start
+    replacePiece(start, emptyPiece);
 
     // reset the legal moves of every piece 
-    for (vector<Piece*> vec : gb){
-		for (Piece* p : vec){
+    for (vector<shared_ptr<Piece>> vec : gb){
+		for (shared_ptr<Piece> p : vec){
             p->resetMoves();
         }
     }
 
-    // at this point we know th emove is valid then we can change its booleans
+    // ------ at this point we know the move is valid then we can change its booleans -------
 
+    // check if the piece that moved is a king 
+    if (startType == 'K' || startType == 'k'){
+        shared_ptr<Pawn> king = dynamic_pointer_cast<King>(endPiece);
+        
+    }
+
+
+    // check if the piece that moved is a pawn -> also if it moved 2 spaces forward 
+
+    // update if the OTHER team is in check 
+    
     // change the turn 
     turn? false : true;
 
-    // is my king in check ****
-    if (isCheck(turn)){
-        // update turn's player to be in check 
-    }
 }
 
 bool ChessBoard::isCheck(bool white){

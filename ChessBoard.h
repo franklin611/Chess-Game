@@ -18,13 +18,10 @@ class GraphicsDisplay;
 class ChessBoard: public Observer{
     vector<vector<shared_ptr<Piece>>> gb;
     vector<vector<unique_ptr<Player>>> eb;
-    Vec wKing;
-    Vec bKing;
     unique_ptr<TextDisplay> td;
     unique_ptr<GraphicsDisplay> gd;
     unique_ptr<Player> playerWhite;
     unique_ptr<Player> playerBlack;
-    Game game;
     bool turn; // true is for white, false is for black
     public:
         // makes a Human move 
@@ -49,7 +46,7 @@ class ChessBoard: public Observer{
         bool isValid(Vec start, Vec end);
 
         // chessboard ctor
-        ChessBoard(unique_ptr<Player> playerWhite, unique_ptr<Player> playerBlack, bool setup);
+        ChessBoard(unique_ptr<Player> playerWhite, unique_ptr<Player> playerBlack);
 
         // setUp players
         void setupPlayers(unique_ptr<Player> playerWhite, unique_ptr<Player> playerBlack);
@@ -60,7 +57,8 @@ class ChessBoard: public Observer{
         // change the gameboard based on validated move 
         void notify(Vec start, Vec end) override;
 
-        // ----------------------------------------------------------------------
+        // replace a piece at coordinate with replacement 
+        void replacePiece(Vec coordinate, shared_ptr<Piece> replacement);
 
         // undos a notification 
         void revertBoard(vector<vector<unique_ptr<Piece>>> oldPieces, bool oldTurn);
@@ -83,7 +81,7 @@ class ChessBoard: public Observer{
         void setupByChar(char type, Vec coordinate);
 
         // returns a DEEP COPY of an empty piece 
-        unique_ptr<Piece> getEmptyPiece(Vec coord);
+        shared_ptr<Piece> getEmptyPiece(Vec coord);
 
         // main calls this function if a human wants to forfeit
         void forfeit(); 
