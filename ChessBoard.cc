@@ -110,12 +110,17 @@ bool twoStep(Vec start, Vec end){
     return false;
 }
 
+
+// Piece::Piece(struct Vec coordinate, char type, bool colour): coordinate{coordinate}, type{type}, white{colour} {} Piece constructor
+// Empty piece seems to just have a superclass constructor of parent class Piece. 
+// To create the empty construcotr, what do I actually pass? (Empty(Vec{row,col}, _ or ' ', true or false)))
+
 // FRANKLIN 
 ChessBoard::ChessBoard() : playerWhite{make_unique<Player>()}, playerBlack{make_unique<Player>()}, game{}, bCheck{false}, wCheck{false}, turn{true}, bKing{}, wKing{} {
     // Setup the empty board and gameboard
     for (int row = 0; row < 8; row+i) {
         vector<unique_ptr<Piece>> ebRow;
-        vector<shared_ptr<Piece>> gbRow;
+        vector<shared_ptr<Piece>> gbRow;/
         for (int col = 0; col < 8; ++col) {
             // gb[row][col] = make_shared<Piece>();
             ebRow.push_back(make_unique<Piece>(Piece::Empty()));
