@@ -31,7 +31,18 @@ void Piece::setCoordinate(Vec coord){
 	coordinate = coord;
 }
 
+bool Piece::isMoveValid(Vec v){
+	for(Vec move : legalMoves){
+		if (move == v){ return true; }
+	}
+	return false;
+}
 
+void Piece::resetMoves(){
+	
+}
+
+// ------------------------------------------------------------------------------------------------------
 // we get the oldBoard -> make a copy of it -> edit the actual board -> revert back to the original board
 bool Piece::willCheck(Vec start, Vec end){
 	// temp hold the original turn 
@@ -58,10 +69,4 @@ bool Piece::willCheck(Vec start, Vec end){
 	// return if the move will put the king in check or not
 	return check;
 }
-
-bool Piece::isMoveValid(Vec v){
-	for(Vec move : legalMoves){
-		if (move == v){ return true; }
-	}
-	return false;
-}
+// ------------------------------------------------------------------------------------------------------

@@ -20,7 +20,10 @@ class Piece{
 		public: 
 			// this will respond according to how p moved
 			virtual void resetMoves();
+			void addLegalMove(Vec end);
+			virtual vector<Vec> getPossibleMoves();
 			char getType();
+			bool getTeam();
 			Piece() = default;
 			Piece(Vec coordinate, char type, bool white);
 			Piece(Piece& p);

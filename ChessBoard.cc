@@ -154,17 +154,21 @@ void ChessBoard::castleMove(Vec start, Vec end){
     if (endX = startX + 2){ // moved to the right -> move the rook to the right TO the left 
         rookCoord.setY(7);
         Vec endCoord = Vec(end.getX() - 1, end.getY()); 
-        makeMove(rookCoord, endCoord);
+        regMove(rookCoord, endCoord);
     } else if (endX = startX - 3){ // moved to the left -> move the rook to the left TO the right
         rookCoord.setY(0);
         Vec endCoord = Vec(end.getX() + 1, end.getY());
-        makeMove(rookCoord, endCoord);
+        regMove(rookCoord, endCoord);
     }
 
 }
 
 void ChessBoard::makeMove(Vec start, Vec end){
-
+     // make the move 
+    regMove(start, end);
+    char startType = getType(end);
+    // check if it was a castle move and if it was make the appropriate rook move 
+    if (startType == 'K' || startType == 'k'){ castleMove(start, end); }
 }
 
 // DONE
@@ -191,15 +195,10 @@ void ChessBoard::updateKingCoord(Vec end, bool white){
     }
 }
 
-void 
 // ALMOST DONE -> CONFIRM WITH HELENA 
 void ChessBoard::notify(Vec start, Vec end){
 
-    // make the move 
     makeMove(start, end);
-    char startType = getType(end);
-    // check if it was a castle move and if it was make the appropriate rook move 
-    if (startType == 'K' || startType == 'k'){ castleMove(start, end); }
 
     char startType = getType(end);
 
@@ -212,19 +211,27 @@ void ChessBoard::notify(Vec start, Vec end){
     // check if the piece that moved is a pawn 
     if (startType == 'P' || startType == 'p'){ updatePawnMoved(start, end); }
 
+    // update if THE OTHER TEAM is in check
+    if (turn){
+        bCheck = isCheck(false);
+    } else {
+        wCheck = isCheck(true);
+    }
+
+    // change the turn
+    turn? false : true;
+
      // reset the legal moves of every piece
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
             p->resetMoves();
+            vector<Vec> possibleMoves = p->getPossibleMoves();
+            // test every possible move -> which will add it to the legal moves if it passes 
+            for (Vec move : possibleMoves){
+                testMove(p->getCoordinate(), move);
+            }
         }
     }
-
-    // update if the YOU or THE OTHER TEAM are in check
-    wCheck = isCheck(true);
-    bCheck = isCheck(false);
-
-    // change the turn
-    turn? false : true;
 
     // might need to notify the td and gd 
 
@@ -245,9 +252,24 @@ void ChessBoard::notify(Vec start, Vec end){
 // }
 
 // CHIARA 
+// flow of the program 
+// 1. takes input about a move 
+// 2. validates that the move is valid 
+// 3. call notify 
+// in notify 
+// 4. make the move + update the board 
+// 5. moves are reset 
+//      a.) every piece will call its own resetmoves to clear the legal moves 
+//      b.) every piece will call get possible moves to get a list of possible moves 
+//      c.) each move will be tested and added to the legalmoves of the piece (at start) if it passes
+
+
+
 // office hours 
 // two ideas -> make this a notification 
 // allow pieces to have a chessboard pointer so they can call the function 
+// this function will ALSO reset the moves of a piece 
+// this need to simulate the move and just check if the move puts it's own team into check 
 void ChessBoard::testMove(Vec start, Vec end){
     // make a deep copy of the gb  
     // creating a 2D vector of unique pointers by copying from the shared vector
@@ -263,9 +285,11 @@ void ChessBoard::testMove(Vec start, Vec end){
     }
 
     // now we can make edits on the game board which we will later revert 
-    makeMove(start, end);
-    if ()
-
+    notify(start, end);
+    shared_ptr<Piece> p = getPiece(end);
+    
+    // need to check if that move put myself in check 
+    bool check = isCheck(p->getTeam());
 
     // unique pointers will go out of scope once the function returns 
 }
