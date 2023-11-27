@@ -111,13 +111,28 @@ bool twoStep(Vec start, Vec end){
 }
 
 // FRANKLIN 
-ChessBoard::ChessBoard(unique_ptr<Player> playerWhite, unique_ptr<Player> playerBlack){
-
+ChessBoard::ChessBoard() : playerWhite{make_unique<Player>()}, playerBlack{make_unique<Player>()}, game{}, bCheck{false}, wCheck{false}, turn{true}, bKing{}, wKing{} {
+    // Setup the empty board and gameboard
+    for (int row = 0; row < 8; row+i) {
+        vector<unique_ptr<Piece>> ebRow;
+        vector<shared_ptr<Piece>> gbRow;
+        for (int col = 0; col < 8; ++col) {
+            // gb[row][col] = make_shared<Piece>();
+            ebRow.push_back(make_unique<Piece>(Piece::Empty()));
+            gbRow.push_back(make_shared<Piece>(Piece::Empty()));
+        }
+        eb.push_back(move(ebRow));
+        gb.push_back(move(gbRow));
+    }
 }
 
 // FRANKLIN
-void ChessBoard::setupPlayers(unique_ptr<Player> playerWhite, unique_ptr<Player> playerBlack){
-
+// I need to use move() because they are unique ptrs. Transfer ownership of white and black
+// to playerWhite and playerBlack respectively.
+// Once function goes out of scope, white and black will be nullptrs and be destroyed
+void ChessBoard::setupPlayers(unique_ptr<Player> white, unique_ptr<Player> black){
+    playerWhite = move(white);
+    playerBlack = move(black);
 }
 
 // DONE
@@ -378,9 +393,9 @@ bool ChessBoard::isEnd() {
 
 // CHIARA
 void ChessBoard::restartGame() {
-     for(size_t i = 0; i < eb.size(); ++i) {
-        for (size_t j = 0; j < eb[0].size(); ++j) {
-            gb[i][j] = eb[i][j];
+    for(size_t i = 0; i < eb.size(); ++i) {
+        for (size_t j = 0; j < eb[i].size(); ++j) {
+            gb[i][j] = make_shared(*(eb[i][j]));
         }
      }
     turn = true; // Default turn is always white   
