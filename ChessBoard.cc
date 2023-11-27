@@ -111,14 +111,43 @@ bool twoStep(Vec start, Vec end){
     return false;
 }
 
-// FRANKLIN 
-ChessBoard::ChessBoard(unique_ptr<Player> playerWhite, unique_ptr<Player> playerBlack){
 
+// Piece::Piece(struct Vec coordinate, char type, bool colour): coordinate{coordinate}, type{type}, white{colour} {} Piece constructor
+// Empty piece seems to just have a superclass constructor of parent class Piece. 
+// To create the empty construcotr, what do I actually pass? (Empty(Vec{row,col}, _ or ' ', true or false)))
+
+// FRANKLIN 
+ChessBoard::ChessBoard() : playerWhite{make_unique<Player>()}, playerBlack{make_unique<Player>()}, game{}, bCheck{false}, wCheck{false}, turn{true}, bKing{}, wKing{} {
+    // Setup the empty board and gameboard
+    bool switch = true;
+    for (int row = 0; row < 8; row+i) {
+        vector<unique_ptr<Piece>> ebRow;
+        vector<shared_ptr<Piece>> gbRow;/
+        for (int col = 0; col < 8; ++col) {
+            // gb[row][col] = make_shared<Piece>();
+            // Top left corner, the colour of the board is white. Bottom right (7,7) is white as well
+            if(switch) { // Alternating of black and white
+                ebRow.push_back(make_unique<Piece>(Piece::Empty(Vec{col, row}, ' ', true))); 
+                gbRow.push_back(make_shared<Piece>(Piece::Empty(Vec{col, row}, ' ', true)));
+                switch = false;
+            } else {
+                ebRow.push_back(make_unique<Piece>(Piece::Empty(Vec{col, row}, '_', false)));
+                gbRow.push_back(make_shared<Piece>(Piece::Empty(Vec{col, row}, '_', false)));
+                switch = true;
+            }
+        }
+        eb.push_back(move(ebRow));
+        gb.push_back(move(gbRow));
+    }
 }
 
 // FRANKLIN
-void ChessBoard::setupPlayers(unique_ptr<Player> playerWhite, unique_ptr<Player> playerBlack){
-
+// I need to use move() because they are unique ptrs. Transfer ownership of white and black
+// to playerWhite and playerBlack respectively.
+// Once function goes out of scope, white and black will be nullptrs and be destroyed
+void ChessBoard::setupPlayers(unique_ptr<Player> white, unique_ptr<Player> black){
+    playerWhite = move(white);
+    playerBlack = move(black);
 }
 
 // DONE
@@ -359,9 +388,9 @@ void ChessBoard::setupWithChar(char type, Vec coordinate) {
     int col = coordinate.getX();
 
     if(type >= 'A' && type <= 'Z' || type == ' ') { //White Colour
-        gb[row][col] = make_shared<Piece>(coordinate, type, white);
+        gb[row][col] = make_shared<Piece>(coordinate, type, 1);
     } else if (type >= 'a' && type <= 'z' || type == '_') {
-        gb[row][col] = make_shared<Piece>(coordinate, type, black);
+        gb[row][col] = make_shared<Piece>(coordinate, type, 0);
     }
     // So creates white pieces for upper cases and ' '
     // Creates black pieces for lower case and _
@@ -372,6 +401,7 @@ void ChessBoard::setupWithChar(char type, Vec coordinate) {
 // I use this in main when I pass it a shared_ptr from the empty board. 
 // I only ever use this when I am deleting in main and passing an empty piece at the location
 // Can I just make this a take a shared_ptr
+// Looks Good
 void ChessBoard::setupWithPiece(shared_ptr<Piece> p, Vec coordinate) {
     int row = coordinate.getY();
     int col = coordinate.getX();
@@ -385,6 +415,7 @@ shared_ptr<Piece> ChessBoard::getEmptyPiece(Vec coord){
     int row = coord.getY();
     int col = coord.getX();
     shared_ptr<Piece> emptyPiece = make_shared<Piece>(*(eb[row][col]));
+    // Assume this copy construtor will work
 
     // return the copied piece
     return emptyPiece;
@@ -426,11 +457,15 @@ bool ChessBoard::isEnd() {
 
 // CHIARA -> need to make sure this is a deep copy (can someone else do this)
 void ChessBoard::restartGame() {
-     for(size_t i = 0; i < eb.size(); ++i) {
-        for (size_t j = 0; j < eb[0].size(); ++j) {
-            gb[i][j] = eb[i][j]; 
+    for(size_t i = 0; i < eb.size(); ++i) { //The row (so the Y value)
+        for (size_t j = 0; j < eb[i].size(); ++j) { // The column (so the X value)
+            gb[j][i] = make_shared<Piece>(*(eb[j][i]));
+            // j, i is Vec{j,i} is X, Y
+            // Assume the copy assignment operator works
         }
      }
+    //  Should be good
+
     turn = true; // Default turn is always white   
     bCheck = false;
     wCheck = false;
@@ -569,7 +604,7 @@ vector<vector<Vec>> generateAvoidCaptureMoves(vector<vector<Vec>> possibleMoves)
         // // We can use this for higher levels of computer instead
         // // Avoids not only capture of their stard coordinate, but also their end coordinate
         // for (int k = 0; !enemyMoves.empty(); ++k) {
-        //     if(enemyMoves[k][1] == start) check1 = true;
+        //     if(enemyMoves[k][1] == start) check1 = true;getEmp
         // }
         // for(int l = 0; !enemyMoves.empty(); ++l) {
         //     if(enemyMoves[l][1] == end) break;

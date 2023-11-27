@@ -54,10 +54,10 @@ class ChessBoard: public Observer{
         bool isValid(Vec start, Vec end);
 
         // chessboard ctor
-        ChessBoard(unique_ptr<Player> playerWhite, unique_ptr<Player> playerBlack);
+        ChessBoard();
 
         // setUp players
-        void setupPlayers(unique_ptr<Player> playerWhite, unique_ptr<Player> playerBlack);
+        void setupPlayers(unique_ptr<Player> white, unique_ptr<Player> black);
 
         void regMove(Vec start, Vec end);
 
@@ -93,7 +93,7 @@ class ChessBoard: public Observer{
 
         // Setup functions for char and piece
         void setupWithChar(char type, Vec coordinate);
-        void setupWithPiece(Piece &p, Vec coordinate);
+        void setupWithPiece(shared_ptr<Piece> p, Vec coordinate);
 
         // returns a DEEP COPY of an empty piece
         shared_ptr<Piece> getEmptyPiece(Vec coord);
