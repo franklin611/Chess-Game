@@ -531,3 +531,96 @@ vector<vector<Vec>> generateAvoidCaptureMoves(vector<vector<Vec>> possibleMoves)
         // if(check! && check2) levelMoves.emplace_back(vector<Vec>{start, end});
     }
 }
+
+
+void ChessBoard::makeComputerMove(Player *p){
+    // based on level, makeComputerMove
+    int level = p.getLevel();
+
+    // get the legal moves for the player
+    vector<vector<Vec>> legalMoves = cb->getLegalMoves(turn);
+    vector<Vec> move; // there are two Vecs [start, end]
+    vector<vector<Vec>> levelMoves = generateAllLevelMoves(legalMoves, level);
+
+    if (turn){
+        move = cb->playerWhite->selectMove(levelMoves);
+    } else {
+        move = cb->playerBlack->selectMove(legalMoves);
+    }
+    notify(move[0], move[1]);
+}
+
+
+// this is for a human player
+bool ChessBoard::makeHumanMove(Vec start, Vec end){
+    // validate that the move is valid -> if not valid return false
+    if (isValid(start, end)){
+        // call notify and return true
+        notify(start, end);
+        return true;
+    }
+    return false;
+
+}
+
+bool ChessBoard::isValid(Vec start, Vec end){
+    // use start to get piece
+    int row = start.getY();
+    int col = start.getX();
+    Piece p = gb[row][col];
+
+    // use end to validate move
+    return p.isMoveValid(end);
+}
+
+// update piece pointer
+bool ChessBoard::isThere(Vec coordinate){
+	for (vector<Piece> vec : gb){
+		for (Piece p : vec){
+			if (p.getCoordinate() == coordinate){
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+
+void ChessBoard::defaultBoard() {
+
+    // First setup pawns 
+    for (int i = 0; i < 8; ++i) {
+        setupByChar('P', Vec{i, 1}); // White pawns
+        setupByChar('p', Vec{i, 7}); // Black
+        // x, y. This corresponds to second row
+    }
+
+    // Whites are the top side of the board. 0,0 
+
+    // Setup Rooks
+    setupByChar('R', Vec{0,0});
+    setupByChar('R', Vec{0, 7}); // Whites
+    setupByChar('r', Vec{7,0});
+    setupByChar('r', Vec{7, 7}); // Whites
+
+    // Setup Knights
+    setupByChar('K', Vec{1,0});
+    setupByChar('K', Vec{6, 0}); // Whites
+    setupByChar('k', Vec{1,7});
+    setupByChar('k', Vec{6, 7}); // Black
+
+    // Setup Bishops
+    setupByChar('B', Vec{2,0});
+    setupByChar('B', Vec{5, 0}); // Whites
+    setupByChar('b', Vec{2,7});
+    setupByChar('b', Vec{5, 7}); // Black
+
+    // Setup Kings
+    setupByChar('K', Vec{0,3}); // White King
+    setupByChar('k', Vec{7, 3}); // Black King
+
+    // Setup Queens
+    setupByChar('K', Vec{0,4}); // White Queen
+    setupByChar('k', Vec{7, 4}); // Black Queen
+}
+
