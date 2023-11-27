@@ -310,9 +310,9 @@ void ChessBoard::setupWithChar(char type, Vec coordinate) {
     int col = coordinate.getX();
 
     if(type >= 'A' && type <= 'Z' || type == ' ') { //White Colour
-        gb[row][col] = Piece{coordinate, type, white};
+        gb[row][col] = make_shared<Piece>(coordinate, type, white);
     } else if (type >= 'a' && type <= 'z' || type == '_') {
-        gb[row][col] = Piece{coordinate, type, black};
+        gb[row][col] = make_shared<Piece>(coordinate, type, black);
     }
     // So creates white pieces for upper cases and ' '
     // Creates black pieces for lower case and _
@@ -320,7 +320,10 @@ void ChessBoard::setupWithChar(char type, Vec coordinate) {
 }
 
 // FRANKLIN 
-void ChessBoard::setupWithPiece(Piece &p, Vec coordinate) {
+// I use this in main when I pass it a shared_ptr from the empty board. 
+// I only ever use this when I am deleting in main and passing an empty piece at the location
+// Can I just make this a take a shared_ptr
+void ChessBoard::setupWithPiece(shared_ptr<Piece> p, Vec coordinate) {
     int row = coordinate.getY();
     int col = coordinate.getX();
 
@@ -328,11 +331,11 @@ void ChessBoard::setupWithPiece(Piece &p, Vec coordinate) {
 }
 
 // CHIARA
-Piece* ChessBoard::getEmptyPiece(Vec coord){
+shared_ptr<Piece> ChessBoard::getEmptyPiece(Vec coord){
     // access the empty board and get the Piece* we want
     int row = coord.getY();
     int col = coord.getX();
-    Piece emptyPiece = eb[row][col];
+    shared_ptr<Piece> emptyPiece = make_shared<Piece>(*(eb[row][col]));
 
     // return the copied piece
     return emptyPiece;
