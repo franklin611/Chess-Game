@@ -398,10 +398,6 @@ vector<vector<Vec>> ChessBoard::getLegalMoves(bool white){
 
 }
 
-// FRANKLIN
-void ChessBoard::defaultBoard(){
-
-}
 
 // CHIARA
 void ChessBoard::setWhiteKing(Vec coordinate){
@@ -533,6 +529,7 @@ vector<vector<Vec>> generateAvoidCaptureMoves(vector<vector<Vec>> possibleMoves)
 }
 
 
+// Helena to Update
 void ChessBoard::makeComputerMove(Player *p){
     // based on level, makeComputerMove
     int level = p.getLevel();
