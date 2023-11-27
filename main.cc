@@ -54,7 +54,6 @@ void outputRules() {
 int main() {
     string cmd;
     // Xwindow xw;
-    Game game = Game{};
     bool usedSetup = false;
     ChessBoard cb = ChessBoard{};
     // Creates a default empty gameBoard. With just empty pieces 
@@ -262,7 +261,7 @@ int main() {
         }
     } 
     // END OF GAME
-    cout << game;
+    cout << cb.game;
     // game has a output operator that will handle the displaying of the score
     cout << "Thank you for playing. We hope you enjoyed!" << endl;
     cout << "Make sure to play again!" << endl;
