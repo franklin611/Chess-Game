@@ -19,7 +19,7 @@ class GraphicsDisplay;
 
 class ChessBoard: public Observer{
     vector<vector<shared_ptr<Piece>>> gb;
-    vector<vector<unique_ptr<Player>>> eb;
+    vector<vector<unique_ptr<Piece>>> eb;
     unique_ptr<TextDisplay> td;
     unique_ptr<GraphicsDisplay> gd;
     unique_ptr<Player> playerWhite;

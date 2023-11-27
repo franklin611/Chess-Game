@@ -440,8 +440,8 @@ bool ChessBoard::isEnd() {
 }
 
 void ChessBoard::setupWithChar(char type, Vec coordinate) {
-    int row = coordinate.getX();
-    int col = coordinate.getY();
+    int row = coordinate.getY();
+    int col = coordinate.getX();
 
     if(type >= 'A' && type <= 'Z' || type == ' ') { //White Colour
         gb[row][col] = Piece{coordinate, type, white};
@@ -453,13 +453,27 @@ void ChessBoard::setupWithChar(char type, Vec coordinate) {
     // I dont think I even need to have the ' ' and _, but keeping it for now!!
 }
 void ChessBoard::setupWithPiece(Piece &p, Vec coordinate) {
-    int row = coordinate.getX();
-    int col = coordinate.getY();
+    int row = coordinate.getY();
+    int col = coordinate.getX();
 
     gb[row][col] = p;
 }
 
-void ChessBoard::defaultBoard() {
+void ChessBoard::restartGame() {
+     gb = eb;// Set gameboard back to empty board
+     for(size_t i = 0; i < eb.size(); ++i) {
+        for (size_t j = 0; j < eb[0].size(); ++j) {
+            gb[i][j] = eb[i][j];
+        }
+     }
+    turn = true; // Default turn is always white   
+    bCheck = false;
+    wCheck = false;
+    
+    // We don't need to reset bKing and wKing because it will be reset in next
+    // game or if not, will just be destroyed.
+
+}void ChessBoard::defaultBoard() {
 
     // First setup pawns 
     for (int i = 0; i < 8; ++i) {
