@@ -90,10 +90,11 @@ int main() {
                 int level = stoi(player2.substr(9)); // The number
                 playerBlack = make_unique<Computer>(0, level);
             }
-
+            if(!usedSetup()) cb.defaultBoard();
+            // In both cases, setup board then players
             // We are always gonna have to setup players anyways
             cb.setupPlayers(playerWhite, playerBlack);
-            if(!usedSetup()) cb.defaultBoard();
+            
             // At this point, we have edited cb's game board already 
             // This set's cb's gameboard to a default baord. 
         
