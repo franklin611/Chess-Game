@@ -20,8 +20,6 @@ class GraphicsDisplay;
 class ChessBoard: public Observer{
     vector<vector<shared_ptr<Piece>>> gb;
     vector<vector<unique_ptr<Piece>>> eb;
-    unique_ptr<TextDisplay> td;
-    unique_ptr<GraphicsDisplay> gd;
     unique_ptr<Player> playerWhite;
     unique_ptr<Player> playerBlack;
     Game game;
@@ -35,7 +33,7 @@ class ChessBoard: public Observer{
         bool makeHumanMove(Vec start, Vec end);
 
         // makes a computer move -> we need to return the end move to check if a pawn has reached the end
-        Vec makeComputerMove(unique_ptr<Player> p);
+        void makeComputerMove(unique_ptr<Player> p);
 
         // returns the type of a piece at that coordinate
         char getType(Vec coordinate);
@@ -49,6 +47,9 @@ class ChessBoard: public Observer{
         // check if there is a piece at that coordinate
         bool isThere(Vec coordinate);
 
+        // replace a piece at coordinate with replacement
+        void replacePiece(Vec coordinate, shared_ptr<Piece> replacement);
+
         // check if a move is valid
         bool isValid(Vec start, Vec end);
 
@@ -58,22 +59,29 @@ class ChessBoard: public Observer{
         // setUp players
         void setupPlayers(unique_ptr<Player> playerWhite, unique_ptr<Player> playerBlack);
 
+        void regMove(Vec start, Vec end);
 
-        // ----------------------------------------------------------------------
+        void castleMove(Vec start, Vec end);
+
+        void makeMove(Vec start, Vec end);
+
+        void updatePawnMoved(Vec start, Vec end);
+
+        void updateKingMoved(Vec end);
+
+        void updateKingCoord(Vec end, bool white);
 
         // change the gameboard based on validated move
         void notify(Vec start, Vec end) override;
 
-        // replace a piece at coordinate with replacement
-        void replacePiece(Vec coordinate, shared_ptr<Piece> replacement);
+        void testMove(Vec start, Vec end) override;
 
         // undos a notification
-        void revertBoard(vector<vector<unique_ptr<Piece>>> oldPieces, bool oldTurn);
+        //void revertBoard(vector<vector<shared_ptr<Piece>>> oldPieces);
+        // void revertBoard(Vec start, Vec end);
 
          // access the gameboard
         vector<vector<unique_ptr<Piece>>> getGameBoard();
-
-        // ----------------------------------------------------------------------
 
         // checks if the king is in check -> ie. any of the opponents legal moves capture king
         bool isCheck(bool white);
@@ -81,11 +89,9 @@ class ChessBoard: public Observer{
         // get the turn status
         bool getTurn();
 
-        // main will instansiate a piece pointer and this function places the piece at this coordinate (empty piece)
-        void setupByPiece(unique_ptr<Piece> p, Vec coordinate);
-
-        // main will receive a char type and this function needs to create the Piece and put it at the coordinate
-        void setupByChar(char type, Vec coordinate);
+        // Setup functions for char and piece
+        void setupWithChar(char type, Vec coordinate);
+        void setupWithPiece(Piece &p, Vec coordinate);
 
         // returns a DEEP COPY of an empty piece
         shared_ptr<Piece> getEmptyPiece(Vec coord);
@@ -113,10 +119,6 @@ class ChessBoard: public Observer{
 
         // set black king
         void setBlackKing(Vec coordinate);
-
-        // Setup functions for char and piece
-        void setupWithChar(char type, Vec coordinate);
-        void setupWithPiece(Piece &p, Vec coordinate);
     
 };
 
