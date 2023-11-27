@@ -76,6 +76,8 @@ class ChessBoard: public Observer{
 
         void testMove(Vec start, Vec end) override;
 
+        void resetAllLegalMoves();
+
         // undos a notification
         //void revertBoard(vector<vector<shared_ptr<Piece>>> oldPieces);
         // void revertBoard(Vec start, Vec end);
