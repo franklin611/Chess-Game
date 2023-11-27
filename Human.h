@@ -1,11 +1,11 @@
-#ifndef _PLAYER_H_
-#define _PLAYER_H_
+#ifndef _HUMAN_H_
+#define _HUMAN_H_
 
 #include "Player.h"
 
 class Human: public Player {
     public:
-    Human(bool colour);
+        Human(bool colour): Player{colour} {}
 };
 
 #endif

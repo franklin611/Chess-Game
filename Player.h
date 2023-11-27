@@ -4,7 +4,7 @@
 class Player {
     bool colour;
     public:
-        Player(bool colour);
+        Player(bool colour) : colour{colour} {}
 };
 
 #endif
