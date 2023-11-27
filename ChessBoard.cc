@@ -6,6 +6,7 @@ using namespace std;
 #include "GraphicsDisplay.h"
 #include "Pawn.h"
 #include "King.h"
+#include <vector>
 
 // YOU CANNOT CASTLE WHILE IN CHECK
 // YOU CANNOT CASTLE WHILE IN CHECK
@@ -163,6 +164,7 @@ void ChessBoard::castleMove(Vec start, Vec end){
 
 }
 
+// DONE
 void ChessBoard::makeMove(Vec start, Vec end){
      // make the move 
     regMove(start, end);
@@ -220,13 +222,26 @@ void ChessBoard::notify(Vec start, Vec end){
 
     // change the turn
     turn? false : true;
+    
 
+    // DEFINITIONS
+    // a possible move is a legal move a piece could make on an empty board 
+        // it will not capture a teammate 
+        // it will not jump over pieces (unless it is a knight)
+        // it COULD put it's own king in check 
+    // a tested move is a move that is validated under the as
+        // it will not put its own team in check 
+    // testMove: simulate that move -> we want to know 
+    // did that move put my king in check 
+        // look at the opposing teams possible moves and see if my king will get captured 
+     
      // reset the legal moves of every piece
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
-            p->resetMoves();
-            vector<Vec> possibleMoves = p->getPossibleMoves();
+            p->resetMoves(); // clear all the legal moves 
+            vector<Vec> possibleMoves = p->getPossibleMoves(); // get the possible moves for this piece 
             // test every possible move -> which will add it to the legal moves if it passes 
+            // this will test 
             for (Vec move : possibleMoves){
                 testMove(p->getCoordinate(), move);
             }
@@ -236,20 +251,6 @@ void ChessBoard::notify(Vec start, Vec end){
     // might need to notify the td and gd 
 
 }
-
-// CHIARA 
-// void ChessBoard::revertBoard(vector<vector<shared_ptr<Piece>>> boardCopy){
-
-//     // we assume that boardCopy is a deep copy of the original board that we want to revert back to 
-//     // copy every piece from boardCopy to gb
-//     for (size_t i = 0; i < boardCopy.size(); ++i){
-//         for (size_t j = 0; j < boardCopy[0].size(); ++j){
-//             gb[i][j] = boardCopy[i][j];
-//         }
-//     }
-
-
-// }
 
 // CHIARA 
 // flow of the program 
@@ -263,13 +264,16 @@ void ChessBoard::notify(Vec start, Vec end){
 //      b.) every piece will call get possible moves to get a list of possible moves 
 //      c.) each move will be tested and added to the legalmoves of the piece (at start) if it passes
 
-
-
+// CHIARA -> SHARE WITH THE CLASS 
 // office hours 
 // two ideas -> make this a notification 
 // allow pieces to have a chessboard pointer so they can call the function 
 // this function will ALSO reset the moves of a piece 
 // this need to simulate the move and just check if the move puts it's own team into check 
+// ISSUE: when testing a move, the opposing team's set of legal moves includes moves that would put their king in check 
+// there is a case where your move is considered "illegal" because it puts your king in check, based on a move from the other team that puts their own king in check
+// in other words, your move is considered illegal based on an illegal move which (since the hypothesis was false, the conclusion is true!)
+// therefore, TECHNICALLY not all the legal moves will be added, but this is a special case that we are omitting to avoid an infinite loop in our implementation 
 void ChessBoard::testMove(Vec start, Vec end){
     // make a deep copy of the gb  
     // creating a 2D vector of unique pointers by copying from the shared vector
@@ -285,11 +289,32 @@ void ChessBoard::testMove(Vec start, Vec end){
     }
 
     // now we can make edits on the game board which we will later revert 
-    notify(start, end);
+    makeMove(start, end);
+    // now the pieces need to reset their possible moves 
+    for (vector<shared_ptr<Piece>> vec : gb){
+		for (shared_ptr<Piece> p : vec){
+            p->resetMoves(); // clear all the legal moves 
+            vector<Vec> possibleMoves = p->getPossibleMoves(); // get the possible moves for this piece 
+            // add all the possible moves as legal moves 
+            for (Vec move : possibleMoves){
+               p->addLegalMove(move);
+            }
+        }
+    }
+
+
     shared_ptr<Piece> p = getPiece(end);
     
     // need to check if that move put myself in check 
     bool check = isCheck(p->getTeam());
+
+    if (!check){
+        // add the end vec to the legal moves 
+        p->addLegalMove(end);
+    }
+
+    // revert the board -> switch the board copy to the gb 
+    swap(gb, boardCopy);
 
     // unique pointers will go out of scope once the function returns 
 }
@@ -354,7 +379,7 @@ void ChessBoard::setupWithPiece(shared_ptr<Piece> p, Vec coordinate) {
     gb[row][col] = p;
 }
 
-// CHIARA
+// DONE -> DOUBLE CHECK THIS MIGHT NOT BE A DEEP COPY 
 shared_ptr<Piece> ChessBoard::getEmptyPiece(Vec coord){
     // access the empty board and get the Piece* we want
     int row = coord.getY();
@@ -365,7 +390,7 @@ shared_ptr<Piece> ChessBoard::getEmptyPiece(Vec coord){
     return emptyPiece;
 }
 
-// DONE ???????? 
+// DONE -> DOES MAIN CALL THE GAME TO RESTART?
 void ChessBoard::forfeit(){
     if (turn){
         // update score +1 for black
@@ -374,7 +399,6 @@ void ChessBoard::forfeit(){
         // update score +1 for white
         game.updateWhite(false);
     }
-    // restart game
 }
 
 // DONE
@@ -400,11 +424,11 @@ bool ChessBoard::isEnd() {
     }
 }
 
-// CHIARA
+// CHIARA -> need to make sure this is a deep copy (can someone else do this)
 void ChessBoard::restartGame() {
      for(size_t i = 0; i < eb.size(); ++i) {
         for (size_t j = 0; j < eb[0].size(); ++j) {
-            gb[i][j] = eb[i][j];
+            gb[i][j] = eb[i][j]; 
         }
      }
     turn = true; // Default turn is always white   
@@ -415,23 +439,23 @@ void ChessBoard::restartGame() {
     // game or if not, will just be destroyed.
 }
 
-// CHIARA 
+// CHIARA -> someone else could also do this 
 bool ChessBoard::upgradePawn(Vec end){
 
 }
 
-// CHIARA 
+// CHIARA -> someone else could do this 
 vector<vector<Vec>> ChessBoard::getLegalMoves(bool white){
 
 }
 
 
-// CHIARA
+// CHIARA -> someone else could do this 
 void ChessBoard::setWhiteKing(Vec coordinate){
 
 }
 
-// CHIARA 
+// CHIARA -> someone else could do this 
 void ChessBoard::setBlackKing(Vec coordinate){
 
 }
