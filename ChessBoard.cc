@@ -127,12 +127,12 @@ ChessBoard::ChessBoard() : playerWhite{make_unique<Player>()}, playerBlack{make_
             // gb[row][col] = make_shared<Piece>();
             // Top left corner, the colour of the board is white. Bottom right (7,7) is white as well
             if(switch) { // Alternating of black and white
-                ebRow.push_back(make_unique<Piece>(Piece::Empty(Vec{col, row}, ' ', true))); 
-                gbRow.push_back(make_shared<Piece>(Piece::Empty(Vec{col, row}, ' ', true)));
+                ebRow.push_back(make_unique<Piece>(Piece::Empty(Vec{row, col}, ' ', true))); 
+                gbRow.push_back(make_shared<Piece>(Piece::Empty(Vec{row, col}, ' ', true)));
                 switch = false;
             } else {
-                ebRow.push_back(make_unique<Piece>(Piece::Empty(Vec{col, row}, '_', false)));
-                gbRow.push_back(make_shared<Piece>(Piece::Empty(Vec{col, row}, '_', false)));
+                ebRow.push_back(make_unique<Piece>(Piece::Empty(Vec{row, col}, '_', false)));
+                gbRow.push_back(make_shared<Piece>(Piece::Empty(Vec{row, col}, '_', false)));
                 switch = true;
             }
         }
@@ -457,10 +457,10 @@ bool ChessBoard::isEnd() {
 
 // CHIARA -> need to make sure this is a deep copy (can someone else do this)
 void ChessBoard::restartGame() {
-    for(size_t i = 0; i < eb.size(); ++i) { //The row (so the Y value)
-        for (size_t j = 0; j < eb[i].size(); ++j) { // The column (so the X value)
-            gb[j][i] = make_shared<Piece>(*(eb[j][i]));
-            // j, i is Vec{j,i} is X, Y
+    for(size_t i = 0; i < eb.size(); ++i) { //The row 
+        for (size_t j = 0; j < eb[i].size(); ++j) { // The column 
+        // Remmber, we have a vector<vector<>>>>
+            gb[j][i] = make_shared<Piece>(*(eb[i][j]));
             // Assume the copy assignment operator works
         }
      }
@@ -637,37 +637,37 @@ void ChessBoard::defaultBoard() {
 
     // First setup pawns 
     for (int i = 0; i < 8; ++i) {
-        setupByChar('P', Vec{i, 1}); // White pawns
-        setupByChar('p', Vec{i, 7}); // Black
+        setupWithChar('P', Vec{i, 1}); // White pawns
+        setupWithChar('p', Vec{i, 7}); // Black
         // x, y. This corresponds to second row
     }
 
     // Whites are the top side of the board. 0,0 
 
     // Setup Rooks
-    setupByChar('R', Vec{0,0});
-    setupByChar('R', Vec{0, 7}); // Whites
-    setupByChar('r', Vec{7,0});
-    setupByChar('r', Vec{7, 7}); // Whites
+    setupWithChar('R', Vec{0,0});
+    setupWithChar('R', Vec{0, 7}); // Whites
+    setupWithChar('r', Vec{7,0});
+    setupWithChar('r', Vec{7, 7}); // Whites
 
     // Setup Knights
-    setupByChar('K', Vec{1,0});
-    setupByChar('K', Vec{6, 0}); // Whites
-    setupByChar('k', Vec{1,7});
-    setupByChar('k', Vec{6, 7}); // Black
+    setupWithChar('K', Vec{1,0});
+    setupWithChar('K', Vec{6, 0}); // Whites
+    setupWithChar('k', Vec{1,7});
+    setupWithChar('k', Vec{6, 7}); // Black
 
     // Setup Bishops
-    setupByChar('B', Vec{2,0});
-    setupByChar('B', Vec{5, 0}); // Whites
-    setupByChar('b', Vec{2,7});
-    setupByChar('b', Vec{5, 7}); // Black
+    setupWithChar('B', Vec{2,0});
+    setupWithChar('B', Vec{5, 0}); // Whites
+    setupWithChar('b', Vec{2,7});
+    setupWithChar('b', Vec{5, 7}); // Black
 
     // Setup Kings
-    setupByChar('K', Vec{0,3}); // White King
-    setupByChar('k', Vec{7, 3}); // Black King
+    setupWithChar('K', Vec{0,3}); // White King
+    setupWithChar('k', Vec{7, 3}); // Black King
 
     // Setup Queens
-    setupByChar('K', Vec{0,4}); // White Queen
-    setupByChar('k', Vec{7, 4}); // Black Queen
+    setupWithChar('K', Vec{0,4}); // White Queen
+    setupWithChar('k', Vec{7, 4}); // Black Queen
 }
 
