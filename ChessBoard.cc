@@ -6,7 +6,6 @@ using namespace std;
 #include "GraphicsDisplay.h"
 #include "Pawn.h"
 #include "King.h"
-#include <map>
 
 // YOU CANNOT CASTLE WHILE IN CHECK
 // YOU CANNOT CASTLE WHILE IN CHECK
@@ -15,6 +14,24 @@ using namespace std;
 // YOU CANNOT CASTLE WHILE IN CHECK
 // YOU CANNOT CASTLE WHILE IN CHECK
 // YOU CANNOT CASTLE WHILE IN CHECK
+
+// DONE
+void ChessBoard::makeComputerMove(unique_ptr<Player> p){
+    // based on level, makeComputerMove
+    int level = p->getLevel();
+
+    // get the legal moves for the player
+    vector<vector<Vec>> legalMoves = getLegalMoves(turn);
+    vector<Vec> move; // there are two Vecs [start, end]
+    vector<vector<Vec>> levelMoves = generateAllLevelMoves(legalMoves, level);
+
+    if (turn){
+        move = playerWhite->selectMove(levelMoves);
+    } else {
+        move = playerBlack->selectMove(legalMoves);
+    }
+    notify(move[0], move[1]);
+}
 
 // DONE
 bool ChessBoard::makeHumanMove(Vec start, Vec end){
@@ -27,22 +44,6 @@ bool ChessBoard::makeHumanMove(Vec start, Vec end){
     return false;
 
 }
-
-// FRANKLIN
-// Vec ChessBoard::makeComputerMove(unique_ptr<Player> p){
-//     // based on level, makeComputerMove
-//     // get the legal moves for the player
-//     vector<vector<Vec>> legalMoves = getLegalMoves(turn);
-//     // pick a random legal move
-//     vector<Vec> move; // there are two Vecs [start, end]
-//     if (turn){
-//         move = playerWhite->selectMove(legalMoves);
-//     } else {
-//         move = playerBlack->selectMove(legalMoves);
-//     }
-//     notify(move[0], move[1]);
-// }
-
 
 // DONE
 char ChessBoard::getType(Vec coordinate){
@@ -58,7 +59,6 @@ shared_ptr<Piece> ChessBoard::getPiece(Vec coordinate){
     return gb[row][col];
 }
 
-
 // DONE
 bool ChessBoard::pawnMovedTwo(Vec coordinate, bool white){
     char type = getType(coordinate);
@@ -72,10 +72,6 @@ bool ChessBoard::pawnMovedTwo(Vec coordinate, bool white){
     return false;
 }
 
-// convert Piece pointer type
-// MAYBE ADD THIS FUNCTION
-
-
 // DONE
 void ChessBoard::replacePiece(Vec coordinate, shared_ptr<Piece> replacement){
     int row = coordinate.getY();
@@ -84,7 +80,29 @@ void ChessBoard::replacePiece(Vec coordinate, shared_ptr<Piece> replacement){
 }
 
 // DONE
-// we know that is was a valid pawn move at this point
+bool ChessBoard::isThere(Vec coordinate){
+	for (vector<shared_ptr<Piece>> vec : gb){
+		for (shared_ptr<Piece> p : vec){
+			if ((p->getType() != ' ' || p->getType() != '_') && p->getCoordinate() == coordinate){
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+// DONE
+bool ChessBoard::isValid(Vec start, Vec end){
+    // use start to get piece
+    int row = start.getY();
+    int col = start.getX();
+    shared_ptr<Piece> p = gb[row][col];
+
+    // use end to validate move
+    return p->isMoveValid(end);
+}
+
+// DONE
 bool twoStep(Vec start, Vec end){
     int startY = start.getY();
     int endY = end.getY();
@@ -92,13 +110,19 @@ bool twoStep(Vec start, Vec end){
     return false;
 }
 
-// CHIARA
-// reset moves AFTER you castle !!
-// add castle move -> king moves two spaces
-void ChessBoard::notify(Vec start, Vec end){
+// FRANKLIN 
+ChessBoard::ChessBoard(unique_ptr<Player> playerWhite, unique_ptr<Player> playerBlack){
 
+}
+
+// FRANKLIN
+void ChessBoard::setupPlayers(unique_ptr<Player> playerWhite, unique_ptr<Player> playerBlack){
+
+}
+
+// DONE
+void ChessBoard::regMove(Vec start, Vec end){
     shared_ptr<Piece> startPiece = getPiece(start);
-    char startType = getType(start);
     shared_ptr<Piece> endPiece = getPiece(end);
 
     // find the piece at start and change the coordinates of the piece to end
@@ -116,43 +140,77 @@ void ChessBoard::notify(Vec start, Vec end){
     // put the endPiece at start
     replacePiece(start, emptyPiece);
 
-    // ------ at this point we want to check if the move was a castle move and move the rook accordingly
-    // validate if the piece is a king and it wants to move two spaces to the left or right
-    // assume that is true then we want ALREADY moved that king
-        // if it moved to the right -> get the rook to the right and move it to the left
-        // if it moved to the left -> get the rook to the left and move it to the right
+}
 
+// DONE
+void ChessBoard::castleMove(Vec start, Vec end){
+    int startX = start.getX();
+    int endX = end.getX();
 
-    // 4 Castle Move Cases
-    // Case 1: White -> Right
-    // Case 2: White -> Left
-    // Case 3: Black -> Right
-    // Case 4: Black -> Left
+    Vec rookCoord;
+    // the y coordinate tells us which colour we want -> keep the y coordinate the same to get the correct rook
+    rookCoord.setY(end.getY());
 
+    if (endX = startX + 2){ // moved to the right -> move the rook to the right TO the left 
+        rookCoord.setY(7);
+        Vec endCoord = Vec(end.getX() - 1, end.getY()); 
+        makeMove(rookCoord, endCoord);
+    } else if (endX = startX - 3){ // moved to the left -> move the rook to the left TO the right
+        rookCoord.setY(0);
+        Vec endCoord = Vec(end.getX() + 1, end.getY());
+        makeMove(rookCoord, endCoord);
+    }
 
-    // ------ at this point we know the move is valid then we can change its booleans -------
+}
 
-    // check if the piece that moved is a king
+void ChessBoard::makeMove(Vec start, Vec end){
+
+}
+
+// DONE
+void ChessBoard::updatePawnMoved(Vec start, Vec end){
+    shared_ptr<Piece> endPiece = getPiece(end);
+    shared_ptr<Pawn> pawn = dynamic_pointer_cast<Pawn>(endPiece);
+    pawn->hasMoved();
+    if (twoStep(start, end)){ pawn->hasMovedTwo(); }
+}
+
+// DONE
+void ChessBoard::updateKingMoved(Vec end){
+    shared_ptr<Piece> endPiece = getPiece(end);
+    shared_ptr<King> king = dynamic_pointer_cast<King>(endPiece);
+    king->hasMoved();
+}
+
+// DONE
+void ChessBoard::updateKingCoord(Vec end, bool white){
+    if (white){
+        wKing == end;
+    } else {
+        bKing == end;
+    }
+}
+
+void 
+// ALMOST DONE -> CONFIRM WITH HELENA 
+void ChessBoard::notify(Vec start, Vec end){
+
+    // make the move 
+    makeMove(start, end);
+    char startType = getType(end);
+    // check if it was a castle move and if it was make the appropriate rook move 
+    if (startType == 'K' || startType == 'k'){ castleMove(start, end); }
+
+    char startType = getType(end);
+
+    // we will also change the king's booleans
     if (startType == 'K' || startType == 'k'){
-        shared_ptr<King> king = dynamic_pointer_cast<King>(endPiece);
-        king->hasMoved();
-        // now the endpiece is the king, we want to update the kings cooordinates to end
-        if (startType == 'K') { wKing == end; }
-        if (startType == 'k') { bKing == end; }
-
-        // check if the move was a castle move
-        int startX = start.getX();
-        int endX = end.getX();
-
-
+        updateKingCoord(end, turn);
+        updateKingMoved(end);
     }
 
-    // check if the piece that moved is a pawn -> also if it moved 2 spaces forward
-    if (startType == 'P' || startType == 'p'){
-        shared_ptr<Pawn> pawn = dynamic_pointer_cast<Pawn>(endPiece);
-        pawn->hasMoved();
-        if (twoStep){ pawn->hasMovedTwo(); }
-    }
+    // check if the piece that moved is a pawn 
+    if (startType == 'P' || startType == 'p'){ updatePawnMoved(start, end); }
 
      // reset the legal moves of every piece
     for (vector<shared_ptr<Piece>> vec : gb){
@@ -168,8 +226,57 @@ void ChessBoard::notify(Vec start, Vec end){
     // change the turn
     turn? false : true;
 
+    // might need to notify the td and gd 
+
 }
 
+// CHIARA 
+// void ChessBoard::revertBoard(vector<vector<shared_ptr<Piece>>> boardCopy){
+
+//     // we assume that boardCopy is a deep copy of the original board that we want to revert back to 
+//     // copy every piece from boardCopy to gb
+//     for (size_t i = 0; i < boardCopy.size(); ++i){
+//         for (size_t j = 0; j < boardCopy[0].size(); ++j){
+//             gb[i][j] = boardCopy[i][j];
+//         }
+//     }
+
+
+// }
+
+// CHIARA 
+// office hours 
+// two ideas -> make this a notification 
+// allow pieces to have a chessboard pointer so they can call the function 
+void ChessBoard::testMove(Vec start, Vec end){
+    // make a deep copy of the gb  
+    // creating a 2D vector of unique pointers by copying from the shared vector
+    vector<vector<unique_ptr<Piece>>> boardCopy;
+
+    for (std::vector<std::shared_ptr<Piece>> vec : gb) {
+        std::vector<std::unique_ptr<Piece>> uniqueRow;
+        for (std::shared_ptr<Piece> p : vec) {
+            // Copying data from shared_ptr to unique_ptr
+            uniqueRow.push_back(std::make_unique<Piece>(*p));
+        }
+        boardCopy.push_back(uniqueRow);
+    }
+
+    // now we can make edits on the game board which we will later revert 
+    makeMove(start, end);
+    if ()
+
+
+    // unique pointers will go out of scope once the function returns 
+}
+
+// CHIARA
+// update piece pointers
+vector<vector<Piece>> ChessBoard::getGameBoard(){
+    return gb;
+}
+
+// DONE
 bool ChessBoard::isCheck(bool white){
     // decide who's king we want to see is in check
     Vec kingCoord;
@@ -192,37 +299,35 @@ bool ChessBoard::isCheck(bool white){
     return false;
 }
 
-
+// DONE
 bool ChessBoard::getTurn(){
     return turn;
 }
 
-// update piece pointers
-vector<vector<Piece>> ChessBoard::getGameBoard(){
-    return gb;
-}
+// FRANKLIN 
+void ChessBoard::setupWithChar(char type, Vec coordinate) {
+    int row = coordinate.getY();
+    int col = coordinate.getX();
 
-// update piece pointers
-// now the boardCopy need to be a deep copy -> reverttBoard can use the deep copy and let it be destroyed after, and then revert back to the original board
-void ChessBoard::revertBoard(vector<vector<Piece>> boardCopy, bool oldTurn){
-    // delete the current gameboard -> this is the one we simulated and now want to get rid of
-    // replace with the pointers we originally had
-    // switch the turn back to what it was
-
-    //
-    int row = 0;
-    int col = 0;
-    for (vector<Piece> vec : gb){
-        for (Piece p : vec){
-            p = boardCopy[row][col];
-            ++col;
-        }
-        ++row;
+    if(type >= 'A' && type <= 'Z' || type == ' ') { //White Colour
+        gb[row][col] = Piece{coordinate, type, white};
+    } else if (type >= 'a' && type <= 'z' || type == '_') {
+        gb[row][col] = Piece{coordinate, type, black};
     }
-    turn = oldTurn;
+    // So creates white pieces for upper cases and ' '
+    // Creates black pieces for lower case and _
+    // I dont think I even need to have the ' ' and _, but keeping it for now!!
 }
 
-// make sure that the empty piece is a deep copy
+// FRANKLIN 
+void ChessBoard::setupWithPiece(Piece &p, Vec coordinate) {
+    int row = coordinate.getY();
+    int col = coordinate.getX();
+
+    gb[row][col] = p;
+}
+
+// CHIARA
 Piece* ChessBoard::getEmptyPiece(Vec coord){
     // access the empty board and get the Piece* we want
     int row = coord.getY();
@@ -233,6 +338,82 @@ Piece* ChessBoard::getEmptyPiece(Vec coord){
     return emptyPiece;
 }
 
+// DONE ???????? 
+void ChessBoard::forfeit(){
+    if (turn){
+        // update score +1 for black
+        game.updateBlack(false);
+    } else {
+        // update score +1 for white
+        game.updateWhite(false);
+    }
+    // restart game
+}
+
+// DONE
+bool ChessBoard::isEnd() {
+    if (turn) {
+        if (wCheck && getLegalMoves(turn).empty()) {
+            game.updateWhite(false);
+            return true;
+        }
+        else if (getLegalMoves(turn).empty()) {
+            game.updateWhite(true);
+            return true;
+        }
+    } else {
+        if (bCheck && getLegalMoves(turn).empty()) {
+            game.updateBlack(false);
+            return true;
+        }
+        else if (getLegalMoves(turn).empty()) {
+            game.updateBlack(true);
+            return true;
+        }
+    }
+}
+
+// CHIARA
+void ChessBoard::restartGame() {
+     for(size_t i = 0; i < eb.size(); ++i) {
+        for (size_t j = 0; j < eb[0].size(); ++j) {
+            gb[i][j] = eb[i][j];
+        }
+     }
+    turn = true; // Default turn is always white   
+    bCheck = false;
+    wCheck = false;
+    
+    // We don't need to reset bKing and wKing because it will be reset in next
+    // game or if not, will just be destroyed.
+}
+
+// CHIARA 
+bool ChessBoard::upgradePawn(Vec end){
+
+}
+
+// CHIARA 
+vector<vector<Vec>> ChessBoard::getLegalMoves(bool white){
+
+}
+
+// FRANKLIN
+void ChessBoard::defaultBoard(){
+
+}
+
+// CHIARA
+void ChessBoard::setWhiteKing(Vec coordinate){
+
+}
+
+// CHIARA 
+void ChessBoard::setBlackKing(Vec coordinate){
+
+}
+
+// idk man
 vector<vector<Vec>> generateAllLevelMoves(vector<vector<Vec>> possibleMoves, int level) {
     vector<vector<Vec>> levelMoves;
     vector<vector<Vec>> checkmateMoves = generateCheckmateMoves(possibleMoves);
@@ -351,6 +532,7 @@ vector<vector<Vec>> generateAvoidCaptureMoves(vector<vector<Vec>> possibleMoves)
     }
 }
 
+
 void ChessBoard::makeComputerMove(Player *p){
     // based on level, makeComputerMove
     int level = p.getLevel();
@@ -403,77 +585,8 @@ bool ChessBoard::isThere(Vec coordinate){
 	return false;
 }
 
-// we assume that main calls this function because the user decided they want to forfeit in their current turn
-// we can think of this as an alternate end?
-// UPDATE THE SCORE
-void ChessBoard::forfeit(){
-    if (turn){
-        // update score +1 for black
-        game.updateBlack(false);
-    } else {
-        // update score +1 for white
-        game.updateWhite(false);
-    }
-    // restart game
-}
 
-bool ChessBoard::isEnd() {
-    if (turn) {
-        if (wCheck && getLegalMoves(turn).empty()) {
-            game.updateWhite(false);
-            return true;
-        }
-        else if (getLegalMoves(turn).empty()) {
-            game.updateWhite(true);
-            return true;
-        }
-    } else {
-        if (bCheck && getLegalMoves(turn).empty()) {
-            game.updateBlack(false);
-            return true;
-        }
-        else if (getLegalMoves(turn).empty()) {
-            game.updateBlack(true);
-            return true;
-        }
-    }
-}
-
-void ChessBoard::setupWithChar(char type, Vec coordinate) {
-    int row = coordinate.getY();
-    int col = coordinate.getX();
-
-    if(type >= 'A' && type <= 'Z' || type == ' ') { //White Colour
-        gb[row][col] = Piece{coordinate, type, white};
-    } else if (type >= 'a' && type <= 'z' || type == '_') {
-        gb[row][col] = Piece{coordinate, type, black};
-    }
-    // So creates white pieces for upper cases and ' '
-    // Creates black pieces for lower case and _
-    // I dont think I even need to have the ' ' and _, but keeping it for now!!
-}
-void ChessBoard::setupWithPiece(Piece &p, Vec coordinate) {
-    int row = coordinate.getY();
-    int col = coordinate.getX();
-
-    gb[row][col] = p;
-}
-
-void ChessBoard::restartGame() {
-     gb = eb;// Set gameboard back to empty board
-     for(size_t i = 0; i < eb.size(); ++i) {
-        for (size_t j = 0; j < eb[0].size(); ++j) {
-            gb[i][j] = eb[i][j];
-        }
-     }
-    turn = true; // Default turn is always white   
-    bCheck = false;
-    wCheck = false;
-    
-    // We don't need to reset bKing and wKing because it will be reset in next
-    // game or if not, will just be destroyed.
-
-}void ChessBoard::defaultBoard() {
+void ChessBoard::defaultBoard() {
 
     // First setup pawns 
     for (int i = 0; i < 8; ++i) {
@@ -510,3 +623,4 @@ void ChessBoard::restartGame() {
     setupByChar('K', Vec{0,4}); // White Queen
     setupByChar('k', Vec{7, 4}); // Black Queen
 }
+

@@ -6,5 +6,7 @@ class Vec {
 			bool operator==(const Vec& other) const;
 			int getX();
 			int getY();
+			void setX(int x);
+			void setY(int y);
 			Vec() = default;
 };
