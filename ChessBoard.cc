@@ -550,42 +550,6 @@ void ChessBoard::makeComputerMove(Player *p){
     notify(move[0], move[1]);
 }
 
-
-// this is for a human player
-bool ChessBoard::makeHumanMove(Vec start, Vec end){
-    // validate that the move is valid -> if not valid return false
-    if (isValid(start, end)){
-        // call notify and return true
-        notify(start, end);
-        return true;
-    }
-    return false;
-
-}
-
-bool ChessBoard::isValid(Vec start, Vec end){
-    // use start to get piece
-    int row = start.getY();
-    int col = start.getX();
-    Piece p = gb[row][col];
-
-    // use end to validate move
-    return p.isMoveValid(end);
-}
-
-// update piece pointer
-bool ChessBoard::isThere(Vec coordinate){
-	for (vector<Piece> vec : gb){
-		for (Piece p : vec){
-			if (p.getCoordinate() == coordinate){
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
-
 void ChessBoard::defaultBoard() {
 
     // First setup pawns 
