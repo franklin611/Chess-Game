@@ -56,6 +56,8 @@ void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
             possibleMoves.push_back(coord);
         } else if (inBounds(coord) && piecAt(gb, coord)->getTeam() != getTeam()) {
             possibleMoves.push_back(coord);
+            // Last possible move they can make
+            break;
         }
     }
 
@@ -66,6 +68,7 @@ void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
             possibleMoves.push_back(coord);
         } else if (inBounds(coord) && piecAt(gb, coord)->getTeam() != getTeam()) {
             possibleMoves.push_back(coord);
+            break;
         }
     }
 
@@ -76,6 +79,7 @@ void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
             possibleMoves.push_back(coord);
         } else if (inBounds(coord) && piecAt(gb, coord)->getTeam() != getTeam()) {
             possibleMoves.push_back(coord);
+            break;
         }
     }
 
@@ -86,6 +90,7 @@ void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
             possibleMoves.push_back(coord);
         } else if (inBounds(coord) && piecAt(gb, coord)->getTeam() != getTeam()) {
             possibleMoves.push_back(coord);
+            break;
         }
     }
 
