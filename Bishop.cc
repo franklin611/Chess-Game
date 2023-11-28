@@ -51,12 +51,13 @@ void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     // To top left Diagonal
     for (int i = 1; i < 7; ++i) {
         Vec coord = Vec{coordinate.getX() - i, coordinate.getY() - i};
-
         if(inBounds(Vec) && isEmptyPiece(pieceAt(gb,coord))) {
             possibleMoves.push_back(coord);
         } else if (inBounds(coord) && piecAt(gb, coord)->getTeam() != getTeam()) {
             possibleMoves.push_back(coord);
             // Last possible move they can make
+            break;
+        } else {
             break;
         }
     }
@@ -69,16 +70,20 @@ void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         } else if (inBounds(coord) && piecAt(gb, coord)->getTeam() != getTeam()) {
             possibleMoves.push_back(coord);
             break;
+        } else {
+            break;
         }
     }
 
     // To bottom left Diagonal
     for (int i = 1; i < 7; ++i) {
         Vec coord = Vec{coordinate.getX() - i, coordinate.getY() + i};
-         if(inBounds(Vec) && isEmptyPiece(pieceAt(gb,coord))) {
+         if(inBounds(Vec) && isEmptyPiece(pieceAt(gb,coord))) { // If it is not an empty piece at that coordinate, then means there is a piece there. 
             possibleMoves.push_back(coord);
-        } else if (inBounds(coord) && piecAt(gb, coord)->getTeam() != getTeam()) {
+        } else if (inBounds(coord) && piecAt(gb, coord)->getTeam() != getTeam()) { // If the piece there is a enemy perfect! That is the last move.
             possibleMoves.push_back(coord);
+            break;
+        } else { // Else a temamate piece, then no more moves so we break
             break;
         }
     }
@@ -90,6 +95,8 @@ void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
             possibleMoves.push_back(coord);
         } else if (inBounds(coord) && piecAt(gb, coord)->getTeam() != getTeam()) {
             possibleMoves.push_back(coord);
+            break;
+        } else {
             break;
         }
     }
