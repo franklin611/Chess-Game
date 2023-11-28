@@ -37,11 +37,12 @@ bool ChessBoard::pawnMovedTwo(Vec coordinate, bool white){
     char type = getType(coordinate);
     shared_ptr<Piece> p = getPiece(coordinate);
     std::shared_ptr<Pawn> pawn;
-    if (type == 'P' || type == 'p'){ std::shared_ptr<Pawn> pawn = std::dynamic_pointer_cast<Pawn>(p); }
+    if (type == 'P' || type == 'p'){ shared_ptr<Pawn> pawn = dynamic_pointer_cast<Pawn>(p); } 
     else { return false; }
 
-    if (((white && type == 'p') || (!white && type == 'P')) && pawn->getMovedTwo()){ return true; }
-
+    if (pawn->pawnMovedTwo(gb)){
+        return true 
+    }
     return false;
 }
 
@@ -218,10 +219,10 @@ void ChessBoard::notify(Vec start, Vec end){
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
             p->resetMoves(); // clear all the legal moves
-            vector<Vec> possibleMoves = p->getPossibleMoves(); // get the possible moves for this piece
+            p->getPossibleMoves(); // get the possible moves for this piece
             // test every possible move -> which will add it to the legal moves if it passes
             // this will test
-            for (Vec move : possibleMoves){
+            for (Vec move : p->possibleMoves){
                 testMove(p->getCoordinate(), move);
             }
         }
@@ -236,7 +237,7 @@ void ChessBoard::notify(Vec start, Vec end){
 }
 
 
-// CHIARA -> SHARE WITH THE CLASS
+// DONE 
 // this function will ALSO reset the moves of a piece
 // this need to simulate the move and just check if the move puts it's own team into check
 // ISSUE: when testing a move, the opposing team's set of legal moves includes moves that would put their king in check
@@ -259,10 +260,23 @@ void ChessBoard::testMove(Vec start, Vec end){
     }
 
     char startType = getType(start);
+    Vec wKingCoord;
+    Vec bKingCoord;
+
+    if (turn && startType != 'K'){
+        wkingCoord = wKing;
+    } else if (!turn, startType != 'k'){
+        bkingCoord = bKing;
+    } else if (turn){
+        wkingCoord = start;
+    } else {
+        bkingCoord = start;
+    }
+
     // now we can make edits on the game board which we will later revert
     makeMove(start, end);
     // we can safely update the booleans of pieces and update
-    // TODO: Save the king's original coordinates so we can revert then back 
+ 
     // we will also change the king's booleans
     if (startType == 'K' || startType == 'k'){
         updateKingCoord(end, turn);
@@ -277,9 +291,9 @@ void ChessBoard::testMove(Vec start, Vec end){
     // TODO: technically to make this more efficient we only have it iterate through the opponent's possible moves 
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
+            if (p->getTeam() == turn){ continue; }
             p->resetMoves(); // clear all the legal moves
-            // pass possibleMoves the game board 
-            vector<Vec> possibleMoves = p->getPossibleMoves(gb); // get the possible moves for this piece
+            p->getPossibleMoves(gb); // get the possible moves for this piece
         }
     }
 
@@ -292,22 +306,24 @@ void ChessBoard::testMove(Vec start, Vec end){
     bool check = isCheck(moved->getTeam());
 
     if (!check){
-        // add the end vec to the legal moves
         moved->addLegalMove(end, turn); // in addLegalMove the player will be notified that a move was added 
     }
 
     // revert the board -> switch the board copy to the gb
     swap(gb, boardCopy);
 
-    // TO DO: revert the king's coordinates 
+    // revert the king's coordinates 
+    if (turn){
+        swap(wKingCoord, wKing);
+    } else {
+        swap(bKingCoord, bKing);
+    }
 
     // unique pointers will go out of scope once the function returns
 }
 
 // DONE
 bool ChessBoard::isCheck(bool white){
-    // ISSUE: this king might not be correct in the test 
-    // decide who's king we want to see is in check
     Vec kingCoord;
     if (white){
         kingCoord = wKing;
@@ -318,6 +334,7 @@ bool ChessBoard::isCheck(bool white){
     // compare the legal moves of each piece with the king's coordinates
     for(vector<shared_ptr<Piece>> vec : gb){
         for(shared_ptr<Piece> p : vec){
+            if (p->getTeam == white){ continue; } // skip pieces on our own team
             for(Vec move : p->getLegalMoves()){
                 if (move == kingCoord){
                     return true;

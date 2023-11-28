@@ -32,7 +32,7 @@ Piece::Piece(Piece& other) {
 
         coordinate = other.coordinate;
         type = other.type;
-        legalMoves = other.legalMoves;
+        possibleMoves = other.possibleMoves;
         white = other.white;
 }
 
