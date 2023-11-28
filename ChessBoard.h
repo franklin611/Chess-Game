@@ -20,8 +20,8 @@ class GraphicsDisplay;
 class ChessBoard: public Observer{
     vector<vector<shared_ptr<Piece>>> gb;
     vector<vector<unique_ptr<Piece>>> eb;
-    unique_ptr<Player> playerWhite;
-    unique_ptr<Player> playerBlack;
+    unique_ptr<DisplayObserver> td;
+    unique_ptr<DisplayObserver> gd;
     Game game;
     bool bCheck;
     bool wCheck;
@@ -29,12 +29,6 @@ class ChessBoard: public Observer{
     Vec bKing;
     Vec wKing;
     public:
-        // makes a Human move
-        bool makeHumanMove(Vec start, Vec end);
-
-        // makes a computer move -> we need to return the end move to check if a pawn has reached the end
-        void makeComputerMove(unique_ptr<Player> p);
-
         // returns the type of a piece at that coordinate
         char getType(Vec coordinate);
 
@@ -76,15 +70,6 @@ class ChessBoard: public Observer{
 
         void testMove(Vec start, Vec end) override;
 
-        void resetAllLegalMoves();
-
-        // undos a notification
-        //void revertBoard(vector<vector<shared_ptr<Piece>>> oldPieces);
-        // void revertBoard(Vec start, Vec end);
-
-         // access the gameboard
-        vector<vector<unique_ptr<Piece>>> getGameBoard();
-
         // checks if the king is in check -> ie. any of the opponents legal moves capture king
         bool isCheck(bool white);
 
@@ -109,9 +94,6 @@ class ChessBoard: public Observer{
 
         // at this point, the move/turn is finished, we want to check if the piece at end is a pawn and return true/false accordingly
         bool upgradePawn(Vec end);
-
-        // this will return all the legal moves of a team
-        vector<vector<Vec>> getLegalMoves(bool white);
 
         // set the default board
         void defaultBoard();
