@@ -376,7 +376,8 @@ void ChessBoard::testMove(Vec start, Vec end){
 
     // now we can make edits on the game board which we will later revert
     makeMove(start, end);
-    // now the pieces need to reset their possible moves
+
+    // now the pieces need to reset their possible moves 
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
             p->resetMoves(); // clear all the legal moves
@@ -387,7 +388,6 @@ void ChessBoard::testMove(Vec start, Vec end){
             }
         }
     }
-
 
     shared_ptr<Piece> p = getPiece(end);
 
@@ -406,8 +406,7 @@ void ChessBoard::testMove(Vec start, Vec end){
 }
 
 // CHIARA
-// update piece pointers
-vector<vector<Piece>> ChessBoard::getGameBoard(){
+vector<vector<shared_ptr<Piece>>> ChessBoard::getGameBoard(){
     return gb;
 }
 
@@ -512,9 +511,12 @@ bool ChessBoard::isEnd() {
     }
 }
 
-// CHIARA -> need to make sure this is a deep copy (can someone else do this)
+// CHIARA 
 void ChessBoard::restartGame() {
-     for(size_t i = 0; i < eb.size(); ++i) {
+    // make a deep copy of unique pointers to empty pieces in empty board 
+    // swap the gameboard for the deep copy 
+    // the vector of vector of unique pointers will die once the function returns 
+    for(size_t i = 0; i < eb.size(); ++i) {
         for (size_t j = 0; j < eb[0].size(); ++j) {
             gb[i][j] = eb[i][j];
     for(size_t i = 0; i < eb.size(); ++i) { //The row
@@ -535,10 +537,12 @@ void ChessBoard::restartGame() {
     // game or if not, will just be destroyed.
 }
 
-// CHIARA -> someone else could also do this
+// CHIARA -> someone else could also do this 
+// is the piece at end a pawn? 
 bool ChessBoard::upgradePawn(Vec end){
 
 }
+
 
 // CHIARA -> someone else could do this
 vector<vector<Vec>> ChessBoard::getLegalMoves(bool white){

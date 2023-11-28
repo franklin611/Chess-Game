@@ -83,7 +83,7 @@ class ChessBoard: public Observer{
         // void revertBoard(Vec start, Vec end);
 
          // access the gameboard
-        vector<vector<unique_ptr<Piece>>> getGameBoard();
+        vector<vector<shared_ptr<Piece>>> getGameBoard();
 
         // checks if the king is in check -> ie. any of the opponents legal moves capture king
         bool isCheck(bool white);
