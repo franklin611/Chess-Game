@@ -10,8 +10,9 @@ class Observer;
 class Piece{
 		// not sure if this needs to be protected ****
 		protected:
-			Observer* cb;
-			ChessBoard* game;
+			unique_ptr<Observer> playerWhite; 
+			unique_ptr<Observer> playerBlack;
+			// ChessBoard* game;
 			Vec coordinate;
 			char type;
 			vector<Vec> legalMoves;
