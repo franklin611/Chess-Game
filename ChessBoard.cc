@@ -76,12 +76,14 @@ bool twoStep(Vec start, Vec end){
 }
 
 
+ChessBoard::setupPlayers(unique)
+
 // Piece::Piece(struct Vec coordinate, char type, bool colour): coordinate{coordinate}, type{type}, white{colour} {} Piece constructor
 // Empty piece seems to just have a superclass constructor of parent class Piece.
 // To create the empty construcotr, what do I actually pass? (Empty(Vec{row,col}, _ or ' ', true or false)))
 
 // FRANKLIN
-ChessBoard::ChessBoard(unique_ptr<Observer> playerWhite, unique_ptr<Observer> playerBlack) : td{td}, gd{gd}, game{}, bCheck{false}, wCheck{false}, turn{true}, bKing{}, wKing{} {
+ChessBoard::ChessBoard() : td{td}, gd{gd}, game{}, bCheck{false}, wCheck{false}, turn{true}, bKing{}, wKing{} {
     // Setup the empty board and gameboard
     // unique_ptr<TextDisplay> td, unique_ptr<GraphicDisplay> gd, I have to make this here
     td = make_unique<TextDisplay>();
@@ -98,11 +100,11 @@ ChessBoard::ChessBoard(unique_ptr<Observer> playerWhite, unique_ptr<Observer> pl
             // gb[row][col] = make_shared<Piece>();
             // Top left corner, the colour of the board is white. Bottom right (7,7) is white as well
             if(switch) { // Alternating of black and white
-                ebRow.push_back(make_unique<Piece>(Piece::Empty(Vec{row, col}, ' ', true)));
+                ebRow.push_back(make_unique<Empty>(Piece::Empty(Vec{row, col}, ' ', true)));
                 gbRow.push_back(make_shared<Piece>(Piece::Empty(Vec{row, col}, ' ', true)));
                 switch = false;
             } else {
-                ebRow.push_back(make_unique<Piece>(Piece::Empty(Vec{row, col}, '_', false)));
+                ebRow.push_back(make_unique<Empty>(Piece::Empty(Vec{row, col}, '_', false)));
                 gbRow.push_back(make_shared<Piece>(Piece::Empty(Vec{row, col}, '_', false)));
                 switch = true;
             }
