@@ -7,8 +7,6 @@ void Empty::resetMoves() {
     // We don't even need to have override but chatGpt said it was good practice. 
 }
 
-vector<Vec> Empty::emptyMove() {
-    // Can I return just an empty?
-    return vector<Vec>(); 
-    // Default
+void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
+    // Nothing?
 }
