@@ -7,7 +7,9 @@ class Pawn : public Piece {
 		void resetMoves() override; 
 		Pawn(); 
 		vector<Vec> pawnMoves();
-		bool canPassant();
+		// bool canPassant();
+		bool canPassantRight();
+		bool canPassantLeft();
 		bool getMovedTwo();
 		bool getMoved();
 		void hasMovedTwo(); 
