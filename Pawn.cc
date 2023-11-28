@@ -73,14 +73,16 @@ bool Pawn::canPassant(){
 void Pawn::resetMoves(){
 	legalMoves.clear();
 	// determine all legal moves 
-	for (vector<Piece> vec : game->getGameBoard()){
-		for (Piece p : vec){
-			vector<Vec> moves = pawnMoves(); 
-			for (Vec end: moves){
-				if (!willCheck(coordinate, end)){
-					legalMoves.push_back(end);
-				};
-			} 
-		}
-	}
+	// for (vector<Piece> vec : game->getGameBoard()){
+	// 	for (Piece p : vec){
+	// 		vector<Vec> moves = pawnMoves(); 
+	// 		for (Vec end: moves){
+	// 			if (!willCheck(coordinate, end)){
+	// 				legalMoves.push_back(end);
+	// 			};
+	// 		} 
+	// 	}
+	// }
+	// We are getting rid of this and putting in CHessboard
+	// Each piece should just update is possibleM
 }
