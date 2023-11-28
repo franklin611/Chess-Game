@@ -2,10 +2,12 @@
 #define _HUMAN_H_
 
 #include "Player.h"
+#include "Vec.h"
 
 class Human: public Player {
     public:
-        Human(bool colour): Player{colour} {}
+        Human(bool colour, unique_ptr<Observer> cb);
+        bool makeHumanMove(Vec start, Vec end);
 };
 
 #endif

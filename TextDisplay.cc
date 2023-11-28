@@ -29,6 +29,11 @@ void TextDisplay::notify(Vec start, char typeStart) {
     theDisplay[start.getY()][start.getX()] = typeStart;
 }
 
+void TextDisplay::notify(bool white) {
+    if (!white) {white = "Black";}
+    else {white = "White";}
+}
+
 ostream &operator<<(ostream &out, const TextDisplay &td) {
     for (int i = 0; i < td.theDisplay.size(); ++i) {
         int num = 8;
@@ -40,6 +45,7 @@ ostream &operator<<(ostream &out, const TextDisplay &td) {
         --num;
     }
     out << " abcdefgh" << endl;
-    out << td.check << "is in check.";
+    if (td.check.size() > 1) {out << td.check << "is in check." << endl;} // empty string is true, so if not empty string output
+    out << "It's " << td.white << "'s turn" << endl;
     return out;
 }
