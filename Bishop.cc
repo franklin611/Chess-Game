@@ -53,7 +53,7 @@ void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         Vec coord = Vec{coordinate.getX() - i, coordinate.getY() - i};
         if(inBounds(Vec) && isEmptyPiece(pieceAt(gb,coord))) {
             possibleMoves.push_back(coord);
-        } else if (inBounds(coord) && piecAt(gb, coord)->getTeam() != getTeam()) {
+        } else if (inBounds(coord) && pieceAt(gb, coord)->getTeam() != getTeam()) {
             possibleMoves.push_back(coord);
             // Last possible move they can make
             break;
@@ -67,7 +67,7 @@ void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         Vec coord = Vec{coordinate.getX() + i, coordinate.getY() -i};
          if(inBounds(Vec) && isEmptyPiece(pieceAt(gb,coord))) {
             possibleMoves.push_back(coord);
-        } else if (inBounds(coord) && piecAt(gb, coord)->getTeam() != getTeam()) {
+        } else if (inBounds(coord) && pieceAt(gb, coord)->getTeam() != getTeam()) {
             possibleMoves.push_back(coord);
             break;
         } else {
@@ -80,7 +80,7 @@ void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         Vec coord = Vec{coordinate.getX() - i, coordinate.getY() + i};
          if(inBounds(Vec) && isEmptyPiece(pieceAt(gb,coord))) { // If it is not an empty piece at that coordinate, then means there is a piece there. 
             possibleMoves.push_back(coord);
-        } else if (inBounds(coord) && piecAt(gb, coord)->getTeam() != getTeam()) { // If the piece there is a enemy perfect! That is the last move.
+        } else if (inBounds(coord) && pieceAt(gb, coord)->getTeam() != getTeam()) { // If the piece there is a enemy perfect! That is the last move.
             possibleMoves.push_back(coord);
             break;
         } else { // Else a temamate piece, then no more moves so we break
@@ -93,7 +93,7 @@ void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         Vec coord = Vec{coordinate.getX() + i, coordinate.getY() + i};
          if(inBounds(Vec) && isEmptyPiece(pieceAt(gb,coord))) {
             possibleMoves.push_back(coord);
-        } else if (inBounds(coord) && piecAt(gb, coord)->getTeam() != getTeam()) {
+        } else if (inBounds(coord) && pieceAt(gb, coord)->getTeam() != getTeam()) {
             possibleMoves.push_back(coord);
             break;
         } else {
