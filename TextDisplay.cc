@@ -1,4 +1,4 @@
-
+#include <iostream>
 #include "TextDisplay.h"
 #include "ChessBoard.h"
 using namespace std;
@@ -17,7 +17,8 @@ TextDisplay::TextDisplay() {
     }
 }
 
-void TextDisplay::notifyMoves(Vec start, char typeStart, Vec end, char typeEnd) { // notify should be only printing the moves
+void TextDisplay::notifyMoves(Vec start, char typeStart, Vec end, char typeEnd, string check) { // notify should be only printing the moves
+    check = check;
     // change thedisplay's character at start, change thedisplay's character at end
     theDisplay[start.getY()][start.getX()] = typeStart;
     theDisplay[end.getY()][end.getX()] = typeEnd;
@@ -29,11 +30,16 @@ void TextDisplay::notify(Vec start, char typeStart) {
 }
 
 ostream &operator<<(ostream &out, const TextDisplay &td) {
-  for (int i = 0; i < td.theDisplay.size(); ++i) {
-    for (int j = 0; j < td.theDisplay.size(); ++i) {
-      out << td.theDisplay[i][j];
+    for (int i = 0; i < td.theDisplay.size(); ++i) {
+        int num = 8;
+        out << to_string(num);
+        for (int j = 0; j < td.theDisplay.size(); ++i) {
+        out << td.theDisplay[i][j];
+        }
+        out << endl; // since each row printed on newline
+        --num;
     }
-    out << endl; // since each row printed on newline
-  }
-  return out;
+    out << " abcdefgh" << endl;
+    out << td.check << "is in check.";
+    return out;
 }
