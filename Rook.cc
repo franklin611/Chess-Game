@@ -67,6 +67,8 @@ void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         }
     }
     // Above were just the regular moves. Now to consider the Castle
+    // Will be done in King
+    // I do not need to worry about it in Rooks
 }
 
 bool Rook::getMoved() {
