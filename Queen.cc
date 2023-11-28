@@ -78,7 +78,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
             break;
         }   // Elseit is a teammate piece there so we can no longer go further
     }
-    
+
     for(int i = 1; i < 7; ++i) {
         // Going Up
         move = Vec{coordinate.getX(), coordinate.getY() - i};
