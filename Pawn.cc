@@ -32,16 +32,20 @@ void Pawn::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
 	// Checks if there is a piece there, and is an enemy
 	// Or En Passant Right option. Where there is an empty piece there
 	// First we have to check that it actually is a valid coordinate there. 
-	if (inBounds(CaptureRight) && !isEmptyPiece((pieceAt(gb,CaptureRight))) && (pieceAt(gb, CaptureRight)->getTeam() != this->getTeam()) || isEmptyPiece((pieceAt(gb,CaptureRight))) && canPassantRight()){
+	shared_ptr<Piece>() p = pieceAt(gb, CaptureRight);
+	if (inBounds(CaptureRight) && (!isEmptyPiece(p) && (p->getTeam() != this->getTeam())) || (isEmptyPiece(p) && canPassantRight())){
 		possibleMoves.push_back(CaptureRight);
 	}
-	if (inBounds(CaptureLeft) && !isEmptyPiece((pieceAt(gb,CaptureLeft))) && (pieceAt(gb, CaptureLeft)->getTeam() != this->getTeam()) || isEmptyPiece((pieceAt(gb,CaptureLeft))) && canPassantRight()){
+	p = pieceAt(gb,CaptureLeft);
+	if (inBounds(CaptureLeft) && (!isEmptyPiece(p) && (p->getTeam() != this->getTeam())) || (isEmptyPiece(p) && canPassantRight())){
 		possibleMoves.push_back(CaptureLeft);
-	}
-	if (inBounds(moveUp) && isEmptyPiece((pieceAt(gb, moveUp)))){
+	}	
+	p = pieceAt(gb,moveUp);
+	if (inBounds(moveUp) && isEmptyPiece(p)){
 		possibleMoves.push_back(moveUp);
 	}
-	if (isEmptyPiece((pieceAt(gb, moveUp))) && !moved){
+	p = pieceAt(gb,twoStep);
+	if (isEmptyPiece(p) && !moved){
 		possibleMoves.push_back(twoStep);
 	} 
 }
@@ -50,7 +54,7 @@ void Pawn::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
 
 bool Pawn::canPassantRight() {
 	Vec passantRight = Vec(coordinate.getX() + 1, coordinate.getY());
-	if (this->getTeam() && coordinate.getY() == 4 && game->pawnMovedTwo(passantRight, this->getTeam())){
+	if (getTeam() && coordinate.getY() == 4 && game->pawnMovedTwo(passantRight, this->getTeam())){
 		return true;
 	} else if(!this->getType() && coordinate.getY() == 3 && game->pawnMovedTwo(passantRight, !this->getTeam())) {
 		return true;
@@ -61,7 +65,7 @@ bool Pawn::canPassantRight() {
 
 bool Pawn::canPassantLeft() {
 	Vec passantLeft = Vec(coordinate.getX() - 1, coordinate.getY());
-	if (this->getTeam() && coordinate.getY() == 4 && game->pawnMovedTwo(passantLeft, this->getTeam())){
+	if (getTeam() && coordinate.getY() == 4 && game->pawnMovedTwo(passantLeft, this->getTeam())){
 		return true;
 	} else if(!this->getTeam() && coordinate.getY() == 3 && game->pawnMovedTwo(passantLeft, !this->getTeam())) {
 		return true;
