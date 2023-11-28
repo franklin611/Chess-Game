@@ -29,9 +29,9 @@ void TextDisplay::notify(Vec start, char typeStart) {
     theDisplay[start.getY()][start.getX()] = typeStart;
 }
 
-void TextDisplay::notify(bool white) {
-    if (!white) {white = "Black";}
-    else {white = "White";}
+void TextDisplay::notify(bool white) { // call this inside of setup as well as when making any move
+    if (!white) {colour = "Black";}
+    else {colour = "White";}
 }
 
 ostream &operator<<(ostream &out, const TextDisplay &td) {
@@ -46,6 +46,6 @@ ostream &operator<<(ostream &out, const TextDisplay &td) {
     }
     out << " abcdefgh" << endl;
     if (td.check.size() > 1) {out << td.check << "is in check." << endl;} // empty string is true, so if not empty string output
-    out << "It's " << td.white << "'s turn" << endl;
+    if (td.colour.size() > 1) out << "It's " << td.colour << "'s turn" << endl;
     return out;
 }

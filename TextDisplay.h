@@ -8,7 +8,7 @@
 class TextDisplay : DisplayObserver {
     protected:
         string check = ""; // please pass to me as "White" or "Black"
-        string white = "White";
+        string colour = "";
         vector<vector<char>> theDisplay;
     public:
         TextDisplay();
