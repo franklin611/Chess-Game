@@ -46,4 +46,25 @@ Vec Piece::getCoordinate(){ return coordinate; }
 
 void Piece::setCoordinate(Vec coord){ coordinate = coord; }
 
+shared_ptr<Piece> Piece::pieceAt(vector<vector<shared_ptr<Piece>>> gb, Vec coordinate) {
+    int row = coordinate.getY();
+    int col = coordinate.getX();
+
+    return make_shared<Piece>(*(gb[row][col]));
+}
+
+bool Piece::isEmptyPiece(shared_ptr<Piece> p) {
+    return (p->getType() != ' ' && p->getType() != '_') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+bool Piece::inBounds(Vec coordinate) {
+    int row = coordinate.getY();
+    int col = coordinate.getX()
+    return (row >= 0 && row <= 7 && col >= 0 && col <= 7);
+}
 

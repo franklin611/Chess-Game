@@ -9,17 +9,14 @@ bool Pawn::getMovedTwo(){
 	return movedTwo;
 }
 
-// MAKE SURE THE PIECE DOESNT GO OUTSIDE THE BOARD LIMIT
-// make sure you check there is actually a piece to capture 
-vector<Vec> Pawn::pawnMoves() {
+// We have to push back to vector<Vec> possibleMoves;
+void Pawn::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
 	Vec CaptureRight;
 	Vec CaptureLeft;
 	Vec moveUp;
 	Vec twoStep;
-	vector<Vec> moves; 
 
-	// determine possible capture moves
-	if (white){
+	if (getTeam()){
 		CaptureRight = Vec(coordinate.getX() + 1, coordinate.getY() + 1);
 		CaptureLeft = Vec(coordinate.getX() - 1, coordinate.getY() + 1);
 		moveUp = Vec(coordinate.getX(), coordinate.getY() + 1);
@@ -32,41 +29,47 @@ vector<Vec> Pawn::pawnMoves() {
 
 	}
 
-	if (game->isThere(CaptureRight) || canPassant()){
-		moves.push_back(CaptureRight);
-	} else if (game->isThere(CaptureLeft) || canPassant()){
-		moves.push_back(CaptureLeft);
-	} else if (!game->isThere(moveUp)){
-		moves.push_back(moveUp);
-	} else if (!game->isThere(twoStep) && !moved){
-		moves.push_back(twoStep);
-	} 
-
-
-	// determine possible passant moves 
-
-	return moves; 
-}
-
-
-bool Pawn::canPassant(){
-	Vec passantLeft = Vec(coordinate.getX() - 1, coordinate.getY());
-	Vec passantRight = Vec(coordinate.getX() + 1, coordinate.getY());
-
-	char leftType = game->getType(passantLeft);
-	char rightType = game->getType
-
-	// if white and my y coordinate is 4 
-	if (white && coordinate.getY() == 4 && game->pawnMovedTwo(passantLeft, white)){
-		
-
+	// Checks if there is a piece there, and is an enemy
+	// Or En Passant Right option. Where there is an empty piece there
+	// First we have to check that it actually is a valid coordinate there. 
+	if (inBounds(CaptureRight) && !isEmptyPiece((pieceAt(gb,CaptureRight))) && (pieceAt(gb, CaptureRight)->getTeam() != this->getTeam()) || isEmptyPiece((pieceAt(gb,CaptureRight))) && canPassantRight()){
+		possibleMoves.push_back(CaptureRight);
 	}
-	
-
-	//  if my y coordinate is 3 
-
-	
+	if (inBounds(CaptureLeft) && !isEmptyPiece((pieceAt(gb,CaptureLeft))) && (pieceAt(gb, CaptureLeft)->getTeam() != this->getTeam()) || isEmptyPiece((pieceAt(gb,CaptureLeft))) && canPassantRight()){
+		possibleMoves.push_back(CaptureLeft);
+	}
+	if (inBounds(moveUp) && isEmptyPiece((pieceAt(gb, moveUp)))){
+		possibleMoves.push_back(moveUp);
+	}
+	if (isEmptyPiece((pieceAt(gb, moveUp))) && !moved){
+		possibleMoves.push_back(twoStep);
+	} 
 }
+// MAKE SURE THE PIECE DOESNT GO OUTSIDE THE BOARD LIMIT
+// make sure you check there is actually a piece to capture 
+
+bool Pawn::canPassantRight() {
+	Vec passantRight = Vec(coordinate.getX() + 1, coordinate.getY());
+	if (this->getTeam() && coordinate.getY() == 4 && game->pawnMovedTwo(passantRight, this->getTeam())){
+		return true;
+	} else if(!this->getType() && coordinate.getY() == 3 && game->pawnMovedTwo(passantRight, !this->getTeam())) {
+		return true;
+	} else {
+		return false; 
+	}
+}
+
+bool Pawn::canPassantLeft() {
+	Vec passantLeft = Vec(coordinate.getX() - 1, coordinate.getY());
+	if (this->getTeam() && coordinate.getY() == 4 && game->pawnMovedTwo(passantLeft, this->getTeam())){
+		return true;
+	} else if(!this->getTeam() && coordinate.getY() == 3 && game->pawnMovedTwo(passantLeft, !this->getTeam())) {
+		return true;
+	} else {
+		return false; 
+	}
+}
+
 
 
 // this might now look the same for all pieces because you decide the individuals moves per piece, then all the validation is the same for all pieces 
