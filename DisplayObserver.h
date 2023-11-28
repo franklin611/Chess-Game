@@ -4,7 +4,7 @@
 
 class DisplayObserver {
     public:
-    virtual void notifyMoves(Vec start, char typeStart, Vec end, char typeEnd) = 0;
+    virtual void notifyMoves(Vec start, char typeStart, Vec end, char typeEnd, string check) = 0;
     virtual void notify(Vec start, char typeStart) = 0;
     virtual ~DisplayObserver();
 };

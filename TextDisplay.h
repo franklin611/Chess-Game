@@ -6,10 +6,11 @@
 
 class TextDisplay : DisplayObserver {
     protected:
+        string check; // please pass to me as "White" or "Black"
         vector<vector<char>> theDisplay;
     public:
         TextDisplay();
-        void notifyMoves(Vec start, char typeStart, Vec end, char typeEnd) override;
+        void notifyMoves(Vec start, char typeStart, Vec end, char typeEnd, string check) override;
         void notify(Vec start, char typeStart) override;
         friend ostream &operator<<(ostream &out, const TextDisplay &td);
         ~TextDisplay() = default; // default because vector has its own dtor
