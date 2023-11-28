@@ -29,9 +29,9 @@ void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         move = Vec{coordinate.getX(), coordinate.getY() + i};
         shared_ptr<Piece> p = pieceAt(gb, move);
         
-        if(isBound(move) && isEmptyPiece(p)) {
+        if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
-        } else if (isBound(move) && !p->getTeam()) {
+        } else if (inBounds(move) && !p->getTeam()) {
             //Either out of bounds or not an empty piece
             // Still in bounds and is an enemy piece
             possibleMoves.pushBack(move);
@@ -45,9 +45,9 @@ void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         // Going Up
         move = Vec{coordinate.getX(), coordinate.getY() - i};
         shared_ptr<Piece> p = pieceAt(gb, move);
-        if(isBound(move) && isEmptyPiece(p)) {
+        if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
-        } else if (isBound(move) && !p->getTeam()) {
+        } else if (inBounds(move) && !p->getTeam()) {
             possibleMoves.pushBack(move);
             break;
         } else {
@@ -58,9 +58,9 @@ void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         // Going right
         move = Vec{coordinate.getX() + i, coordinate.getY()};
         shared_ptr<Piece> p = pieceAt(gb, move);
-        if(isBound(move) && isEmptyPiece(p)) {
+        if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
-        } else if (isBound(move) && !p->getTeam()) {
+        } else if (inBounds(move) && !p->getTeam()) {
             possibleMoves.pushBack(move);
             break;
         } else {
@@ -71,9 +71,9 @@ void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
       // Going Left
         move = Vec{coordinate.getX() - i, coordinate.getY()};
         shared_ptr<Piece> p = pieceAt(gb, move);
-        if(isBound(move) && isEmptyPiece(p)) {
+        if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
-        } else if (isBound(move) && !p->getTeam()) {
+        } else if (inBounds(move) && !p->getTeam()) {
             possibleMoves.pushBack(move);
             break;
         } else {
