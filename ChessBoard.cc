@@ -76,7 +76,15 @@ bool twoStep(Vec start, Vec end){
 }
 
 
-ChessBoard::setupPlayers(unique)
+// Attach the player observers to each piece
+ChessBoard::setupPlayers(unique_ptr<Observer> playerWhite>, unique_ptr<Observer> playerBlack) {
+    for(size_t row = 0; row < gb.size(); ++row) {
+        for (size_t col = 0; col < gb[i].size; ++col) {
+            gb[row][col]->attachWhite(playerWhite);
+            gb[row][col]->attachBlack(playerBlack);
+        }
+    }
+}
 
 // Piece::Piece(struct Vec coordinate, char type, bool colour): coordinate{coordinate}, type{type}, white{colour} {} Piece constructor
 // Empty piece seems to just have a superclass constructor of parent class Piece.
