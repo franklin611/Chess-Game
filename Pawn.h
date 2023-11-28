@@ -14,5 +14,6 @@ class Pawn : public Piece {
 		bool getMoved();
 		void hasMovedTwo(); 
 		void hasMoved();
+		bool pawnMovedTwo();
 }; 
 
