@@ -1,14 +1,14 @@
 #include "Piece.h"
 #include "ChessBoard.h"
 
-void Piece::resetMoves(){ legalMoves.clear(); }
+void Piece::resetMoves(){ possibleMoves.clear(); }
 
 void Piece::addLegalMove(Vec end, bool white){ 
 	if (white){ playerWhite->notify(coordinate, end); }
 	else { playerBlack->notify(coordinate, end); }
 }
 
-void Piece::addTestMove(Vec end){ legalMoves.push_back(end); }
+void Piece::addTestMove(Vec end){ possibleMoves.push_back(end); }
 
 char Piece::getType(){ return type; }
 

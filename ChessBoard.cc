@@ -52,7 +52,7 @@ void ChessBoard::replacePiece(Vec coordinate, shared_ptr<Piece> replacement){
     gb[row][col] = replacement;
 }
 
-// DONE
+// DONE --> REMOVE IT 
 bool ChessBoard::isThere(Vec coordinate){
 	for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
@@ -280,11 +280,6 @@ void ChessBoard::testMove(Vec start, Vec end){
             p->resetMoves(); // clear all the legal moves
             // pass possibleMoves the game board 
             vector<Vec> possibleMoves = p->getPossibleMoves(gb); // get the possible moves for this piece
-
-            // add all the possible moves as legal moves
-            for (Vec move : possibleMoves){
-               p->addTestMove(move); // this function won't notify the player 
-            }
         }
     }
 
