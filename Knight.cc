@@ -45,29 +45,37 @@ void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     bottomLeft2 = Vec{coordx - 1, coordy + 2};
     
     // Need to check if teammate or enemy team
-    
-    if(inBounds(topRight1) && !(pieceAt(gb, topRight1)->getTeam() == getTeam())) {
-        possibleMovess.push_back(topRight1);
+
+    Vec move = topRight1;
+    if(inBounds(move) && !(moveAt(gb, move)->getTeam() == getTeam())) {
+        possibleMovess.push_back(move);
     } 
-    if(inBounds(topRight2) && !(pieceAt(gb, topRight2)->getTeam() == getTeam())) {
-        possibleMovess.push_back(topRight2);
-    } 
-    if(inBounds(topLeft1) && !(pieceAt(gb, topLeft1)->getTeam() == getTeam())) {
-        possibleMovess.push_back(topLeft1);
-    } 
-    if(inBounds(topLeft2) && !(pieceAt(gb, topLeft2)->getTeam() == getTeam())) {
-        possibleMovess.push_back(topLeft2);
-    } 
-    if(inBounds(bottomRight1) && !(pieceAt(gb, bottomRight1)->getTeam() == getTeam())) {
-        possibleMovess.push_back(bottomRight1);
-    } 
-    if(inBounds(bottomRight2) && !(pieceAt(gb, bottomRight2)->getTeam() == getTeam())) {
-        possibleMovess.push_back(bottomRight2);
-    } 
-    if(inBounds(bottomLeft1) && !(pieceAt(gb, bottomLeft1)->getTeam() == getTeam())) {
-        possibleMovess.push_back(bottomLeft1);
-    } 
-    if(inBounds(bottomLeft2) && !(pieceAt(gb, bottomLeft2)->getTeam() == getTeam())) {
-        possibleMovess.push_back(bottomLeft2);
+    move = topRight1;
+    if(inBounds(move) && !(moveAt(gb, move)->getTeam() == getTeam())) {
+        possibleMovess.push_back(move);
+    }
+    move = topLeft1;
+    if(inBounds(move) && !(moveAt(gb, move)->getTeam() == getTeam())) {
+        possibleMovess.push_back(move);
+    }
+    move = topLeft2;
+    if(inBounds(move) && !(moveAt(gb, move)->getTeam() == getTeam())) {
+        possibleMovess.push_back(move);
+    }
+    move = bottomRight1;
+    if(inBounds(move) && !(moveAt(gb, move)->getTeam() == getTeam())) {
+        possibleMovess.push_back(move);
+    }
+    move = bottomRight2;
+    if(inBounds(move) && !(moveAt(gb, move)->getTeam() == getTeam())) {
+        possibleMovess.push_back(move);
+    }
+    move = bottomLeft1;
+    if(inBounds(move) && !(moveAt(gb, move)->getTeam() == getTeam())) {
+        possibleMovess.push_back(move);
+    }
+    move = bottomLeft2;
+    if(inBounds(move) && !(moveAt(gb, move)->getTeam() == getTeam())) {
+        possibleMovess.push_back(move);
     } 
 }
