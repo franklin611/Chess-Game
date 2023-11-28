@@ -360,18 +360,28 @@ bool ChessBoard::getTurn(){
 }
 
 // DONE
+// I need to do dynamic type casting.
 void ChessBoard::setupWithChar(char type, Vec coordinate) {
     int row = coordinate.getY();
     int col = coordinate.getX();
 
-    if (type >= 'A' && type <= 'Z' || type == ' ') { //White Colour
-        gb[row][col] = make_shared<Piece>(coordinate, type, 1);
-    } else if (type >= 'a' && type <= 'z' || type == '_') {
-        gb[row][col] = make_shared<Piece>(coordinate, type, 0);
+    if (type == 'K' || type == 'k') {
+        gb[row][col] = make_shared<King>(coordinate, type, (type == 'K') ? 1 : 0); // King
+    } else if (type == 'Q' || type == 'q') {
+        gb[row][col] = make_shared<Queen>(coordinate, type, (type == 'Q') ? 1 : 0); // Queen
+    } else if (type == 'P' || type == 'p') {
+        gb[row][col] = make_shared<Pawn>(coordinate, type, (type == 'P') ? 1 : 0); // Pawn
+    } else if (type == 'N' || type == 'n') {
+        gb[row][col] = make_shared<Knight>(coordinate, type, (type == 'N') ? 1 : 0); // Knight
+    } else if (type == 'R' || type == 'r') {
+        gb[row][col] = make_shared<Rook>(coordinate, type, (type == 'R') ? 1 : 0); // Rook
+    } else if (type == 'B' || type == 'b') {
+        gb[row][col] = make_shared<Bishop>(coordinate, type, (type == 'B') ? 1 : 0); // Bishop
+    } else if (type == ' ' || type = '_') { //These may not be needed but im just having. I dont think it would ever reach it
+        gb[row][col] = getEmptyPiece(coordinate);
+    } else {
+        // Handle other cases or provide a default behavior
     }
-    // So creates white pieces for upper cases and ' '
-    // Creates black pieces for lower case and _
-    // I dont think I even need to have the ' ' and _, but keeping it for now!!
 }
 
 // DONE
@@ -380,6 +390,8 @@ void ChessBoard::setupWithPiece(shared_ptr<Piece> p, Vec coordinate) {
     int col = coordinate.getX();
 
     gb[row][col] = p;
+    // That should be fine because I am using this to only setup empty pieces.  
+    // It is fine that the gameboard starts and has empty pieces at first
 }
 
 // DONE 
