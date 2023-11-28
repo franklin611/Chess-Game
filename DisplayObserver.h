@@ -1,11 +1,12 @@
 #ifndef _DISPLAYOBSERVER_H_
 #define _DISPLAYOBSERVER_H_
-class ChessBoard;
+#include "Vec.h"
 
 class DisplayObserver {
     public:
-    virtual void notify(ChessBoard &cb) = 0; // TODO: pretty sure need to have cb because what calls notify when it changes each time is the cb?
-    virtual ~DisplayObserver() = default;
+    virtual void notify(Vec start, char typeStart, Vec end, char typeEnd) = 0;
+    virtual void notify(Vec start, char typeStart) = 0;
+    virtual ~DisplayObserver();
 };
 
 #endif

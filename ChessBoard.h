@@ -20,8 +20,10 @@ class GraphicsDisplay;
 class ChessBoard: public Observer{
     vector<vector<shared_ptr<Piece>>> gb;
     vector<vector<unique_ptr<Piece>>> eb;
-    unique_ptr<Player> playerWhite;
-    unique_ptr<Player> playerBlack;
+    // unique_ptr<Player> playerWhite;
+    // unique_ptr<Player> playerBlack;
+    unique_ptr<DisplayObserver> td;
+    unique_ptr<DisplayObserver> gd;
     Game game;
     bool bCheck;
     bool wCheck;
@@ -30,10 +32,10 @@ class ChessBoard: public Observer{
     Vec wKing;
     public:
         // makes a Human move
-        bool makeHumanMove(Vec start, Vec end);
+        // bool makeHumanMove(Vec start, Vec end); // move this to player 
 
-        // makes a computer move -> we need to return the end move to check if a pawn has reached the end
-        void makeComputerMove(unique_ptr<Player> p);
+        // // makes a computer move -> we need to return the end move to check if a pawn has reached the end
+        // void makeComputerMove(unique_ptr<Player> p); // move this to player
 
         // returns the type of a piece at that coordinate
         char getType(Vec coordinate);

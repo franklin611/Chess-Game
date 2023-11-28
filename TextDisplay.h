@@ -10,7 +10,8 @@ class TextDisplay {
     public:
         TextDisplay();
         // ~TextDisplay(); // since pointer? or don't need since unique_ptr?
-        void notify(Vec start, char typeStart, Vec end, char typeEnd);
+        void notify(Vec start, char typeStart, Vec end, char typeEnd) override;
+        void notify(Vec start, char typeStart) override;
         friend ostream &operator<<(ostream &out, const TextDisplay &td);
 
 };
