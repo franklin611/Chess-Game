@@ -75,7 +75,7 @@ bool Pawn::canPassantLeft(vector<vector<shared_ptr<Piece>>> gb) {
 }
 
 // Chessboard has one but this is specifically to the Pawn Piece
-Logic is pawnMovedTwo
+// Logic is pawnMovedTwo
 
 // Check that the piece at the coordinate is a Pawn
 // Also checks that it is an enemy
