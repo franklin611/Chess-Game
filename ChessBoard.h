@@ -3,6 +3,8 @@
 #include <iostream>
 #include <memory>
 #include "Game.h" // Because we are creating an actual Game object
+
+
 using namespace std;
 
 class Piece; // Because we are not directly access fields/functions of Piece, a forward declaration suffices
@@ -11,6 +13,8 @@ class Vec;
 class Player;
 class TextDisplay;
 class GraphicsDisplay;
+
+
 
 // CASTLE MOVE
 // to make a castle move -> validate that we are moving a king two spaces to the left or right -> have a function that returns true or false so if it is a castle move we know to move the rook as well

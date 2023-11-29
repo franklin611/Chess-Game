@@ -6,6 +6,9 @@
 #include "Knight.h"
 #include "Bishop.h"
 #include "Empty.h"
+
+#include "TextDisplay.h"
+#include "GraphicsDisplay.h" // We call their notify
 using namespace std;
 
 // DONE
@@ -269,7 +272,7 @@ void ChessBoard::notify(Vec start, Vec end){
             // It was initially just possibleMoves
             // test every possible move -> which will add it to the legal moves if it passes
             // this will test
-            for (Vec move : p->possibleMoves){
+            for (Vec move : p->returnPossibleMoves()){
                 testMove(p->getCoordinate(), move);
             }
         }
