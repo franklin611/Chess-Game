@@ -135,14 +135,9 @@ ChessBoard::setupPlayers(unique_ptr<Observer> playerWhite>, unique_ptr<Observer>
 // To create the empty construcotr, what do I actually pass? (Empty(Vec{row,col}, _ or ' ', true or false)))
 
 // FRANKLIN
-ChessBoard::ChessBoard() : td{td}, gd{gd}, game{}, bCheck{false}, wCheck{false}, turn{true}, bKing{}, wKing{} {
+ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_unique<TextDisplay>()}, gd{make_unique<GraphicsDisplay>()}, game{}, bCheck{false}, wCheck{false}, turn{true}, bKing{}, wKing{} {
     // Setup the empty board and gameboard
     // unique_ptr<TextDisplay> td, unique_ptr<GraphicDisplay> gd, I have to make this here
-    td = make_unique<TextDisplay>();
-    gd = make_unique<GraphicsDisplay>();
-    
-    observers.push_back(td);
-    observers.push_back(gd);
 
     bool switch = true;
     for (int row = 0; row < 8; row+i) {
@@ -163,8 +158,6 @@ ChessBoard::ChessBoard() : td{td}, gd{gd}, game{}, bCheck{false}, wCheck{false},
         }
         eb.push_back(move(ebRow));
         gb.push_back(move(gbRow));
-
-
     }
 }
 
@@ -486,9 +479,6 @@ bool ChessBoard::isEnd() {
 
 // CHIARA 
 void ChessBoard::restartGame() {
-    // make a deep copy of unique pointers to empty pieces in empty board 
-    // swap the gameboard for the deep copy 
-    // the vector of vector of unique pointers will die once the function returns 
     for(size_t i = 0; i < eb.size(); ++i) { //The row
         for (size_t j = 0; j < eb[i].size(); ++j) { // The column
         // Remmber, we have a vector<vector<>>>>
