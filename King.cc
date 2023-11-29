@@ -28,15 +28,20 @@ void King::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
 
     // Consider two cases of "Left" for White and Black
     // Check image in Discord
-    if (!moved && !(gb[coordinate.getY()][coordinate.getX()]->getMoved()) && isEmptyPiece(Vec{coordinate.getX() - 1, coordinate.getY()} && isEmptyPiece({coordinate.getX() - 2, coordinate.getY()}))) {
+    // Need to dynamically cast the piece pointers to King pointers
+    shared_ptr<King> king = dynamic_pointer_cast<King>(gb[coordinate.getY()][coordinate.getX()]);
+    shared_ptr<Piece> p = pieceAt(gb,Vec{coordinate.getX() - 1, coordinate.getY()});
+    shared_ptr<Piece> p2 = pieceAt(gb,Vec{coordinate.getX() - 2, coordinate.getY()});
+    
+    if (!moved && !(king->getMoved()) && isEmptyPiece(p) && isEmptyPiece(p2)){
         possibleMoves.push_back(castleLeft);
     }
-
-    if (!moved && !(gb[coordinate.getY()][coordinate.getX()]->getMoved()) && isEmptyPiece(Vec{coordinate.getX() + 1, coordinate.getY()} && isEmptyPiece({coordinate.getX() + 2, coordinate.getY()}))) {
+    p = pieceAt(gb, Vec{coordinate.getX() + 1, coordinate.getY()});
+    p2 = pieceAt(gb, Vec{coordinate.getX() + 2, coordinate.getY()});
+    if (!moved && !(king->getMoved()) && isEmptyPiece(p) && isEmptyPiece(p2)) {
         possibleMoves.push_back(castleRight);
     }
-
-    shared_ptr<Piece> p = pieceAt(gb, moveUp);
+    p = pieceAt(gb, moveUp);
     if (inBounds(moveUp) && (isEmptyPiece(p) || (p->getType() != getType()))) {
         possibleMoves.push_back(moveUp);
     }
