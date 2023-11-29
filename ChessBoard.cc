@@ -9,14 +9,47 @@ using namespace std;
 #include "King.h"
 #include <vector>
 
+// DONE
 bool ChessBoard::boardIsValid() {
-    // One White KIng
-    // One Black King
-    // No Pawns on the First Row (Row 0) 
-    // No Pawns on the Last Row (Row 7)
-    bool oneBlack = true;
-    bool oneWhite = true;
+    // One White KIng - good
+    // One Black King - good
+    // No Pawns on the First Row (Row 0)   -good
+    // No Pawns on the Last Row (Row 7) - good
+    // Neither king is inCheck
+    bool oneBlack = false;
+    bool oneWhite = false;
+
+    int rowSize = eb.size();
+    int colSize = eb[1].size();
+
+	for (vector<shared_ptr<Piece>> vec : gb){
+		for (shared_ptr<Piece> p : vec){
+            // CHECKS THAT THERE IS ONLY ONE BLACK PIECE
+            if (!oneBlack && (p->getType() == 'k')) {
+                oneBlack = true;
+            } else if(oneBlack && (p->getType() == 'k')) {
+                return false;
+            }
+            // CHECKS THAT THERE IS ONLY ONE WHITE PIECE
+            if (!oneWhite && (p->getType() == 'K')) {
+                oneWhite = true;
+            } else if(oneWhite && (p->getType() == 'K')) {
+                return false;
+            }
+        }
+    }
+    // If either white (true) or black (false) are in check, not a valid board
+    if (isCheck(true) || isCheck(false)) return false;
+
     
+    // Checks for Pawns on the first row
+	for (shared_ptr<Piece> p : gb[0]){
+        if(p->getType() == 'p' || p->getType() == 'P') return false;  
+    }
+    // Checks for Pawns on the last row
+    for (shared_ptr<Piece> p : gb[7]){
+        if(p->getType() == 'p' || p->getType() == 'P') return false;  
+    }
 }
 
 // DONE
