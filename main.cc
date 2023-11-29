@@ -102,12 +102,12 @@ int main() {
                         cin >> start >> end;
 
                         int x = convertToInt(start.substr(0,1)[0]);
-                        int y = (int) start.substr(1);
-                        Vec coordinate1 = Vec{x,y};
+                        int y = stoi(start.substr(1));;
+                        Vec coordinate1 = Vec{x, y - 1};
 
                         int x = convertToInt(end.substr(0,1)[0]);
-                        int y = (int) end.substr(1);
-                        Vec coordinate2 = Vec{x,y};
+                        int y = stoi(end.substr(1));
+                        Vec coordinate2 = Vec{x, y - 1};
 
                         if(playerWhite.makeHumanMove(coordinate1, coordinate2)) {
                             // Valid Move
@@ -142,12 +142,12 @@ int main() {
                         cin >> start >> end;
 
                         int x = convertToInt(start.substr(0,1)[0]);
-                        int y = (int) start.substr(1);
-                        Vec coordinate1 = Vec{x,y};
+                        int y = stoi(start.substr(1));
+                        Vec coordinate1 = Vec{x, y - 1};
 
                         int x = convertToInt(end.substr(0,1)[0]);
-                        int y = (int) end.substr(1);
-                        Vec coordinate2 = Vec{x,y};
+                        int y = stoi(end.substr(1));
+                        Vec coordinate2 = Vec{x, y - 1}; // Start at row 0
 
                         if(playerBlack.makeHumanMove(coordinate1, coordinate2)) {
                             if(cb.upgradePawn(coordinate2)) {
@@ -188,7 +188,7 @@ int main() {
                     //  sop shoudl Vec{0,7)}
                     int x = convertToInt(coord.substr(0,1)[0]);
                     int y = stoi(coord.substr(1));
-                    Vec coordinate = Vec{x,y};
+                    Vec coordinate = Vec{x, y- 1};
                     // Need to also check that the char was a proper input
                     if (x == -1 ||(y > 7 && y < 0) !(piece == 'k' || piece == 'K' || piece == 'q' || piece == 'Q' ||
                         piece == 'b' || piece == 'B' || piece == 'n' || piece == 'N' ||
@@ -201,10 +201,10 @@ int main() {
                     cb.setupWithChar(piece, coordinate); 
                 } else if (cmd2 == "-") {
                     cin >> coord;
-                    int x = convertToInt(piece.substr(0,1)[0]);
-                    int y = (int) piece.substr(1);
+                    int x = convertToInt(coord.substr(0,1)[0]);
+                    int y = stoi(coord.substr(1));
                     // Remove a piece on a board by placing an empty piece on that coordinate
-                    Vec coordinate = Vec{x,y};
+                    Vec coordinate = Vec{x, y - 1}; // We have to minus one because we are 0-7
                     cb.setupWithPiece(getEmptyPiece(coordinate), coordinate);
                 } else if (cmd2 == "=") { 
                     // From my understanding, "makes it colors turn to go next" means when the game start, it is their turn
