@@ -1,13 +1,12 @@
 #include "ChessBoard.h"
-#include "Piece.h"
-using namespace std;
-#include "Player.h"
-#include "Computer.h"
-#include "TextDisplay.h"
-#include "GraphicsDisplay.h"
 #include "Pawn.h"
 #include "King.h"
-#include <vector>
+#include "Queen.h"
+#include "Rook.h"
+#include "Knight.h"
+#include "Bishop.h"
+#include "Empty.h"
+using namespace std;
 
 // DONE
 bool ChessBoard::boardIsValid() {
@@ -75,8 +74,8 @@ bool ChessBoard::pawnMovedTwo(Vec coordinate, bool white){
     if (type == 'P' || type == 'p'){ shared_ptr<Pawn> pawn = dynamic_pointer_cast<Pawn>(p); } 
     else { return false; }
 
-    if (pawn->pawnMovedTwo(gb)){
-        return true 
+    if (pawn->pawnMovedTwo(gb, coordinate, white)){ // Idk why has issues
+        return true; 
     }
     return false;
 }
@@ -109,6 +108,7 @@ bool ChessBoard::isValid(Vec start, Vec end){
 
     // use end to validate move
     return p->isMoveValid(end);
+    // This function no longer exists?
 }
 
 // DONE
