@@ -3,9 +3,8 @@
 class King : public Piece {
         bool moved;
     public: 
-        void resetMoves() override; 
         King();
-        vector<Vec> kingMoves();
+        void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) override;
         bool getMoved();
         void hasMoved();
 };
