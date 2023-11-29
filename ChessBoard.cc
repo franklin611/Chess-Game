@@ -215,7 +215,7 @@ void ChessBoard::notify(Vec start, Vec end){
     // change the turn
     turn? false : true;
 
-     // reset the legal moves of every piece
+     // reset the legal moves of every piece // only go through the opponents 
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
             p->resetMoves(); // clear all the legal moves
@@ -304,7 +304,8 @@ void ChessBoard::testMove(Vec start, Vec end){
 
     // need to check if that move put myself in check
     bool check = isCheck(moved->getTeam());
-
+    
+    // we decide its legal -> notify player 
     if (!check){
         moved->addLegalMove(end, turn); // in addLegalMove the player will be notified that a move was added 
     }

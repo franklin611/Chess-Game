@@ -20,8 +20,9 @@ class GraphicsDisplay;
 class ChessBoard: public Observer{
     vector<vector<shared_ptr<Piece>>> gb;
     vector<vector<unique_ptr<Piece>>> eb;
-    unique_ptr<DisplayObserver> td;
-    unique_ptr<DisplayObserver> gd;
+    vector<unique_ptr<Observer>> observers; 
+    unique_ptr<TextDisplay> td; 
+    unique_ptr<GraphicsDisplay> gd; 
     Game game;
     bool bCheck;
     bool wCheck;
