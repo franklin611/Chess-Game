@@ -125,7 +125,7 @@ int main() {
                         } 
                     } else if(cmd2 == "move" && player1 == "computer") {
                         // Make Computer Move
-                        Vec end = cb.makeComputerMove(1, level); // TO DO UPDATE WITH HELENA'S NEW FUNCTION
+                        Vec end = cb.makeComputerMove(level); // TO DO UPDATE WITH HELENA'S NEW FUNCTION
                         if(cb.upgradePawn(end)){
                             cb.setupWithChar('Q', end);
                         }
@@ -160,7 +160,7 @@ int main() {
                             cout << "Invalid move. Please retry" << endl;
                         }
                     } else if (cmd == "move" && player2 == "computer") {
-                        Vec end = cb.makeComputerMove(0, level);
+                        Vec end = cb.makeComputerMove(level);
                         if(cb.upgradePawn(end)){
                             cb.setupWithChar('q', end);
                         }
