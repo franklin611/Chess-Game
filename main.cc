@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Game.h"
 #include "Piece.h"
+#include "Observer.h"
 
 using namespace std;
 
@@ -70,9 +71,11 @@ int main() {
 
         if(cmd == "game") {
             //To setup a new game, we take two input playerWhite playerBlack.
+            // They are not players, they are Observers
+            // Observer -> Player -> Computer or Human. They are subclasses of Observer
             String player1, player2;
             cin >> player1 >> player2;
-            unique_ptr<Player> playerWhite, playerBlack;
+            unique_ptr<Observer> playerWhite, playerBlack;
 
             if(player1 == "human") {
                 playerWhite = make_unique<Human>(1, cb);
