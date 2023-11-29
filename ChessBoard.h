@@ -103,6 +103,9 @@ class ChessBoard: public Observer{
 
         // set black king
         void setBlackKing(Vec coordinate);
+
+        // Check if it is a valid board
+        bool boardIsValid();
     
 };
 
