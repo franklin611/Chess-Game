@@ -10,6 +10,92 @@ using namespace std;
 #include <vector>
 
 // DONE
+bool ChessBoard::boardIsValid() {
+    // One White KIng - good
+    // One Black King - good
+    // No Pawns on the First Row (Row 0)   -good
+    // No Pawns on the Last Row (Row 7) - good
+    // Neither king is inCheck
+    bool oneBlack = false;
+    bool oneWhite = false;
+
+    int rowSize = eb.size();
+    int colSize = eb[1].size();
+
+	for (vector<shared_ptr<Piece>> vec : gb){
+		for (shared_ptr<Piece> p : vec){
+            // CHECKS THAT THERE IS ONLY ONE BLACK PIECE
+            if (!oneBlack && (p->getType() == 'k')) {
+                oneBlack = true;
+            } else if(oneBlack && (p->getType() == 'k')) {
+                return false;
+            }
+            // CHECKS THAT THERE IS ONLY ONE WHITE PIECE
+            if (!oneWhite && (p->getType() == 'K')) {
+                oneWhite = true;
+            } else if(oneWhite && (p->getType() == 'K')) {
+                return false;
+            }
+        }
+    }
+    // If either white (true) or black (false) are in check, not a valid board
+    if (isCheck(true) || isCheck(false)) return false;
+
+    
+    // Checks for Pawns on the first row
+	for (shared_ptr<Piece> p : gb[0]){
+        if(p->getType() == 'p' || p->getType() == 'P') return false;  
+    }
+    // Checks for Pawns on the last row
+    for (shared_ptr<Piece> p : gb[7]){
+        if(p->getType() == 'p' || p->getType() == 'P') return false;  
+    }
+}
+
+// DONE
+bool ChessBoard::boardIsValid() {
+    // One White KIng - good
+    // One Black King - good
+    // No Pawns on the First Row (Row 0)   -good
+    // No Pawns on the Last Row (Row 7) - good
+    // Neither king is inCheck
+    bool oneBlack = false;
+    bool oneWhite = false;
+
+    int rowSize = eb.size();
+    int colSize = eb[1].size();
+
+	for (vector<shared_ptr<Piece>> vec : gb){
+		for (shared_ptr<Piece> p : vec){
+            // CHECKS THAT THERE IS ONLY ONE BLACK PIECE
+            if (!oneBlack && (p->getType() == 'k')) {
+                oneBlack = true;
+            } else if(oneBlack && (p->getType() == 'k')) {
+                return false;
+            }
+            // CHECKS THAT THERE IS ONLY ONE WHITE PIECE
+            if (!oneWhite && (p->getType() == 'K')) {
+                oneWhite = true;
+            } else if(oneWhite && (p->getType() == 'K')) {
+                return false;
+            }
+        }
+    }
+    // If either white (true) or black (false) are in check, not a valid board
+    if (isCheck(true) || isCheck(false)) return false;
+
+    
+    // Checks for Pawns on the first row
+	for (shared_ptr<Piece> p : gb[0]){
+        if(p->getType() == 'p' || p->getType() == 'P') return false;  
+    }
+    // Checks for Pawns on the last row
+    for (shared_ptr<Piece> p : gb[7]){
+        if(p->getType() == 'p' || p->getType() == 'P') return false;  
+    }
+}
+
+// DONE
 char ChessBoard::getType(Vec coordinate){
     shared_ptr<Piece> p = getPiece(coordinate);
     char type = p->getType();
@@ -76,13 +162,30 @@ bool twoStep(Vec start, Vec end){
 }
 
 
+// Attach the player observers to each piece
+ChessBoard::setupPlayers(unique_ptr<Observer> playerWhite>, unique_ptr<Observer> playerBlack) {
+    for(size_t row = 0; row < gb.size(); ++row) {
+        for (size_t col = 0; col < gb[i].size; ++col) {
+            gb[row][col]->attachWhite(playerWhite);
+            gb[row][col]->attachBlack(playerBlack);
+        }
+    }
+}
+
 // Piece::Piece(struct Vec coordinate, char type, bool colour): coordinate{coordinate}, type{type}, white{colour} {} Piece constructor
 // Empty piece seems to just have a superclass constructor of parent class Piece.
 // To create the empty construcotr, what do I actually pass? (Empty(Vec{row,col}, _ or ' ', true or false)))
 
 // FRANKLIN
-ChessBoard::ChessBoard() : playerWhite{make_unique<Player>()}, playerBlack{make_unique<Player>()}, game{}, bCheck{false}, wCheck{false}, turn{true}, bKing{}, wKing{} {
+ChessBoard::ChessBoard() : td{td}, gd{gd}, game{}, bCheck{false}, wCheck{false}, turn{true}, bKing{}, wKing{} {
     // Setup the empty board and gameboard
+    // unique_ptr<TextDisplay> td, unique_ptr<GraphicDisplay> gd, I have to make this here
+    td = make_unique<TextDisplay>();
+    gd = make_unique<GraphicsDisplay>();
+    
+    observers.push_back(td);
+    observers.push_back(gd);
+
     bool switch = true;
     for (int row = 0; row < 8; row+i) {
         vector<unique_ptr<Piece>> ebRow;
@@ -91,17 +194,19 @@ ChessBoard::ChessBoard() : playerWhite{make_unique<Player>()}, playerBlack{make_
             // gb[row][col] = make_shared<Piece>();
             // Top left corner, the colour of the board is white. Bottom right (7,7) is white as well
             if(switch) { // Alternating of black and white
-                ebRow.push_back(make_unique<Piece>(Piece::Empty(Vec{row, col}, ' ', true)));
+                ebRow.push_back(make_unique<Empty>(Piece::Empty(Vec{row, col}, ' ', true)));
                 gbRow.push_back(make_shared<Piece>(Piece::Empty(Vec{row, col}, ' ', true)));
                 switch = false;
             } else {
-                ebRow.push_back(make_unique<Piece>(Piece::Empty(Vec{row, col}, '_', false)));
+                ebRow.push_back(make_unique<Empty>(Piece::Empty(Vec{row, col}, '_', false)));
                 gbRow.push_back(make_shared<Piece>(Piece::Empty(Vec{row, col}, '_', false)));
                 switch = true;
             }
         }
         eb.push_back(move(ebRow));
         gb.push_back(move(gbRow));
+
+
     }
 }
 
@@ -341,18 +446,28 @@ bool ChessBoard::getTurn(){
 }
 
 // DONE
+// I need to do dynamic type casting.
 void ChessBoard::setupWithChar(char type, Vec coordinate) {
     int row = coordinate.getY();
     int col = coordinate.getX();
 
-    if (type >= 'A' && type <= 'Z' || type == ' ') { //White Colour
-        gb[row][col] = make_shared<Piece>(coordinate, type, 1);
-    } else if (type >= 'a' && type <= 'z' || type == '_') {
-        gb[row][col] = make_shared<Piece>(coordinate, type, 0);
+    if (type == 'K' || type == 'k') {
+        gb[row][col] = make_shared<King>(coordinate, type, (type == 'K') ? 1 : 0); // King
+    } else if (type == 'Q' || type == 'q') {
+        gb[row][col] = make_shared<Queen>(coordinate, type, (type == 'Q') ? 1 : 0); // Queen
+    } else if (type == 'P' || type == 'p') {
+        gb[row][col] = make_shared<Pawn>(coordinate, type, (type == 'P') ? 1 : 0); // Pawn
+    } else if (type == 'N' || type == 'n') {
+        gb[row][col] = make_shared<Knight>(coordinate, type, (type == 'N') ? 1 : 0); // Knight
+    } else if (type == 'R' || type == 'r') {
+        gb[row][col] = make_shared<Rook>(coordinate, type, (type == 'R') ? 1 : 0); // Rook
+    } else if (type == 'B' || type == 'b') {
+        gb[row][col] = make_shared<Bishop>(coordinate, type, (type == 'B') ? 1 : 0); // Bishop
+    } else if (type == ' ' || type = '_') { //These may not be needed but im just having. I dont think it would ever reach it
+        gb[row][col] = getEmptyPiece(coordinate);
+    } else {
+        // Handle other cases or provide a default behavior
     }
-    // So creates white pieces for upper cases and ' '
-    // Creates black pieces for lower case and _
-    // I dont think I even need to have the ' ' and _, but keeping it for now!!
 }
 
 // DONE
@@ -361,6 +476,8 @@ void ChessBoard::setupWithPiece(shared_ptr<Piece> p, Vec coordinate) {
     int col = coordinate.getX();
 
     gb[row][col] = p;
+    // That should be fine because I am using this to only setup empty pieces.  
+    // It is fine that the gameboard starts and has empty pieces at first
 }
 
 // DONE 
@@ -414,25 +531,16 @@ void ChessBoard::restartGame() {
     // make a deep copy of unique pointers to empty pieces in empty board 
     // swap the gameboard for the deep copy 
     // the vector of vector of unique pointers will die once the function returns 
-    for(size_t i = 0; i < eb.size(); ++i) {
-        for (size_t j = 0; j < eb[0].size(); ++j) {
-            gb[i][j] = eb[i][j];
-        }
-    }
     for(size_t i = 0; i < eb.size(); ++i) { //The row
         for (size_t j = 0; j < eb[i].size(); ++j) { // The column
         // Remmber, we have a vector<vector<>>>>
             gb[j][i] = make_shared<Piece>(*(eb[i][j]));
             // Assume the copy assignment operator works
         }
-     }
-    turn = true; // Default turn is always white
-    //  Should be good
-
+    }
     turn = true; // Default turn is always white
     bCheck = false;
     wCheck = false;
-
     // We don't need to reset bKing and wKing because it will be reset in next
     // game or if not, will just be destroyed.
 }
@@ -595,10 +703,10 @@ void ChessBoard::defaultBoard() {
     setupWithChar('r', Vec{7, 7}); // Whites
 
     // Setup Knights
-    setupWithChar('K', Vec{1,0});
-    setupWithChar('K', Vec{6, 0}); // Whites
-    setupWithChar('k', Vec{1,7});
-    setupWithChar('k', Vec{6, 7}); // Black
+    setupWithChar('N', Vec{1,0});
+    setupWithChar('N', Vec{6, 0}); // Whites
+    setupWithChar('n', Vec{1,7});
+    setupWithChar('n', Vec{6, 7}); // Black
 
     // Setup Bishops
     setupWithChar('B', Vec{2,0});
@@ -609,9 +717,11 @@ void ChessBoard::defaultBoard() {
     // Setup Kings
     setupWithChar('K', Vec{0,3}); // White King
     setupWithChar('k', Vec{7, 3}); // Black King
+    setWhiteKing(Vec{0,3});
+    setBlackKing(Vec{7, 3});
 
     // Setup Queens
-    setupWithChar('K', Vec{0,4}); // White Queen
-    setupWithChar('k', Vec{7, 4}); // Black Queen
+    setupWithChar('Q', Vec{0,4}); // White Queen
+    setupWithChar('q', Vec{7, 4}); // Black Queen
 }
 

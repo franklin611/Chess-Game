@@ -80,6 +80,9 @@ int main() {
 
             if(player1 == "human") {
                 playerWhite = make_unique<Human>(1)
+                // I need to construct the player constructor in main
+                // I need to pass it the chessboard
+
             } else {
                 int level = stoi(player1.substr(9));
                 playerWhite = make_unique<Computer>(1, level);
@@ -94,6 +97,8 @@ int main() {
             // In both cases, setup board then players
             // We are always gonna have to setup players anyways
             cb.setupPlayers(playerWhite, playerBlack);
+            // JUst do in chessbaor constructor
+
             
             // At this point, we have edited cb's game board already 
             // This set's cb's gameboard to a default baord. 
@@ -139,6 +144,7 @@ int main() {
                         Vec end = cb.makeComputerMove(1, level);
                         if(cb.upgradePawn(end)){
                             cb.setupWithChar(newPiece, end);
+                            // This needs to be fixed because its not a new piece it will always be Queen
                         }
                     } else if(cmd2 == "resign") {
                         //Player1 now has to lose 
