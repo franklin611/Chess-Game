@@ -3,21 +3,6 @@
 
 Rook:Rook() : Piece{}, moved{false} {}
 
-void Rook::resetMoves() {
-	legalMoves.clear();
-	// determine all legal moves 
-	// for (vector<Piece> vec : game->getGameBoard()){
-	// 	for (Piece p : vec){
-	// 		vector<Vec> moves = rookMovse(); 
-	// 		for (Vec end: moves){
-	// 			if (!willCheck(coordinate, end)){
-	// 				legalMoves.push_back(end);
-	// 			};
-	// 		} 
-	// 	}
-	// }
-}
-
 // To make Chiara's life easier, I can also just check if there is a piece there.
 // If our team, we can't make that move and break the for loop (Assuming we have 4 for loops for each
 // direction) if it is an enemy team, capturing is the last move we can make then break. 
