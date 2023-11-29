@@ -5,11 +5,13 @@ Queen::Queen(Vec coordinate, char type, bool white) : Piece{coordinate, type, wh
 
 void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec move;
+    shared_ptr<Piece> p;
 
     // To top left diagonal
     for (int i = 1; i < 7; ++i) {
         move = Vec{coordinate.getX() - i, coordinate.getY() - i};
-        if(inBounds(move) && isEmptyPiece(pieceAt(gb,move))) {
+        p = pieceAt(gb, move);
+        if(inBounds(move) && isEmptyPiece(p)) { // We dont care that 
             possibleMoves.push_back(move);
         } else if (inBounds(move) && pieceAt(gb, move)->getTeam() != getTeam()) {
             possibleMoves.push_back(move);
@@ -23,7 +25,8 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     // To top right Diagonal
     for (int i = 1; i < 7; ++i) {
         move = Vec{coordinate.getX() + i, coordinate.getY() -i};
-         if(inBounds(move) && isEmptyPiece(pieceAt(gb,move))) {
+        p = pieceAt(gb, move);
+         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
         } else if (inBounds(move) && pieceAt(gb, move)->getTeam() != getTeam()) {
             possibleMoves.push_back(move);
@@ -36,7 +39,8 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     // To bottom left Diagonal
     for (int i = 1; i < 7; ++i) {
         move = Vec{coordinate.getX() - i, coordinate.getY() + i};
-         if(inBounds(move) && isEmptyPiece(pieceAt(gb,move))) { // If it is not an empty piece at that coordinate, then means there is a piece there. 
+        p = pieceAt(gb, move);
+         if(inBounds(move) && isEmptyPiece(p)) { // If it is not an empty piece at that coordinate, then means there is a piece there. 
             possibleMoves.push_back(move);
         } else if (inBounds(move) && pieceAt(gb, move)->getTeam() != getTeam()) { // If the piece there is a enemy perfect! That is the last move.
             possibleMoves.push_back(move);
@@ -49,9 +53,10 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     // To bottom right Diagonal
     for (int i = 1; i < 7; ++i) {
         move = Vec{coordinate.getX() + i, coordinate.getY() + i};
-         if(inBounds(move) && isEmptyPiece(pieceAt(gb,move))) {
+        p = pieceAt(gb, move);
+         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
-        } else if (inBounds(move) && pieceAt(gb, move)->getTeam() != getTeam()) {
+        } else if (inBounds(move) && p->getTeam() != getTeam()) {
             possibleMoves.push_back(move);
             break;
         } else {
@@ -62,8 +67,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     for(int i = 1; i < 7; ++i) {
         // Going Down
         move = Vec{coordinate.getX(), coordinate.getY() + i};
-        shared_ptr<Piece> p = pieceAt(gb, move);
-        
+        p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
         } else if (inBounds(move) && !p->getTeam()) {
@@ -80,7 +84,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     for(int i = 1; i < 7; ++i) {
         // Going Up
         move = Vec{coordinate.getX(), coordinate.getY() - i};
-        shared_ptr<Piece> p = pieceAt(gb, move);
+        p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
         } else if (inBounds(move) && !p->getTeam()) {
@@ -94,7 +98,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     for(int i = 1; i < 7; ++i) {
         // Going right
         move = Vec{coordinate.getX() + i, coordinate.getY()};
-        shared_ptr<Piece> p = pieceAt(gb, move);
+        p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
         } else if (inBounds(move) && !p->getTeam()) {
@@ -108,7 +112,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     for(int i = 1; i < 7; ++i) {
       // Going Left
         move = Vec{coordinate.getX() - i, coordinate.getY()};
-        shared_ptr<Piece> p = pieceAt(gb, move);
+        p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
         } else if (inBounds(move) && !p->getTeam()) {

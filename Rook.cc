@@ -9,12 +9,13 @@ Rook::Rook(Vec coordinate, char type, bool white) : Piece{coordinate, type, whit
 // direction) if it is an enemy team, capturing is the last move we can make then break. 
 void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec move;
+    shared_ptr<Piece> p;
+    
 
     for(int i = 1; i < 7; ++i) {
         // Going Down
         move = Vec{coordinate.getX(), coordinate.getY() + i};
-        shared_ptr<Piece> p = pieceAt(gb, move);
-        
+        p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
         } else if (inBounds(move) && !p->getTeam()) {
@@ -30,7 +31,7 @@ void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     for(int i = 1; i < 7; ++i) {
         // Going Up
         move = Vec{coordinate.getX(), coordinate.getY() - i};
-        shared_ptr<Piece> p = pieceAt(gb, move);
+        p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
         } else if (inBounds(move) && !p->getTeam()) {
@@ -43,7 +44,7 @@ void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     for(int i = 1; i < 7; ++i) {
         // Going right
         move = Vec{coordinate.getX() + i, coordinate.getY()};
-        shared_ptr<Piece> p = pieceAt(gb, move);
+        p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
         } else if (inBounds(move) && !p->getTeam()) {
@@ -56,7 +57,7 @@ void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     for(int i = 1; i < 7; ++i) {
       // Going Left
         move = Vec{coordinate.getX() - i, coordinate.getY()};
-        shared_ptr<Piece> p = pieceAt(gb, move);
+        p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
         } else if (inBounds(move) && !p->getTeam()) {

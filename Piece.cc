@@ -51,7 +51,7 @@ shared_ptr<Piece> Piece::pieceAt(vector<vector<shared_ptr<Piece>>> gb, Vec coord
     int row = coordinate.getY();
     int col = coordinate.getX();
 
-    return make_shared<Piece>(*(gb[row][col]));
+    return gb[row][col];
 }
 
 bool Piece::isEmptyPiece(shared_ptr<Piece> p) {
