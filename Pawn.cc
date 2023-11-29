@@ -91,22 +91,3 @@ bool Pawn::pawnMovedTwo(vector<vector<shared_ptr<Piece>>> gb, Vec coordinate, bo
 	return false;
 
 }
-
-
-// this might now look the same for all pieces because you decide the individuals moves per piece, then all the validation is the same for all pieces 
-void Pawn::resetMoves(){
-	legalMoves.clear();
-	// determine all legal moves 
-	// for (vector<Piece> vec : game->getGameBoard()){
-	// 	for (Piece p : vec){
-	// 		vector<Vec> moves = pawnMoves(); 
-	// 		for (Vec end: moves){
-	// 			if (!willCheck(coordinate, end)){
-	// 				legalMoves.push_back(end);
-	// 			};
-	// 		} 
-	// 	}
-	// }
-	// We are getting rid of this and putting in CHessboard
-	// Each piece should just update is possibleM
-}
