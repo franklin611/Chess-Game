@@ -34,34 +34,34 @@ void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
 
     Vec move = topRight1;
     if(inBounds(move) && !(pieceAt(gb, move)->getTeam() == getTeam())) {
-        possibleMovess.push_back(move);
+        possibleMoves.push_back(move);
     } 
     move = topRight1;
     if(inBounds(move) && !(pieceAt(gb, move)->getTeam() == getTeam())) {
-        possibleMovess.push_back(move);
+        possibleMoves.push_back(move);
     }
     move = topLeft1;
     if(inBounds(move) && !(pieceAt(gb, move)->getTeam() == getTeam())) {
-        possibleMovess.push_back(move);
+        possibleMoves.push_back(move);
     }
     move = topLeft2;
     if(inBounds(move) && !(pieceAt(gb, move)->getTeam() == getTeam())) {
-        possibleMovess.push_back(move);
+        possibleMoves.push_back(move);
     }
     move = bottomRight1;
     if(inBounds(move) && !(pieceAt(gb, move)->getTeam() == getTeam())) {
-        possibleMovess.push_back(move);
+        possibleMoves.push_back(move);
     }
     move = bottomRight2;
     if(inBounds(move) && !(pieceAt(gb, move)->getTeam() == getTeam())) {
-        possibleMovess.push_back(move);
+        possibleMoves.push_back(move);
     }
     move = bottomLeft1;
     if(inBounds(move) && !(pieceAt(gb, move)->getTeam() == getTeam())) {
-        possibleMovess.push_back(move);
+        possibleMoves.push_back(move);
     }
     move = bottomLeft2;
     if(inBounds(move) && !(pieceAt(gb, move)->getTeam() == getTeam())) {
-        possibleMovess.push_back(move);
+        possibleMoves.push_back(move);
     } 
 }
