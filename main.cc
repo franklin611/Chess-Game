@@ -10,7 +10,7 @@ using namespace std;
 
 int convertToInt(char c) {
     if(c >= 'a' && c <= 'h') {
-        return c - 'a';
+        return (c - 'a') - 1;
         // We use 0-7
     } else {
         return -1;
@@ -110,11 +110,11 @@ int main() {
                         string start, end;
                         cin >> start >> end;
 
-                        int x = convertToInt(start.substr(0,1));
+                        int x = convertToInt(start.substr(0,1)[0]);
                         int y = (int) start.substr(1);
                         Vec coordinate1 = Vec{x,y};
 
-                        int x = convertToInt(end.substr(0,1));
+                        int x = convertToInt(end.substr(0,1)[0]);
                         int y = (int) end.substr(1);
                         Vec coordinate2 = Vec{x,y};
 
@@ -163,11 +163,11 @@ int main() {
                         string start, end;
                         cin >> start >> end;
 
-                        int x = convertToInt(start.substr(0,1));
+                        int x = convertToInt(start.substr(0,1)[0]);
                         int y = (int) start.substr(1);
                         Vec coordinate1 = Vec{x,y};
 
-                        int x = convertToInt(end.substr(0,1));
+                        int x = convertToInt(end.substr(0,1)[0]);
                         int y = (int) end.substr(1);
                         Vec coordinate2 = Vec{x,y};
 
@@ -216,7 +216,7 @@ int main() {
                     cin >> piece >> coord;
                     // Place piece on coord. Piece is char
                     // e1, is Column 3 (starting from  0 to 7), Row 0
-                    //  
+                    //  sop shoudl Vec{0,7)}
                     int x = convertToInt(coord.substr(0,1));
                     int y = (int) coord.substr(1);
                     Vec coordinate = Vec{x,y};
