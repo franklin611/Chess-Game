@@ -60,7 +60,7 @@ bool ChessBoard::boardIsValid() {
 		for (shared_ptr<Piece> p : vec) {
             if(p->getTeam() = turn) {
                 p->getPossibleMoves();
-                for (Vec end : p->returnPossibleMoves) {
+                for (Vec end : p->returnPossibleMoves()) {
                     testMove(p->getCoordinate(), end);
                 }
             } // Sets up that piece'possible moves
