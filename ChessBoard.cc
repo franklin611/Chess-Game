@@ -103,18 +103,6 @@ bool ChessBoard::isThere(Vec coordinate){
 	return false;
 }
 
-// DONE --> REMOVE IT
-bool ChessBoard::isValid(Vec start, Vec end){
-    // use start to get piece
-    int row = start.getY();
-    int col = start.getX();
-    shared_ptr<Piece> p = gb[row][col];
-
-    // use end to validate move
-    return p->isMoveValid(end);
-    // This function no longer exists?
-}
-
 // DONE
 bool twoStep(Vec start, Vec end){
     int startY = start.getY();
