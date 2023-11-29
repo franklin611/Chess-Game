@@ -119,6 +119,7 @@ int main() {
                             } else cin.ignore();
                             // cin.ignore(std::numeric_limits<std::streamsize>::max()); // ChatGPT suggested
                             // Ignore the single next character input by the user. (Cuz we can't assume just one character)
+                            cout  << cb;
 
                         } else {
                             cout << "Invalid move. Please retry" << endl;
@@ -129,6 +130,7 @@ int main() {
                         if(cb.upgradePawn(end)){
                             cb.setupWithChar('Q', end);
                         }
+                        cout << cb;
                     } else if(cmd2 == "resign") {
                         //Player1 now has to lose 
                         cb.forfeit(); // This function will update the white and black score
@@ -156,6 +158,7 @@ int main() {
                                 cin >> newPiece;
                                 cb.setupWithChar(newPiece, coordinate2);
                             } else cin.ignore();
+                            cout << cb;
                         } else {
                             cout << "Invalid move. Please retry" << endl;
                         }
@@ -164,19 +167,20 @@ int main() {
                         if(cb.upgradePawn(end)){
                             cb.setupWithChar('q', end);
                         }
+                        cout << cb;
                     } else if(cmd2 == "resign") {
                         // Player2 has to lose
                         cb.forfeit(); 
                         cb.restartGame();
                     } 
                 }
-                // 1. Check if game is over
-                if(cb.isEnd()) { // will check players legalMoves to see if they are empoty or not
-                    cb.restartGame(); // Restarts ChessBoard
-                    // We don't need to reset player pointers because they will go out of scope or when we make it equal to something new, the old ones die
-                    usedSetup = false;
-                    break;
-                }
+                // // 1. Check if game is over
+                // if(cb.isEnd()) { // will check players legalMoves to see if they are empoty or not
+                //     cb.restartGame(); // Restarts ChessBoard
+                //     // We don't need to reset player pointers because they will go out of scope or when we make it equal to something new, the old ones die
+                //     usedSetup = false;
+                //     break;
+                // } // No longer needed
             }
         } else if (cmd == "setup") { 
             string cmd2, coord, colour;
@@ -200,6 +204,7 @@ int main() {
                     if(piece == 'k') cb.setBlackKing(coordinate);
                     if(piece == 'K') cb.setWhiteKing(coordinate);
                     cb.setupWithChar(piece, coordinate); 
+                    cout << cb;
                 } else if (cmd2 == "-") {
                     cin >> coord;
                     int x = convertToInt(coord.substr(0,1)[0]);
@@ -218,6 +223,7 @@ int main() {
                             cout << "Invalid input, please try again." << endl;
                         }
                     } 
+                    cout << cb;
                 } else if (cmd == "done") { 
                     if(cb.boardIsValid()) {
                         usedSetup = true;
