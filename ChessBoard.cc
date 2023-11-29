@@ -6,6 +6,7 @@
 #include "Knight.h"
 #include "Bishop.h"
 #include "Empty.h"
+#include <utility>
 
 #include "TextDisplay.h"
 #include "GraphicsDisplay.h" // We call their notify
@@ -385,7 +386,9 @@ void ChessBoard::testMove(Vec start, Vec end){
 
     // revert the board -> switch the board copy to the gb
     // this swap might not work
+    // Yup chatgpt said nada
     swap(gb, boardCopy);
+
 
     // revert the king's coordinates
     if (turn){
@@ -443,7 +446,7 @@ void ChessBoard::setupWithChar(char type, Vec coordinate) {
         gb[row][col] = make_shared<Rook>(coordinate, type, (type == 'R') ? 1 : 0); // Rook
     } else if (type == 'B' || type == 'b') {
         gb[row][col] = make_shared<Bishop>(coordinate, type, (type == 'B') ? 1 : 0); // Bishop
-    } else if (type == ' ' || type = '_') { //These may not be needed but im just having. I dont think it would ever reach it
+    } else if (type == ' ' || type == '_') { //These may not be needed but im just having. I dont think it would ever reach it
         gb[row][col] = getEmptyPiece(coordinate);
     } else {
         // Handle other cases or provide a default behavior
