@@ -1,10 +1,11 @@
-#include "Observer.h"
+// #include "Observer.h"
 #include <vector>
 #include "Vec.h"
+#include <memory>
 using namespace std;
 
 class ChessBoard;
-class Vec;
+// class Vec;
 class Observer;
 
 // queen 

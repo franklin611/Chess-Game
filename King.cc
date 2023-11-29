@@ -10,7 +10,7 @@ void King::hasMoved(){
     moved = true;
 }
 
-void::getMoved() {
+bool King::getMoved() {
     return moved;
 }
 
@@ -36,19 +36,19 @@ void King::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         possibleMoves.push_back(castleRight);
     }
 
-    shared_ptr<Piece> p = pieceAt(moveUp);
+    shared_ptr<Piece> p = pieceAt(gb, moveUp);
     if (inBounds(moveUp) && (isEmptyPiece(p) || (p->getType() != getType()))) {
         possibleMoves.push_back(moveUp);
     }
-    p = pieceAt(moveLeft);
+    p = pieceAt(gb, moveLeft);
     if (inBounds(moveLeft) && (isEmptyPiece(p) || (p->getType() != getType()))) {
         possibleMoves.push_back(moveLeft);
     }
-    p = pieceAt(moveRight);
+    p = pieceAt(gb, moveRight);
     if (inBounds(moveRight) && (isEmptyPiece(p) || (p->getType() != getType()))) {
         possibleMoves.push_back(moveRight);
     }
-    p = pieceAt(moveDown);
+    p = pieceAt(gb, moveDown);
     if (inBounds(moveDown) && (isEmptyPiece(p) || (p->getType() != getType()))) {
         possibleMoves.push_back(moveDown);
     }
