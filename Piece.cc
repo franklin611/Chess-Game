@@ -1,12 +1,13 @@
 #include "Piece.h"
 #include "ChessBoard.h"
+#include "Observer.h"
 
 void Piece::resetMoves(){ possibleMoves.clear(); }
 
-void Piece::addLegalMove(Vec end, bool white){ 
-	if (white){ playerWhite->notify(coordinate, end); }
-	else { playerBlack->notify(coordinate, end); }
-}
+// void Piece::addLegalMove(Vec end, bool white){ 
+// 	if (white){ playerWhite->notify(coordinate, end); }
+// 	else { playerBlack->notify(coordinate, end); }
+// }
 
 void Piece::addTestMove(Vec end){ possibleMoves.push_back(end); }
 
@@ -36,11 +37,11 @@ Piece::Piece(Piece& other) {
         white = other.white;
 }
 
-void Piece::attachWhite(unique_ptr<Observer> o){ playerWhite = o; }
+void Piece::attachWhite(unique_ptr<Observer> o){ playerWhite = move(o); } // We need to use move because we are transferring ownership
 
-void Piece::attachBlack(unique_ptr<Observer> o){ playerBlack = o; }
+void Piece::attachBlack(unique_ptr<Observer> o){ playerBlack = move(o); }
 
-vector<Vec> Piece::getLegalMoves(){ return legalMoves; }
+// vector<Vec> Piece::getLegalMoves(){ return legalMoves; }
 
 Vec Piece::getCoordinate(){ return coordinate; }
 

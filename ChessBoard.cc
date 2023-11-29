@@ -10,6 +10,7 @@
 
 #include "TextDisplay.h"
 #include "GraphicsDisplay.h" // We call their notify
+#include "Observer.h"
 using namespace std;
 
 // DONE

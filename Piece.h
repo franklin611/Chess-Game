@@ -53,7 +53,7 @@ class Piece{
 		public: 
 			// this will respond according to how p moved
 			void resetMoves();
-			void addLegalMove(Vec end, bool white); 
+			// void addLegalMove(Vec end, bool white);  // Not sure if we even need anymore
 			void addTestMove(Vec end);
 			// Directly edits possibleMoves
 			virtual void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) = 0; 
