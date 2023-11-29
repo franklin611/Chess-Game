@@ -104,13 +104,11 @@ void ChessBoard::replacePiece(Vec coordinate, shared_ptr<Piece> replacement){
     gb[row][col] = replacement;
 }
 
-// DONE --> NO STILL NEED FOR GENERATECAPTUREMOVES TODO: HELENA
-bool ChessBoard::isThere(Vec coordinate){
-	for (vector<shared_ptr<Piece>> vec : gb){
+// DONE 
+bool ChessBoard::isThere(Vec coordinate, bool white, vector<vector<shared_ptr<Piece>>> board){
+	for (vector<shared_ptr<Piece>> vec : board){
 		for (shared_ptr<Piece> p : vec){
-			if ((p->getType() != ' ' || p->getType() != '_') && p->getCoordinate() == coordinate){
-				return true;
-			}
+			if ((p->getType() != ' ' || p->getType() != '_') && p->getCoordinate() == coordinate && p->getTeam() == white){ return true; }
 		}
 	}
 	return false;
@@ -275,21 +273,17 @@ void ChessBoard::notify(Vec start, Vec end){
     }
 
      // reset the legal moves of every piece // only go through the opponents
+    bool end = true;
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
             p->resetMoves(); // clear all the legal moves
             p->getPossibleMoves(gb); // get the possible moves for this piece
-            // It was initially just possibleMoves
             // test every possible move -> which will add it to the legal moves if it passes
-            // this will test
-            for (Vec move : p->returnPossibleMoves()){
-                testMove(p->getCoordinate(), move);
+            for (Vec move : p->returnPossibleMoves(gb)){
+                if (testMove(p->getCoordinate(), move)){ end = false; };
             }
         }
     }
-
-    // change the turn
-    turn? false : true;
 
     shared_ptr<Piece> emptyPiece = getPiece(start);
     shared_ptr<Piece> endPiece = getPiece(end);
@@ -300,11 +294,26 @@ void ChessBoard::notify(Vec start, Vec end){
     td->notify(start, startChar, end, endChar);
     gd->notify(start, startChar, end, endChar);
 
+    // change the turn
+    turn? false : true;
+
+    if (end) { isEnd(); }
+}
+
+// DONE
+// we can assume that the turn player has no moves 
+void ChessBoard::isEnd() {
+    if (turn) {
+        if (wCheck) { game.updateWhite(false); } 
+        else { game.updateWhite(true); }
+    } else {
+        if (bCheck) { game.updateBlack(false); }
+        else { game.updateBlack(true); }
+    }
 }
 
 
-// ALMOST DONE
-// this needs to keep track of if there are no possible moves
+// DONE
 void ChessBoard::testMove(Vec start, Vec end){
     // make a deep copy of the gb
     // consult about making a deep copy of the board
@@ -354,10 +363,9 @@ void ChessBoard::testMove(Vec start, Vec end){
 		for (shared_ptr<Piece> p : vec){
             if (p->getTeam() == turn){ continue; } 
             p->resetMoves(); // clear all the legal moves
-            p->possibleMoves(gb); // get the possible moves for this piece
+            p->getPossibleMoves(gb); // get the possible moves for this piece
         }
     }
-    // TODO: i think somewhere above need break because what if not possible move?
     // --------------------- at this point ALL the pieces have possible moves -----------------------------
     // we need to decide if any of these moves will put the opponent's king in check
 
@@ -365,32 +373,17 @@ void ChessBoard::testMove(Vec start, Vec end){
     bool check = isCheck(!turn);
     
     // we decide its legal -> notify player 
-    if (!check){
+    if (!check){ 
         if (!turn){ playerWhite->notifyLM(start, end); } // if the next turn (opponent is white)
         else { playerBlack->notifyLM(start, end); }
+        isCaptureMove(start, end);
+        isCheckMove(start, end);
+        isCheckMateMove(start, end);
+        isAvoidCaptureMove(start, end);
+        return true;
     }
-
-    if (isCaptureMove(start, end)) {
-        if (!turn){ playerWhite->notifyCapM(start, end); } // if the next turn (opponent is white)
-        else { playerBlack->notifyCapM(start, end); }
-    }
-
-    if (isCheckMove(start, end)) {
-        if (!turn){ playerWhite->notifyCheckM(start, end); } // if the next turn (opponent is white) // TODO: take away observer.h? make player directly observer
-        else { playerBlack->notifyCheckM(start, end); }
-    }
-
-    if (isCheckmateMove(start, end)) {
-        if (!turn){ playerWhite->notifyCMM(start, end); } // if the next turn (opponent is white)
-        else { playerBlack->notifyCMM(start, end); }
-    }
-// in player we ahve a bunch of notifoes just like nogtify legal move concatenate to add in categories, then inside of chessboard have the
-// helper functions and call them inside testMove after check it does not make it check, which is where w put it in notify for player anwyays
-// and then if it meets the category for the helper function we notify it accordinlgy for player to put in vectorvectorvec of category
-// and we are okay if it's in more than one category
-
-// player observes chessboard, chessboard calls player's notify for specific playerBlack/White so dont have
-// a vector of observers?
+    return false;
+}
 
     // revert the board -> switch the board copy to the gb
     // this swap might not work
@@ -421,7 +414,7 @@ bool ChessBoard::isCheck(bool white){
     for(vector<shared_ptr<Piece>> vec : gb){
         for(shared_ptr<Piece> p : vec){
             if (p->getTeam() == white){ continue; } // skip pieces on our own team
-            for(Vec move : p->getPossibleMoves()){
+            for(Vec move : p->returnPossibleMoves()){
                 if (move == kingCoord){
                     return true;
                 }
@@ -431,21 +424,79 @@ bool ChessBoard::isCheck(bool white){
     return false;
 }
 
-void isCheckMateMove(){
+void isCheckMateMove(Vec start, Vec end){
     // get the possible moves of the current 
     bool empty = true;
     for (vector<shared_ptr<Piece>> vec : gb){
         for (shared_ptr<Piece> p : vec){
             if (p->getTeam() != turn){ continue;}
-            p->possibleMoves(gb);
-            if (p->getPossibleMoves().size() != 0){ empty = false}
+            p->resetMoves();
+            p->getPossibleMoves(gb);
+            if (p->returnPossibleMoves().size() != 0){ empty = false}
         }
     }
 
     if (isCheck(turn) && empty){ 
-        // notify player 
+        if (!turn){ playerWhite->notifyCMM(start, end); } // if the next turn (opponent is white)
+        else { playerBlack->notifyCMM(start, end); }
     }
 }
+
+//  did this move put the current team in check 
+void isCheckMove(Vec start, Vec end){
+    if (isCheck(turn)){
+        if (!turn){ playerWhite->notifyCheckM(start, end); } 
+        else { playerBlack->notifyCheckM(start, end); }
+    }
+}
+
+// WILL this move capture any pieces on the opposing team 
+void isCaptureMove(Vec start, Vec end, vector<vector<shared_ptr<Piece>>> ob){
+    // if there is a piece at the end coordinate -> it is a capture move 
+    if (isThere(end, turn, ob)){ 
+        if (!turn){ playerWhite->notifyCapM(start, end); } // if the next turn (opponent is white)
+        else { playerBlack->notifyCapM(start, end); }
+    }
+}
+
+// did the move take this piece out of a position to be captured 
+void isAvoidCaptureMove(Vec start, Vec end, vector<vector<shared_ptr<Piece>>> ob){
+    // assume it is not in a position to be captured 
+    bool capture = false;
+    // was the piece (on the opponent's team) in a position to be captured in the first place in the old board
+    // look at the current team's possible moves if they are equal to the piece's start 
+    for (vector<shared_ptr<Piece>> vec : ob){
+        for (<shared_ptr<Piece> p : vec){
+            if (p->getTeam() != turn){ continue; }
+            p->resetMoves();
+            p->getPossibleMoves(ob); 
+            for (Vec move: p->returnPossibleMoves()){
+                if (move == start){ capture == true; break;}
+            }
+        }
+    }
+
+    if (!capture){ return; }
+
+    // will the move take the piece out of a position to be captured
+    // consider the board after the move was made, will any of the other team's pieces capture mine (which is at end)
+    for (vector<shared_ptr<Piece>> vec: gb){
+        for (shared_ptr<Piece> p : vec){
+            if (p->getTeam() != turn){ continue; }
+            p->resetMoves();
+            p->getPossibleMoves(gb); 
+            for (Vec move: p->returnPossibleMoves()){
+                if (move == end){ capture == true; break;}
+            }
+        }
+    }
+
+    if (!capture){
+        if (!turn){ playerWhite->notifyCheckM(start, end); } 
+        else { playerBlack->notifyCheckM(start, end); }
+    }
+}
+
 
 // DONE
 bool ChessBoard::getTurn(){
@@ -507,29 +558,6 @@ void ChessBoard::forfeit(){
     } else {
         // update score +1 for white
         game.updateWhite(false);
-    }
-}
-
-// DONE //TODO: use player ptr access legalMoves to see if empty
-bool ChessBoard::isEnd() {
-    if (turn) {
-        if (wCheck && getLegalMoves(turn).empty()) {
-            game.updateWhite(false);
-            return true;
-        }
-        else if (getLegalMoves(turn).empty()) {
-            game.updateWhite(true);
-            return true;
-        }
-    } else {
-        if (bCheck && getLegalMoves(turn).empty()) {
-            game.updateBlack(false);
-            return true;
-        }
-        else if (getLegalMoves(turn).empty()) {
-            game.updateBlack(true);
-            return true;
-        }
     }
 }
 
