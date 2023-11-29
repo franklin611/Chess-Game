@@ -6,6 +6,7 @@
 
 
 #include "Empty.h"
+#include "Empty.h"
 using namespace std;
 
 class Piece; // Because we are not directly access fields/functions of Piece, a forward declaration suffices
