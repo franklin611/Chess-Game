@@ -8,15 +8,6 @@ using namespace std;
 #include "Pawn.h"
 #include "King.h"
 #include <vector>
-#include "Level.h"
-
-// YOU CANNOT CASTLE WHILE IN CHECK
-// YOU CANNOT CASTLE WHILE IN CHECK
-// YOU CANNOT CASTLE WHILE IN CHECK
-// YOU CANNOT CASTLE WHILE IN CHECK
-// YOU CANNOT CASTLE WHILE IN CHECK
-// YOU CANNOT CASTLE WHILE IN CHECK
-// YOU CANNOT CASTLE WHILE IN CHECK
 
 // DONE
 char ChessBoard::getType(Vec coordinate){
@@ -65,7 +56,7 @@ bool ChessBoard::isThere(Vec coordinate){
 	return false;
 }
 
-// DONE
+// DONE --> REMOVE IT 
 bool ChessBoard::isValid(Vec start, Vec end){
     // use start to get piece
     int row = start.getY();
@@ -212,21 +203,24 @@ void ChessBoard::notify(Vec start, Vec end){
         wCheck = isCheck(true);
     }
 
-    // change the turn
-    turn? false : true;
-
      // reset the legal moves of every piece // only go through the opponents 
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
             p->resetMoves(); // clear all the legal moves
-            p->getPossibleMoves(); // get the possible moves for this piece
+            p->possibleMoves(gb); // get the possible moves for this piece
             // test every possible move -> which will add it to the legal moves if it passes
             // this will test
-            for (Vec move : p->possibleMoves){
+            for (Vec move : p->getPossibleMoves(gb)){
                 testMove(p->getCoordinate(), move);
             }
         }
     }
+
+    // change the turn
+    turn? false : true;
+
+    shared_ptr<Piece> emptyPiece = getPiece(start);
+    shared_ptr<Piece> endPiece = getPiece(end);
 
     // notify the gd and td
     char startChar = emptyPiece->getType();
@@ -237,13 +231,8 @@ void ChessBoard::notify(Vec start, Vec end){
 }
 
 
-// DONE 
-// this function will ALSO reset the moves of a piece
-// this need to simulate the move and just check if the move puts it's own team into check
-// ISSUE: when testing a move, the opposing team's set of legal moves includes moves that would put their king in check
-// there is a case where your move is considered "illegal" because it puts your king in check, based on a move from the other team that puts their own king in check
-// in other words, your move is considered illegal based on an illegal move which (since the hypothesis was false, the conclusion is true!)
-// therefore, TECHNICALLY not all the legal moves will be added, but this is a special case that we are omitting to avoid an infinite loop in our implementation
+// ALMOST DONE 
+// this needs to keep track of if there are no possible moves
 void ChessBoard::testMove(Vec start, Vec end){
     // make a deep copy of the gb
     // consult about making a deep copy of the board 
@@ -264,13 +253,13 @@ void ChessBoard::testMove(Vec start, Vec end){
     Vec bKingCoord;
 
     if (turn && startType != 'K'){
-        wkingCoord = wKing;
+        wKingCoord = wKing;
     } else if (!turn, startType != 'k'){
-        bkingCoord = bKing;
+        bKingCoord = bKing;
     } else if (turn){
-        wkingCoord = start;
+        wKingCoord = start;
     } else {
-        bkingCoord = start;
+        bKingCoord = start;
     }
 
     // now we can make edits on the game board which we will later revert
@@ -298,19 +287,19 @@ void ChessBoard::testMove(Vec start, Vec end){
     }
 
     // --------------------- at this point ALL the pieces have possible moves -----------------------------
-    // we need to decide if any of these moves will put our target piece's king in check 
+    // we need to decide if any of these moves will put the opponent's king in check 
 
-    shared_ptr<Piece> moved = getPiece(end);
-
-    // need to check if that move put myself in check
-    bool check = isCheck(moved->getTeam());
+    // need to check if that move the opponent 
+    bool check = isCheck(!turn);
     
     // we decide its legal -> notify player 
     if (!check){
-        moved->addLegalMove(end, turn); // in addLegalMove the player will be notified that a move was added 
+        if (!turn){ playerWhite->notify(start, end); } // if the next turn (opponent is white)
+        else { playerBlack->notify(start, end); }
     }
 
     // revert the board -> switch the board copy to the gb
+    // this swap might not work 
     swap(gb, boardCopy);
 
     // revert the king's coordinates 
@@ -335,7 +324,7 @@ bool ChessBoard::isCheck(bool white){
     // compare the legal moves of each piece with the king's coordinates
     for(vector<shared_ptr<Piece>> vec : gb){
         for(shared_ptr<Piece> p : vec){
-            if (p->getTeam == white){ continue; } // skip pieces on our own team
+            if (p->getTeam() == white){ continue; } // skip pieces on our own team
             for(Vec move : p->getLegalMoves()){
                 if (move == kingCoord){
                     return true;
