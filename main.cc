@@ -92,6 +92,7 @@ int main() {
             }
 
             if(!usedSetup) cb.defaultBoard(); // In both cases setup board first 
+            
             cb.setupPlayers(playerWhite, playerBlack); // Then players
             string cmd2;
             while(cin >> cmd2) {

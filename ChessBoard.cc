@@ -54,6 +54,30 @@ bool ChessBoard::boardIsValid() {
     for (shared_ptr<Piece> p : gb[7]){
         if(p->getType() == 'p' || p->getType() == 'P') return false;
     }
+    // After board is determined to be valid
+    
+	for (vector<shared_ptr<Piece>> vec : gb) {
+		for (shared_ptr<Piece> p : vec) {
+            if(p->getTeam() = turn) {
+                p->getPossibleMoves();
+                for (vector<vec> test : p->returnPossibleMoves) {
+                    test_
+                }
+            } // Sets up that piece's possible moves
+        }
+    }
+    for (vector<shared_ptr<Piece>> vec : gb) {
+		for (shared_ptr<Piece> p : vec) {
+            
+        }
+    }
+
+
+
+    
+
+
+    
 }
 
 
