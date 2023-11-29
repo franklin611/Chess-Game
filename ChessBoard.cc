@@ -60,24 +60,12 @@ bool ChessBoard::boardIsValid() {
 		for (shared_ptr<Piece> p : vec) {
             if(p->getTeam() = turn) {
                 p->getPossibleMoves();
-                for (vector<vec> test : p->returnPossibleMoves) {
-                    test_
+                for (Vec end : p->returnPossibleMoves) {
+                    testMove(p->getCoordinate(), end);
                 }
-            } // Sets up that piece's possible moves
+            } // Sets up that piece'possible moves
         }
-    }
-    for (vector<shared_ptr<Piece>> vec : gb) {
-		for (shared_ptr<Piece> p : vec) {
-            
-        }
-    }
-
-
-
-    
-
-
-    
+    } 
 }
 
 
@@ -944,6 +932,17 @@ void ChessBoard::defaultBoard() {
     // Setup Queens
     setupWithChar('Q', Vec{0,4}); // White Queen
     setupWithChar('q', Vec{7, 4}); // Black Queen
+
+    for (vector<shared_ptr<Piece>> vec : gb) {
+		for (shared_ptr<Piece> p : vec) {
+            if(p->getTeam() = turn) {
+                p->getPossibleMoves();
+                for (Vec end : p->returnPossibleMoves) {
+                    testMove(p->getCoordinate(), end);
+                }
+            } // Sets up that piece'possible moves
+        }
+    } 
 }
 
 ostream& operator<<(ChessBoard& cb, ostream& out) {
