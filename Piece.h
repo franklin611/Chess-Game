@@ -44,8 +44,8 @@ class Observer;
 class Piece{
 		// not sure if this needs to be protected ****
 		protected:
-			unique_ptr<Observer> playerWhite; 
-			unique_ptr<Observer> playerBlack;
+			// unique_ptr<Observer> playerWhite; 
+			// unique_ptr<Observer> playerBlack;
 			Vec coordinate;
 			char type;
 			vector<Vec> possibleMoves;

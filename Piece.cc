@@ -19,17 +19,17 @@ Piece::Piece(struct Vec coordinate, char type, bool colour): coordinate{coordina
 
 Piece::Piece(Piece& other) {
         // Copy member variables
-        if (other.playerWhite) {
-            playerWhite = make_unique<Observer>(*other.playerWhite);
-        } else {
-            playerWhite = nullptr;
-        }
+        // if (other.playerWhite) {
+        //     playerWhite = make_unique<Observer>(*other.playerWhite);
+        // } else {
+        //     playerWhite = nullptr;
+        // }
 
-        if (other.playerBlack) {
-            playerBlack = make_unique<Observer>(*other.playerBlack);
-        } else {
-            playerBlack = nullptr;
-        }
+        // if (other.playerBlack) {
+        //     playerBlack = make_unique<Observer>(*other.playerBlack);
+        // } else {
+        //     playerBlack = nullptr;
+        // }
 
         coordinate = other.coordinate;
         type = other.type;
