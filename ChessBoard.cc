@@ -115,14 +115,22 @@ bool twoStep(Vec start, Vec end){
 // Attach the player observers to each piece
 // It will also now attach the playerWhite and playerBlack pointers
 void ChessBoard::setupPlayers(unique_ptr<Observer> pWhite, unique_ptr<Observer> pBlack) {
-    playerWhite = pWhite;
-    playerBlack = pBlack;
-    for (vector<shared_ptr<Piece>> row : gb) {
-        for (shared_ptr<Piece> p : row) {
-            p->attachWhite(pWhite);
-            p->attachBlack(pBlack);
+    // You can make a unique to a shared, but not other way around
+    shared_ptr<Observer> sharedWhite = make_shared<Observer>(pWhite);
+    shared_ptr<Observer> sharedBlack = make_shared<Observer>(pBlack);
+    playerWhite = std::move(pWhite);
+    playerBlack = std::move(pBlack);
+
+    // Iterate through the game board and set up observers for each piece
+    for (auto& row : gb) {
+        for (auto& p : row) {
+            if (p) { // Check if the pointer is not null
+                p->attachWhite(sharedWhite); // We might have to change this to handle shared_ptr not unique_ptr
+                p->attachBlack(sharedBlack);
+            }
         }
     }
+
 }
 
 // Piece::Piece(struct Vec coordinate, char type, bool colour): coordinate{coordinate}, type{type}, white{colour} {} Piece constructor
