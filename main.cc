@@ -10,8 +10,8 @@ using namespace std;
 
 int convertToInt(char c) {
     if(c >= 'a' && c <= 'h') {
-        return c - 'a' + 1;
-        // Just going to make a decision that we use 1-8 not 0-7
+        return c - 'a';
+        // We use 0-7
     } else {
         return -1;
     }
@@ -69,7 +69,6 @@ int main() {
         // If we we are to use the custom board, we just get players cuz we already created this custom board in setup.
         // On top of this, we have a isEnd that resets the gameBoard and players. 
 
-         
         if(cmd == "game") {
             // Once the user has entered game, they should not be able to exit the below while loop until the game is over. 
             //To setup a new game, we take two input playerWhite playerBlack.
@@ -77,9 +76,11 @@ int main() {
             cin >> player1 >> player2;
 
             unique_ptr<Player> playerWhite, playerBlack;
+            // We are passing a default chessboard
+
 
             if(player1 == "human") {
-                playerWhite = make_unique<Human>(1)
+                playerWhite = make_unique<Human>(1, cb)
                 // I need to construct the player constructor in main
                 // I need to pass it the chessboard
 
@@ -88,7 +89,7 @@ int main() {
                 playerWhite = make_unique<Computer>(1, level);
             }
             if(player2 == "human") {
-                playerBlack = make_unique<Human>(0)
+                playerBlack = make_unique<Human>(0, cb)
             } else {
                 int level = stoi(player2.substr(9)); // The number
                 playerBlack = make_unique<Computer>(0, level);
@@ -97,9 +98,7 @@ int main() {
             // In both cases, setup board then players
             // We are always gonna have to setup players anyways
             cb.setupPlayers(playerWhite, playerBlack);
-            // JUst do in chessbaor constructor
 
-            
             // At this point, we have edited cb's game board already 
             // This set's cb's gameboard to a default baord. 
         
@@ -130,7 +129,8 @@ int main() {
                                 cin >> newPiece;
                                 cb.setupWithChar(newPiece, coordinate2);
                             } else cin.ignore();
-                            // Ignore the single next character input by the user. 
+                            // cin.ignore(std::numeric_limits<std::streamsize>::max()); // ChatGPT suggested
+                            // Ignore the single next character input by the user. (Cuz we can't assume just one character)
 
                         } else {
                             cout << "Invalid move. Please retry" << endl;
@@ -138,12 +138,11 @@ int main() {
                         }
                         // In makeHumanMove, we already check if move is valid. All we do inmain is just pass it.
                         // Is valid will check and determine based on what piece is located at start whether valid or not.  
-
                     } else if(cmd2 == "move" && player1 == "computer") {
                         // Make Computer Move
                         Vec end = cb.makeComputerMove(1, level);
                         if(cb.upgradePawn(end)){
-                            cb.setupWithChar(newPiece, end);
+                            cb.setupWithChar('Q', end);
                             // This needs to be fixed because its not a new piece it will always be Queen
                         }
                     } else if(cmd2 == "resign") {
@@ -183,9 +182,10 @@ int main() {
                         }
 
                     } else if (cmd == "move" && player2 == "computer") {
+
                         Vec end = cb.makeComputerMove(0, level);
                         if(cb.upgradePawn(end)){
-                            cb.setupWithChar(newPiece, end);
+                            cb.setupWithChar('q', end);
                         }
                     } else if(cmd2 == "resign") {
                         cb.forfeit();
@@ -215,8 +215,10 @@ int main() {
                 if(cmd2 == "+") {
                     cin >> piece >> coord;
                     // Place piece on coord. Piece is char
-                    int x = convertToInt(piece.substr(0,1));
-                    int y = (int) piece.substr(1);
+                    // e1, is Column 3 (starting from  0 to 7), Row 0
+                    //  
+                    int x = convertToInt(coord.substr(0,1));
+                    int y = (int) coord.substr(1);
                     Vec coordinate = Vec{x,y};
                     if (x == -1 ||(y <= 8 && y >= 1)) {
                         // Invalid input was pased. Do re-run the loop
@@ -224,7 +226,6 @@ int main() {
                         break;
                     
                     }
-
                     if(piece == 'k') cb.setBlackKing(coordinate);
                     if(piece == 'K') cb.setWhiteKing(coordinate);
 
