@@ -1,9 +1,11 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 #include "Observer.h"
+#include <memory> // Not sure if we need
 #include "Vec.h"
 #include <vector> // if I have the include in .h then don't need in .cc
 using namespace std;
+
 
 // player is an observer to pieces, and a subject for chessboard to observe
 class Player : public Observer {

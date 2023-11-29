@@ -1,14 +1,17 @@
 #include "ChessBoard.h"
-#include "Piece.h"
-using namespace std;
-#include "Player.h"
-#include "Computer.h"
-#include "TextDisplay.h"
-#include "GraphicsDisplay.h"
 #include "Pawn.h"
 #include "King.h"
-#include <vector>
-#include <ostream>
+#include "Queen.h"
+#include "Rook.h"
+#include "Knight.h"
+#include "Bishop.h"
+#include "Empty.h"
+#include <utility>
+
+#include "TextDisplay.h"
+#include "GraphicsDisplay.h" // We call their notify
+#include "Observer.h"
+using namespace std;
 
 // DONE
 bool ChessBoard::boardIsValid() {
@@ -51,6 +54,18 @@ bool ChessBoard::boardIsValid() {
     for (shared_ptr<Piece> p : gb[7]){
         if(p->getType() == 'p' || p->getType() == 'P') return false;
     }
+    // After board is determined to be valid
+    
+	for (vector<shared_ptr<Piece>> vec : gb) {
+		for (shared_ptr<Piece> p : vec) {
+            if(p->getTeam() = turn) {
+                p->getPossibleMoves();
+                for (Vec end : p->returnPossibleMoves) {
+                    testMove(p->getCoordinate(), end);
+                }
+            } // Sets up that piece'possible moves
+        }
+    } 
 }
 
 
@@ -76,8 +91,8 @@ bool ChessBoard::pawnMovedTwo(Vec coordinate, bool white){
     if (type == 'P' || type == 'p'){ shared_ptr<Pawn> pawn = dynamic_pointer_cast<Pawn>(p); }
     else { return false; }
 
-    if (pawn->pawnMovedTwo(gb)){
-        return true
+    if (pawn->pawnMovedTwo(gb, coordinate, white)){ // Idk why has issues
+        return true; 
     }
     return false;
 }
@@ -101,17 +116,6 @@ bool ChessBoard::isThere(Vec coordinate){
 	return false;
 }
 
-// DONE --> REMOVE IT
-bool ChessBoard::isValid(Vec start, Vec end){
-    // use start to get piece
-    int row = start.getY();
-    int col = start.getX();
-    shared_ptr<Piece> p = gb[row][col];
-
-    // use end to validate move
-    return p->isMoveValid(end);
-}
-
 // DONE
 bool twoStep(Vec start, Vec end){
     int startY = start.getY();
@@ -120,18 +124,25 @@ bool twoStep(Vec start, Vec end){
     return false;
 }
 
-
 // Attach the player observers to each piece
-// It wwill also now attach the playerWhite and playerBlack pointers
-ChessBoard::setupPlayers(unique_ptr<Observer> pWhite, unique_ptr<Observer> pBlack) {
-    playerWhite = pWhite;
-    playerBlack = pBlack;
-    for(size_t row = 0; row < gb.size(); ++row) {
-        for (size_t col = 0; col < gb[i].size; ++col) {
-            gb[row][col]->attachWhite(pWhite);
-            gb[row][col]->attachBlack(pBlack);
-        }
-    }
+// It will also now attach the playerWhite and playerBlack pointers
+void ChessBoard::setupPlayers(unique_ptr<Observer> pWhite, unique_ptr<Observer> pBlack) {
+    // You can make a unique to a shared, but not other way around
+    // shared_ptr<Observer> sharedWhite = make_shared<Observer>(pWhite);
+    // shared_ptr<Observer> sharedBlack = make_shared<Observer>(pBlack);
+    playerWhite = move(pWhite);
+    playerBlack = move(pBlack);
+
+    // Iterate through the game board and set up observers for each piece
+    // for (auto& row : gb) {
+    //     for (auto& p : row) {
+    //         if (p) { // Check if the pointer is not null
+    //             p->attachWhite(sharedWhite); // We might have to change this to handle shared_ptr not unique_ptr
+    //             p->attachBlack(sharedBlack);
+    //         }
+    //     }
+    // }
+
 }
 
 // Piece::Piece(struct Vec coordinate, char type, bool colour): coordinate{coordinate}, type{type}, white{colour} {} Piece constructor
@@ -143,21 +154,21 @@ ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_u
     // Setup the empty board and gameboard
     // unique_ptr<TextDisplay> td, unique_ptr<GraphicDisplay> gd, I have to make this here
 
-    bool switch = true;
-    for (int row = 0; row < 8; row+i) {
+    bool back = true;
+    for (int row = 0; row < 8; row++) {
         vector<unique_ptr<Piece>> ebRow;
-        vector<shared_ptr<Piece>> gbRow;/
+        vector<shared_ptr<Piece>> gbRow;
         for (int col = 0; col < 8; ++col) {
             // gb[row][col] = make_shared<Piece>();
             // Top left corner, the colour of the board is white. Bottom right (7,7) is white as well
-            if(switch) { // Alternating of black and white
-                ebRow.push_back(make_unique<Empty>(Piece::Empty(Vec{row, col}, ' ', true)));
-                gbRow.push_back(make_shared<Piece>(Piece::Empty(Vec{row, col}, ' ', true)));
-                switch = false;
+            if(back) { // Alternating of black and white
+                ebRow.push_back(make_unique<Empty>(Empty(Vec{row, col}, ' ', true)));
+                gbRow.push_back(make_shared<Piece>(Empty(Vec{row, col}, ' ', true)));
+                back = false;
             } else {
-                ebRow.push_back(make_unique<Empty>(Piece::Empty(Vec{row, col}, '_', false)));
-                gbRow.push_back(make_shared<Piece>(Piece::Empty(Vec{row, col}, '_', false)));
-                switch = true;
+                ebRow.push_back(make_unique<Empty>(Empty(Vec{row, col}, '_', false)));
+                gbRow.push_back(make_shared<Piece>(Empty(Vec{row, col}, '_', false)));
+                back = true;
             }
         }
         eb.push_back(move(ebRow));
@@ -267,10 +278,11 @@ void ChessBoard::notify(Vec start, Vec end){
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
             p->resetMoves(); // clear all the legal moves
-            p->possibleMoves(gb); // get the possible moves for this piece
+            p->getPossibleMoves(gb); // get the possible moves for this piece
+            // It was initially just possibleMoves
             // test every possible move -> which will add it to the legal moves if it passes
             // this will test
-            for (Vec move : p->getPossibleMoves(gb)){
+            for (Vec move : p->returnPossibleMoves()){
                 testMove(p->getCoordinate(), move);
             }
         }
@@ -382,7 +394,9 @@ void ChessBoard::testMove(Vec start, Vec end){
 
     // revert the board -> switch the board copy to the gb
     // this swap might not work
+    // Yup chatgpt said nada
     swap(gb, boardCopy);
+
 
     // revert the king's coordinates
     if (turn){
@@ -456,7 +470,7 @@ void ChessBoard::setupWithChar(char type, Vec coordinate) {
         gb[row][col] = make_shared<Rook>(coordinate, type, (type == 'R') ? 1 : 0); // Rook
     } else if (type == 'B' || type == 'b') {
         gb[row][col] = make_shared<Bishop>(coordinate, type, (type == 'B') ? 1 : 0); // Bishop
-    } else if (type == ' ' || type = '_') { //These may not be needed but im just having. I dont think it would ever reach it
+    } else if (type == ' ' || type == '_') { //These may not be needed but im just having. I dont think it would ever reach it
         gb[row][col] = getEmptyPiece(coordinate);
     } else {
         // Handle other cases or provide a default behavior
@@ -918,6 +932,17 @@ void ChessBoard::defaultBoard() {
     // Setup Queens
     setupWithChar('Q', Vec{0,4}); // White Queen
     setupWithChar('q', Vec{7, 4}); // Black Queen
+
+    for (vector<shared_ptr<Piece>> vec : gb) {
+		for (shared_ptr<Piece> p : vec) {
+            if(p->getTeam() = turn) {
+                p->getPossibleMoves();
+                for (Vec end : p->returnPossibleMoves) {
+                    testMove(p->getCoordinate(), end);
+                }
+            } // Sets up that piece'possible moves
+        }
+    } 
 }
 
 ostream& operator<<(ChessBoard& cb, ostream& out) {

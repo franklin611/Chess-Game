@@ -1,25 +1,27 @@
 #include "Piece.h"
 #include "Rook.h"
 
-Rook:Rook() : Piece{}, moved{false} {}
+Rook::Rook(): Piece{}, moved{false} {}
 
+Rook::Rook(Vec coordinate, char type, bool white) : Piece{coordinate, type, white}, moved{false} {}
 // To make Chiara's life easier, I can also just check if there is a piece there.
 // If our team, we can't make that move and break the for loop (Assuming we have 4 for loops for each
 // direction) if it is an enemy team, capturing is the last move we can make then break. 
 void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec move;
+    shared_ptr<Piece> p;
+    
 
     for(int i = 1; i < 7; ++i) {
         // Going Down
         move = Vec{coordinate.getX(), coordinate.getY() + i};
-        shared_ptr<Piece> p = pieceAt(gb, move);
-        
+        p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
         } else if (inBounds(move) && !p->getTeam()) {
             //Either out of bounds or not an empty piece
             // Still in bounds and is an enemy piece
-            possibleMoves.pushBack(move);
+            possibleMoves.push_back(move);
             break;
             // Last Capture Move
         } else {
@@ -29,11 +31,11 @@ void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     for(int i = 1; i < 7; ++i) {
         // Going Up
         move = Vec{coordinate.getX(), coordinate.getY() - i};
-        shared_ptr<Piece> p = pieceAt(gb, move);
+        p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
         } else if (inBounds(move) && !p->getTeam()) {
-            possibleMoves.pushBack(move);
+            possibleMoves.push_back(move);
             break;
         } else {
             break;
@@ -42,11 +44,11 @@ void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     for(int i = 1; i < 7; ++i) {
         // Going right
         move = Vec{coordinate.getX() + i, coordinate.getY()};
-        shared_ptr<Piece> p = pieceAt(gb, move);
+        p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
         } else if (inBounds(move) && !p->getTeam()) {
-            possibleMoves.pushBack(move);
+            possibleMoves.push_back(move);
             break;
         } else {
             break;
@@ -55,11 +57,11 @@ void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     for(int i = 1; i < 7; ++i) {
       // Going Left
         move = Vec{coordinate.getX() - i, coordinate.getY()};
-        shared_ptr<Piece> p = pieceAt(gb, move);
+        p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
         } else if (inBounds(move) && !p->getTeam()) {
-            possibleMoves.pushBack(move);
+            possibleMoves.push_back(move);
             break;
         } else {
             break;

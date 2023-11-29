@@ -1,12 +1,13 @@
 #include "Piece.h"
 #include "ChessBoard.h"
+#include "Observer.h"
 
 void Piece::resetMoves(){ possibleMoves.clear(); }
 
-void Piece::addLegalMove(Vec end, bool white){ 
-	if (white){ playerWhite->notify(coordinate, end); }
-	else { playerBlack->notify(coordinate, end); }
-}
+// void Piece::addLegalMove(Vec end, bool white){ 
+// 	if (white){ playerWhite->notify(coordinate, end); }
+// 	else { playerBlack->notify(coordinate, end); }
+// }
 
 void Piece::addTestMove(Vec end){ possibleMoves.push_back(end); }
 
@@ -18,17 +19,17 @@ Piece::Piece(struct Vec coordinate, char type, bool colour): coordinate{coordina
 
 Piece::Piece(Piece& other) {
         // Copy member variables
-        if (other.playerWhite) {
-            playerWhite = make_unique<Observer>(*other.playerWhite);
-        } else {
-            playerWhite = nullptr;
-        }
+        // if (other.playerWhite) {
+        //     playerWhite = make_unique<Observer>(*other.playerWhite);
+        // } else {
+        //     playerWhite = nullptr;
+        // }
 
-        if (other.playerBlack) {
-            playerBlack = make_unique<Observer>(*other.playerBlack);
-        } else {
-            playerBlack = nullptr;
-        }
+        // if (other.playerBlack) {
+        //     playerBlack = make_unique<Observer>(*other.playerBlack);
+        // } else {
+        //     playerBlack = nullptr;
+        // }
 
         coordinate = other.coordinate;
         type = other.type;
@@ -36,11 +37,11 @@ Piece::Piece(Piece& other) {
         white = other.white;
 }
 
-void Piece::attachWhite(unique_ptr<Observer> o){ playerWhite = o; }
+void Piece::attachWhite(unique_ptr<Observer> o){ playerWhite = move(o); } // We need to use move because we are transferring ownership
 
-void Piece::attachBlack(unique_ptr<Observer> o){ playerBlack = o; }
+void Piece::attachBlack(unique_ptr<Observer> o){ playerBlack = move(o); }
 
-vector<Vec> Piece::getLegalMoves(){ return legalMoves; }
+// vector<Vec> Piece::getLegalMoves(){ return legalMoves; }
 
 Vec Piece::getCoordinate(){ return coordinate; }
 
@@ -50,11 +51,11 @@ shared_ptr<Piece> Piece::pieceAt(vector<vector<shared_ptr<Piece>>> gb, Vec coord
     int row = coordinate.getY();
     int col = coordinate.getX();
 
-    return make_shared<Piece>(*(gb[row][col]));
+    return gb[row][col];
 }
 
 bool Piece::isEmptyPiece(shared_ptr<Piece> p) {
-    return (p->getType() != ' ' && p->getType() != '_') {
+    if (p->getType() != ' ' && p->getType() != '_') {
         return true;
     } else {
         return false;
@@ -64,7 +65,11 @@ bool Piece::isEmptyPiece(shared_ptr<Piece> p) {
 
 bool Piece::inBounds(Vec coordinate) {
     int row = coordinate.getY();
-    int col = coordinate.getX()
+    int col = coordinate.getX();
     return (row >= 0 && row <= 7 && col >= 0 && col <= 7);
 }
 
+
+vector<Vec> Piece::returnPossibleMoves() {
+    return possibleMoves;
+}

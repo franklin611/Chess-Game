@@ -5,13 +5,14 @@ class Pawn : public Piece {
 	bool moved; 
 	public: 
 		Pawn(); 
+		Pawn(Vec coordinate, char type, bool white);
 		void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) override;
-		bool canPassantRight();
-		bool canPassantLeft();
+		bool canPassantRight(vector<vector<shared_ptr<Piece>>> gb);
+		bool canPassantLeft(vector<vector<shared_ptr<Piece>>> gb);
 		bool getMovedTwo();
 		bool getMoved();
 		void hasMovedTwo(); 
 		void hasMoved();
-		bool pawnMovedTwo();
+		bool pawnMovedTwo(vector<vector<shared_ptr<Piece>>> gb, Vec coordinate, bool white);
 }; 
 

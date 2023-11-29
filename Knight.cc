@@ -2,6 +2,7 @@
 #include "ChessBoard.h"
 // Can just call the Piece's default constructor because no difference between Knight and Piece
 
+Knight::Knight(Vec coordinate, char type, bool colour): Piece{coordinate, type, colour} {}
 
 void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec topRight1;
@@ -32,35 +33,43 @@ void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     // Need to check if teammate or enemy team
 
     Vec move = topRight1;
-    if(inBounds(move) && !(pieceAt(gb, move)->getTeam() == getTeam())) {
-        possibleMovess.push_back(move);
+    shared_ptr<Piece> p = pieceAt(gb,move);
+    if(inBounds(move) && !(p->getTeam() == getTeam())) {
+        possibleMoves.push_back(move);
     } 
     move = topRight1;
-    if(inBounds(move) && !(pieceAt(gb, move)->getTeam() == getTeam())) {
-        possibleMovess.push_back(move);
+    p = pieceAt(gb,move);
+    if(inBounds(move) && !(p->getTeam() == getTeam())) {
+        possibleMoves.push_back(move);
     }
     move = topLeft1;
-    if(inBounds(move) && !(pieceAt(gb, move)->getTeam() == getTeam())) {
-        possibleMovess.push_back(move);
+    p = pieceAt(gb,move);
+    if(inBounds(move) && !(p->getTeam() == getTeam())) {
+        possibleMoves.push_back(move);
     }
     move = topLeft2;
-    if(inBounds(move) && !(pieceAt(gb, move)->getTeam() == getTeam())) {
-        possibleMovess.push_back(move);
+    p = pieceAt(gb,move);
+    if(inBounds(move) && !(p->getTeam() == getTeam())) {
+        possibleMoves.push_back(move);
     }
     move = bottomRight1;
-    if(inBounds(move) && !(pieceAt(gb, move)->getTeam() == getTeam())) {
-        possibleMovess.push_back(move);
+    p = pieceAt(gb,move);
+    if(inBounds(move) && !(p->getTeam() == getTeam())) {
+        possibleMoves.push_back(move);
     }
     move = bottomRight2;
-    if(inBounds(move) && !(pieceAt(gb, move)->getTeam() == getTeam())) {
-        possibleMovess.push_back(move);
+    p = pieceAt(gb,move);
+    if(inBounds(move) && !(p->getTeam() == getTeam())) {
+        possibleMoves.push_back(move);
     }
     move = bottomLeft1;
-    if(inBounds(move) && !(pieceAt(gb, move)->getTeam() == getTeam())) {
-        possibleMovess.push_back(move);
+    p = pieceAt(gb,move);
+    if(inBounds(move) && !(p->getTeam() == getTeam())) {
+        possibleMoves.push_back(move);
     }
     move = bottomLeft2;
-    if(inBounds(move) && !(pieceAt(gb, move)->getTeam() == getTeam())) {
-        possibleMovess.push_back(move);
+    p = pieceAt(gb,move);
+    if(inBounds(move) && !(p->getTeam() == getTeam())) {
+        possibleMoves.push_back(move);
     } 
 }
