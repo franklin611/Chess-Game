@@ -337,23 +337,22 @@ void ChessBoard::testMove(Vec start, Vec end){
         updatePawnMoved(start, end);
     }
 
-    // TODO: technically to make this more efficient we only have it iterate through the opponent's possible moves
+    // TODO: technically to make this more efficient we only have it iterate through the current's possible moves 
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
-            if (p->getTeam() == turn){ continue; }
+            if (p->getTeam() == turn){ continue; } 
             p->resetMoves(); // clear all the legal moves
-            p->getPossibleMoves(gb); // get the possible moves for this piece
+            p->possibleMoves(gb); // get the possible moves for this piece
         }
     }
     // TODO: i think somewhere above need break because what if not possible move?
     // --------------------- at this point ALL the pieces have possible moves -----------------------------
     // we need to decide if any of these moves will put the opponent's king in check
 
-    // need to check if that move the opponent
-    bool check = isCheck(!turn); // TODO: checking if our move puts the opponent in check? or checking if puts our opponent in check?????
-    // TODO: should be not putting our king in check
-
-    // we decide its legal -> notify player
+    // need to check if that move puts the opponent in check 
+    bool check = isCheck(!turn);
+    
+    // we decide its legal -> notify player 
     if (!check){
         if (!turn){ playerWhite->notifyLM(start, end); } // if the next turn (opponent is white)
         else { playerBlack->notifyLM(start, end); }
@@ -408,7 +407,7 @@ bool ChessBoard::isCheck(bool white){
     for(vector<shared_ptr<Piece>> vec : gb){
         for(shared_ptr<Piece> p : vec){
             if (p->getTeam() == white){ continue; } // skip pieces on our own team
-            for(Vec move : p->getLegalMoves()){
+            for(Vec move : p->getPossibleMoves()){
                 if (move == kingCoord){
                     return true;
                 }
@@ -416,6 +415,22 @@ bool ChessBoard::isCheck(bool white){
         }
     }
     return false;
+}
+
+void isCheckMateMove(){
+    // get the possible moves of the current 
+    bool empty = true;
+    for (vector<shared_ptr<Piece>> vec : gb){
+        for (shared_ptr<Piece> p : vec){
+            if (p->getTeam() != turn){ continue;}
+            p->possibleMoves(gb);
+            if (p->getPossibleMoves().size() != 0){ empty = false}
+        }
+    }
+
+    if (isCheck(turn) && empty){ 
+        // notify player 
+    }
 }
 
 // DONE
