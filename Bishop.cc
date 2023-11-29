@@ -4,38 +4,6 @@
 
 void Bishop::resetMoves() {
 	legalMoves.clear();
-	// determine all legal moves 
-	for (vector<Piece> vec : game->getGameBoard()){
-		for (Piece p : vec){
-			vector<Vec> moves = bishopMoves(); 
-			for (Vec end: moves){
-				if (!willCheck(coordinate, end)){
-					legalMoves.push_back(end);
-				};
-			} 
-		}
-	}
-}
-
-
-
-#include "Piece.h"
-#include "Chessboard.h"
-
-
-void Bishop::resetMoves() {
-	legalMoves.clear();
-	// determine all legal moves 
-	// for (vector<Piece> vec : game->getGameBoard()){
-	// 	for (Piece p : vec){
-	// 		vector<Vec> moves = bishopMoves(); 
-	// 		for (Vec end: moves){
-	// 			if (!willCheck(coordinate, end)){
-	// 				legalMoves.push_back(end);
-	// 			};
-	// 		} 
-	// 	}
-	// }
 }
 
 // Just all possible moves

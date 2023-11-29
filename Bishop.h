@@ -2,8 +2,7 @@
 
 class Bishop : public Piece {
     public: 
-        void resetMoves() override; 
         Bishop();
-        vector<Vec> bishopMoves();
+        void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb);
 };
 
