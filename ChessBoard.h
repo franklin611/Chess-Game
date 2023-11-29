@@ -1,12 +1,12 @@
-#include "Game.h"
+
 #include <vector>
 #include <iostream>
 #include <memory>
-#include "King.h"
-#include "Pawn.h"
+#include "Game.h" // Because we are creating an actual Game object
 using namespace std;
 
-class Piece;
+class Piece; // Because we are not directly access fields/functions of Piece, a forward declaration suffices
+class Observer; // Same reasonin
 class Vec;
 class Player;
 class TextDisplay;
@@ -74,7 +74,8 @@ class ChessBoard: public Observer {
         // change the gameboard based on validated move
         void notify(Vec start, Vec end) override; //TODO: what are we notifying for here????
 
-        void testMove(Vec start, Vec end) override; // TODO: also dont know what we're overriding here from observer pattern
+        void testMove(Vec start, Vec end);
+        // Why was it override before? void testMove(Vec start, Vec end) override;
 
         // checks if the king is in check -> ie. any of the opponents legal moves capture king
         bool isCheck(bool white);

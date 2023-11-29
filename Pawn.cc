@@ -84,7 +84,9 @@ bool Pawn::canPassantLeft(vector<vector<shared_ptr<Piece>>> gb) {
 bool Pawn::pawnMovedTwo(vector<vector<shared_ptr<Piece>>> gb, Vec coordinate, bool white) {
 	shared_ptr<Piece> p = pieceAt(gb, coordinate);
 	char type = p->getType();
-	if (type == 'P' || type == 'p'){ std::shared_ptr<Pawn> pawn = dynamic_pointer_cast<Pawn>(p); }
+	if (type == 'P' || type == 'p'){ 
+		std::shared_ptr<Pawn> pawn = dynamic_pointer_cast<Pawn>(p); 
+	} else return false;
 	if((white && type == 'p') || (!white && type == 'P') && pawn->getMovedTwo()) {
 		return true;
 	}
