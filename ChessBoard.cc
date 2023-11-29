@@ -119,16 +119,15 @@ bool twoStep(Vec start, Vec end){
     return false;
 }
 
-
 // Attach the player observers to each piece
-// It wwill also now attach the playerWhite and playerBlack pointers
-ChessBoard::setupPlayers(unique_ptr<Observer> pWhite, unique_ptr<Observer> pBlack) {
+// It will also now attach the playerWhite and playerBlack pointers
+void ChessBoard::setupPlayers(unique_ptr<Observer> pWhite, unique_ptr<Observer> pBlack) {
     playerWhite = pWhite;
     playerBlack = pBlack;
-    for(size_t row = 0; row < gb.size(); ++row) {
-        for (size_t col = 0; col < gb[i].size; ++col) {
-            gb[row][col]->attachWhite(pWhite);
-            gb[row][col]->attachBlack(pBlack);
+    for (vector<shared_ptr<Piece>> row : gb) {
+        for (shared_ptr<Piece> p : row) {
+            p->attachWhite(pWhite);
+            p->attachBlack(pBlack);
         }
     }
 }
@@ -142,21 +141,21 @@ ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_u
     // Setup the empty board and gameboard
     // unique_ptr<TextDisplay> td, unique_ptr<GraphicDisplay> gd, I have to make this here
 
-    bool switch = true;
-    for (int row = 0; row < 8; row+i) {
+    bool back = true;
+    for (int row = 0; row < 8; row++) {
         vector<unique_ptr<Piece>> ebRow;
-        vector<shared_ptr<Piece>> gbRow;/
+        vector<shared_ptr<Piece>> gbRow;
         for (int col = 0; col < 8; ++col) {
             // gb[row][col] = make_shared<Piece>();
             // Top left corner, the colour of the board is white. Bottom right (7,7) is white as well
-            if(switch) { // Alternating of black and white
-                ebRow.push_back(make_unique<Empty>(Piece::Empty(Vec{row, col}, ' ', true)));
-                gbRow.push_back(make_shared<Piece>(Piece::Empty(Vec{row, col}, ' ', true)));
-                switch = false;
+            if(back) { // Alternating of black and white
+                ebRow.push_back(make_unique<Empty>(Empty(Vec{row, col}, ' ', true)));
+                gbRow.push_back(make_shared<Piece>(Empty(Vec{row, col}, ' ', true)));
+                back = false;
             } else {
-                ebRow.push_back(make_unique<Empty>(Piece::Empty(Vec{row, col}, '_', false)));
-                gbRow.push_back(make_shared<Piece>(Piece::Empty(Vec{row, col}, '_', false)));
-                switch = true;
+                ebRow.push_back(make_unique<Empty>(Empty(Vec{row, col}, '_', false)));
+                gbRow.push_back(make_shared<Piece>(Empty(Vec{row, col}, '_', false)));
+                back = true;
             }
         }
         eb.push_back(move(ebRow));

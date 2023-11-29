@@ -57,7 +57,7 @@ class ChessBoard: public Observer {
         ChessBoard();
 
         // setUp players
-        void setupPlayers(unique_ptr<Player> white, unique_ptr<Player> black);
+        void setupPlayers(unique_ptr<Player> pWhite, unique_ptr<Player> pblack);
 
         void regMove(Vec start, Vec end);
 
