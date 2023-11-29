@@ -234,7 +234,7 @@ int main() {
         }
     } 
     // END OF GAME
-    cout << cb.game;e
+    cout << cb.game;
     cout << "Thank you for playing. We hope you enjoyed!" << endl;
     cout << "Make sure to play again!" << endl;
 }
