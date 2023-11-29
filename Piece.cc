@@ -64,7 +64,11 @@ bool Piece::isEmptyPiece(shared_ptr<Piece> p) {
 
 bool Piece::inBounds(Vec coordinate) {
     int row = coordinate.getY();
-    int col = coordinate.getX()
+    int col = coordinate.getX();
     return (row >= 0 && row <= 7 && col >= 0 && col <= 7);
 }
 
+
+vector<Vec> Piece::returnPossibleMoves() {
+    return possibleMoves;
+}

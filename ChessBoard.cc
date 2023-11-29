@@ -265,10 +265,11 @@ void ChessBoard::notify(Vec start, Vec end){
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
             p->resetMoves(); // clear all the legal moves
-            p->possibleMoves(gb); // get the possible moves for this piece
+            p->getPossibleMoves(gb); // get the possible moves for this piece
+            // It was initially just possibleMoves
             // test every possible move -> which will add it to the legal moves if it passes
             // this will test
-            for (Vec move : p->getPossibleMoves(gb)){
+            for (Vec move : p->possibleMoves){
                 testMove(p->getCoordinate(), move);
             }
         }
