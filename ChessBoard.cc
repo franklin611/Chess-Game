@@ -130,8 +130,8 @@ void ChessBoard::setupPlayers(unique_ptr<Observer> pWhite, unique_ptr<Observer> 
     // You can make a unique to a shared, but not other way around
     // shared_ptr<Observer> sharedWhite = make_shared<Observer>(pWhite);
     // shared_ptr<Observer> sharedBlack = make_shared<Observer>(pBlack);
-    playerWhite = std::move(pWhite);
-    playerBlack = std::move(pBlack);
+    playerWhite = move(pWhite);
+    playerBlack = move(pBlack);
 
     // Iterate through the game board and set up observers for each piece
     // for (auto& row : gb) {
