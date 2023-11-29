@@ -33,7 +33,7 @@ void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     
 // Actually, it shouldn't matter if it is black or white. 
     topRight1 = Vec{coordx + 1, coordy - 2};
-    topRight2 = Vec{coordx + 2, coordy - 2};
+    topRight2 = Vec{coordx + 2, coordy - 1};
         
     topLeft1 = Vec{coordx - 1, coordy - 2};
     topLeft2 = Vec{coordx - 2, coordy - 1};
