@@ -4,7 +4,6 @@
 
 
 void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
-    vector<Vec> moves;
     Vec topRight1;
     Vec topRight2;
     Vec topLeft1;
