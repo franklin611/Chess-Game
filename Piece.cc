@@ -54,7 +54,7 @@ shared_ptr<Piece> Piece::pieceAt(vector<vector<shared_ptr<Piece>>> gb, Vec coord
 }
 
 bool Piece::isEmptyPiece(shared_ptr<Piece> p) {
-    return (p->getType() != ' ' && p->getType() != '_') {
+    if (p->getType() != ' ' && p->getType() != '_') {
         return true;
     } else {
         return false;

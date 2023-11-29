@@ -20,7 +20,7 @@ void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         } else if (inBounds(move) && !p->getTeam()) {
             //Either out of bounds or not an empty piece
             // Still in bounds and is an enemy piece
-            possibleMoves.pushBack(move);
+            possibleMoves.push_back(move);
             break;
             // Last Capture Move
         } else {
@@ -34,7 +34,7 @@ void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
         } else if (inBounds(move) && !p->getTeam()) {
-            possibleMoves.pushBack(move);
+            possibleMoves.push_back(move);
             break;
         } else {
             break;
@@ -47,7 +47,7 @@ void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
         } else if (inBounds(move) && !p->getTeam()) {
-            possibleMoves.pushBack(move);
+            possibleMoves.push_back(move);
             break;
         } else {
             break;
@@ -60,7 +60,7 @@ void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
         } else if (inBounds(move) && !p->getTeam()) {
-            possibleMoves.pushBack(move);
+            possibleMoves.push_back(move);
             break;
         } else {
             break;
