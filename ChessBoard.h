@@ -17,19 +17,23 @@ class GraphicsDisplay;
 
 // remember that we want to make DEEP copies of pieces so then we need UNIQUE pointers to make sure that we don't accidentally make shallow copies
 
-class ChessBoard: public Observer{
+//td is observer, chessboard is subject
+
+class ChessBoard: public Observer {
     vector<vector<shared_ptr<Piece>>> gb;
     vector<vector<unique_ptr<Piece>>> eb;
     unique_ptr<Observer> playerWhite;
     unique_ptr<Observer> playerBlack;
-    unique_ptr<TextDisplay> td; 
-    unique_ptr<GraphicsDisplay> gd; 
+    unique_ptr<TextDisplay> td;
+    unique_ptr<GraphicsDisplay> gd;
     Game game;
     bool bCheck;
     bool wCheck;
     bool turn; // true is for white, false is for black
     Vec bKing;
     Vec wKing;
+    unique_ptr<TextDisplay> tdOutput; //TODO: i dont really understand why we have a pointer to display observer td, but we need
+    // one for td pointer
     public:
         // returns the type of a piece at that coordinate
         char getType(Vec coordinate);
@@ -68,9 +72,9 @@ class ChessBoard: public Observer{
         void updateKingCoord(Vec end, bool white);
 
         // change the gameboard based on validated move
-        void notify(Vec start, Vec end) override;
+        void notify(Vec start, Vec end) override; //TODO: what are we notifying for here????
 
-        void testMove(Vec start, Vec end) override;
+        void testMove(Vec start, Vec end) override; // TODO: also dont know what we're overriding here from observer pattern
 
         // checks if the king is in check -> ie. any of the opponents legal moves capture king
         bool isCheck(bool white);
@@ -108,7 +112,13 @@ class ChessBoard: public Observer{
 
         // Check if it is a valid board
         bool boardIsValid();
-    
+
+        bool isCheckmateMove(Vec start, Vec end);
+        bool isCheckMove(Vec start, Vec end);
+        bool isCaptureMove(Vec start, Vec end);
+
+
+        friend ostream& operator<<(ChessBoard& cb, ostream& out);
+
 };
 
-ostream& operator<<(ChessBoard& cb, ostream& out);
