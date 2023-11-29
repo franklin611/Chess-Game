@@ -110,7 +110,7 @@ int main() {
                         int y = stoi(end.substr(1));
                         Vec coordinate2 = Vec{x, y - 1};
 
-                        if(playerWhite.makeHumanMove(coordinate1, coordinate2)) {
+                        if(playerWhite->makeHumanMove(coordinate1, coordinate2)) {
                             // Valid Move
                             if(cb.upgradePawn(coordinate2)) {
                                 char newPiece;
@@ -150,7 +150,7 @@ int main() {
                         int y = stoi(end.substr(1));
                         Vec coordinate2 = Vec{x, y - 1}; // Start at row 0
 
-                        if(playerBlack.makeHumanMove(coordinate1, coordinate2)) {
+                        if(playerBlack->makeHumanMove(coordinate1, coordinate2)) {
                             if(cb.upgradePawn(coordinate2)) {
                                 char newPiece;
                                 cin >> newPiece;
