@@ -28,18 +28,17 @@ void Pawn::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
 		CaptureLeft = Vec(coordinate.getX() - 1, coordinate.getY() - 1);
 		moveUp = Vec(coordinate.getX(), coordinate.getY() - 1);
 		twoStep = Vec(coordinate.getX(), coordinate.getY() - 2);
-
 	}
 
 	// Checks if there is a piece there, and is an enemy
 	// Or En Passant Right option. Where there is an empty piece there
 	// First we have to check that it actually is a valid coordinate there. 
-	shared_ptr<Piece>() p = pieceAt(gb, CaptureRight);
-	if (inBounds(CaptureRight) && (!isEmptyPiece(p) && (p->getTeam() != this->getTeam())) || (isEmptyPiece(p) && canPassantRight())){
+	shared_ptr<Piece> p = pieceAt(gb, CaptureRight);
+	if (inBounds(CaptureRight) && (!isEmptyPiece(p) && (p->getTeam() != this->getTeam())) || (isEmptyPiece(p) && canPassantRight(gb))){
 		possibleMoves.push_back(CaptureRight);
 	}
 	p = pieceAt(gb,CaptureLeft);
-	if (inBounds(CaptureLeft) && (!isEmptyPiece(p) && (p->getTeam() != this->getTeam())) || (isEmptyPiece(p) && canPassantRight())){
+	if (inBounds(CaptureLeft) && (!isEmptyPiece(p) && (p->getTeam() != this->getTeam())) || (isEmptyPiece(p) && canPassantRight(gb))){
 		possibleMoves.push_back(CaptureLeft);
 	}	
 	p = pieceAt(gb,moveUp);
@@ -86,8 +85,9 @@ bool Pawn::canPassantLeft(vector<vector<shared_ptr<Piece>>> gb) {
 bool Pawn::pawnMovedTwo(vector<vector<shared_ptr<Piece>>> gb, Vec coordinate, bool white) {
 	shared_ptr<Piece> p = pieceAt(gb, coordinate);
 	char type = p->getType();
+	shared_ptr<Pawn> pawn;
 	if (type == 'P' || type == 'p'){ 
-		std::shared_ptr<Pawn> pawn = dynamic_pointer_cast<Pawn>(p); 
+		pawn = dynamic_pointer_cast<Pawn>(p); 
 	} else return false;
 	if((white && type == 'p') || (!white && type == 'P') && pawn->getMovedTwo()) {
 		return true;
