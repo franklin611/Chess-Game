@@ -8,7 +8,7 @@ void King::hasMoved(){
     moved = true;
 }
 
-void::getMOved() {
+void::getMoved() {
     return moved;
 }
 
