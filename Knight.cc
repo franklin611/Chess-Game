@@ -3,20 +3,6 @@
 // Can just call the Piece's default constructor because no difference between Knight and Piece
 
 
-void Knight::resetMoves() {
-    legalMoves.clear();
-	// for (vector<Piece> vec : game->getGameBoard()){
-	// 	for (Piece p : vec){
-	// 		vector<Vec> moves = knightMoves(); 
-	// 		for (Vec end: moves){
-	// 			if (!willCheck(coordinate, end)){
-	// 				legalMoves.push_back(end);
-	// 			};
-	// 		} 
-	// 	}
-	// }
-}
-
 void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     vector<Vec> moves;
     Vec topRight1;

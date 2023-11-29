@@ -54,8 +54,8 @@ class Piece{
 			void resetMoves();
 			void addLegalMove(Vec end, bool white); 
 			void addTestMove(Vec end);
-			// return what the possibleMoves are based on the board 
-			virtual getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) = 0; 
+			// Directly edits possibleMoves
+			virtual void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) = 0; 
 			char getType(); 
 			bool getTeam();
 			Piece() = default;

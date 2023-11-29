@@ -3,9 +3,8 @@
 class Rook : public Piece {
     bool moved;
     public: 
-        void resetMoves() override; 
         Rook();
-        vector<Vec> rookMoves();
+        void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) override;
         bool getMoved();
 };
 
