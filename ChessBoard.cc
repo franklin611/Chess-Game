@@ -122,7 +122,7 @@ bool twoStep(Vec start, Vec end){
 
 // Attach the player observers to each piece
 // It wwill also now attach the playerWhite and playerBlack pointers
-ChessBoard::setupPlayers(unique_ptr<Observer> pWhite>, unique_ptr<Observer> pBlack) {
+ChessBoard::setupPlayers(unique_ptr<Observer> pWhite, unique_ptr<Observer> pBlack) {
     playerWhite = pWhite;
     playerBlack = pBlack;
     for(size_t row = 0; row < gb.size(); ++row) {
