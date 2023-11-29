@@ -1,6 +1,8 @@
 #include "Piece.h"
 #include "Queen.h"
 
+Queen::Queen(Vec coordinate, char type, bool white) : Piece{coordinate, type, white} {}
+
 void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec move;
 

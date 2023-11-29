@@ -2,6 +2,7 @@
 #include "ChessBoard.h"
 // Can just call the Piece's default constructor because no difference between Knight and Piece
 
+Knight::Knight(Vec coordinate, char type, bool colour): Piece{coordinate, type, colour} {}
 
 void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec topRight1;
