@@ -4,6 +4,7 @@
 #include <memory>
 #include "King.h"
 #include "Pawn.h"
+#include "Empty.h"
 using namespace std;
 
 class Piece;
@@ -21,7 +22,7 @@ class GraphicsDisplay;
 
 class ChessBoard: public Observer {
     vector<vector<shared_ptr<Piece>>> gb;
-    vector<vector<unique_ptr<Piece>>> eb;
+    vector<vector<unique_ptr<Empty>>> eb;
     unique_ptr<Observer> playerWhite;
     unique_ptr<Observer> playerBlack;
     unique_ptr<TextDisplay> td;
