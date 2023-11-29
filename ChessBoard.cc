@@ -9,6 +9,16 @@ using namespace std;
 #include "King.h"
 #include <vector>
 
+bool ChessBoard::boardIsValid() {
+    // One White KIng
+    // One Black King
+    // No Pawns on the First Row (Row 0) 
+    // No Pawns on the Last Row (Row 7)
+    bool oneBlack = true;
+    bool oneWhite = true;
+    
+}
+
 // DONE
 char ChessBoard::getType(Vec coordinate){
     shared_ptr<Piece> p = getPiece(coordinate);
