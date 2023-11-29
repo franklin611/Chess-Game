@@ -2,8 +2,7 @@
 
 class Knight : public Piece {
     public: 
-        void resetMoves() override; 
         Knight();
-        vector<Vec> knightMoves();
+        void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) override;
 };
 
