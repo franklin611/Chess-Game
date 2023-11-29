@@ -2,7 +2,8 @@
 #include <string>
 #include "ChessBoard.h"
 #include "Player.h"
-#include "Game.h"
+#include "Human.h"
+#include "Computer.h"
 #include "Piece.h"
 #include "Observer.h"
 
@@ -11,7 +12,7 @@ using namespace std;
 
 int convertToInt(char c) {
     if(c >= 'a' && c <= 'h') {
-        return (c - 'a') - 1;
+        return (c - 'a'); // 'a' is equal to 97
         // We use 0-7
     } else {
         return -1;
@@ -56,7 +57,7 @@ int main() {
     string cmd;
     // Xwindow xw;
     bool usedSetup = false;
-    ChessBoard cb = ChessBoard{}; // Default chessBoard constructor
+    ChessBoard cb; // Default chessBoard constructor
     outputRules();
 
     while (cin >> cmd) {   
@@ -73,7 +74,7 @@ int main() {
             //To setup a new game, we take two input playerWhite playerBlack.
             // They are not players, they are Observers
             // Observer -> Player -> Computer or Human. They are subclasses of Observer
-            String player1, player2;
+            string player1, player2;
             cin >> player1 >> player2;
             unique_ptr<Observer> playerWhite, playerBlack;
 
@@ -185,8 +186,8 @@ int main() {
                     cin >> piece >> coord;
                     // e1, is Column 3 (starting from  0 to 7), Row 0
                     //  sop shoudl Vec{0,7)}
-                    int x = convertToInt(coord.substr(0,1));
-                    int y = (int) coord.substr(1);
+                    int x = convertToInt(coord.substr(0,1)[0]);
+                    int y = stoi(coord.substr(1));
                     Vec coordinate = Vec{x,y};
                     // Need to also check that the char was a proper input
                     if (x == -1 ||(y > 7 && y < 0) !(piece == 'k' || piece == 'K' || piece == 'q' || piece == 'Q' ||
@@ -200,7 +201,7 @@ int main() {
                     cb.setupWithChar(piece, coordinate); 
                 } else if (cmd2 == "-") {
                     cin >> coord;
-                    int x = convertToInt(piece.substr(0,1));
+                    int x = convertToInt(piece.substr(0,1)[0]);
                     int y = (int) piece.substr(1);
                     // Remove a piece on a board by placing an empty piece on that coordinate
                     Vec coordinate = Vec{x,y};
