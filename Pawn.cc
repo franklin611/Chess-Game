@@ -1,6 +1,8 @@
 #include "Pawn.h"
 #include "ChessBoard.h"
 
+Pawn::Pawn(Vec coordinate, char type, bool white) : Piece{coordinate, type, white}, movedTwo{false}, moved{false} {}
+
 bool Pawn::getMoved(){
 	return moved; 
 }

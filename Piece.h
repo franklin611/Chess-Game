@@ -69,6 +69,7 @@ class Piece{
 			shared_ptr<Piece> pieceAt(vector<vector<shared_ptr<Piece>>> gb, Vec coordinate);
 			bool isEmptyPiece(shared_ptr<Piece> p);
 			bool inBounds(Vec coordinate);
+			vector<Vec> returnPossibleMoves();
 };
 
 

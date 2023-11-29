@@ -6,6 +6,10 @@
 #include "Knight.h"
 #include "Bishop.h"
 #include "Empty.h"
+#include <utility>
+
+#include "TextDisplay.h"
+#include "GraphicsDisplay.h" // We call their notify
 using namespace std;
 
 // DONE
@@ -97,18 +101,6 @@ bool ChessBoard::isThere(Vec coordinate){
 		}
 	}
 	return false;
-}
-
-// DONE --> REMOVE IT
-bool ChessBoard::isValid(Vec start, Vec end){
-    // use start to get piece
-    int row = start.getY();
-    int col = start.getX();
-    shared_ptr<Piece> p = gb[row][col];
-
-    // use end to validate move
-    return p->isMoveValid(end);
-    // This function no longer exists?
 }
 
 // DONE
@@ -265,10 +257,11 @@ void ChessBoard::notify(Vec start, Vec end){
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
             p->resetMoves(); // clear all the legal moves
-            p->possibleMoves(gb); // get the possible moves for this piece
+            p->getPossibleMoves(gb); // get the possible moves for this piece
+            // It was initially just possibleMoves
             // test every possible move -> which will add it to the legal moves if it passes
             // this will test
-            for (Vec move : p->getPossibleMoves(gb)){
+            for (Vec move : p->returnPossibleMoves()){
                 testMove(p->getCoordinate(), move);
             }
         }
@@ -381,7 +374,9 @@ void ChessBoard::testMove(Vec start, Vec end){
 
     // revert the board -> switch the board copy to the gb
     // this swap might not work
+    // Yup chatgpt said nada
     swap(gb, boardCopy);
+
 
     // revert the king's coordinates
     if (turn){
@@ -439,7 +434,7 @@ void ChessBoard::setupWithChar(char type, Vec coordinate) {
         gb[row][col] = make_shared<Rook>(coordinate, type, (type == 'R') ? 1 : 0); // Rook
     } else if (type == 'B' || type == 'b') {
         gb[row][col] = make_shared<Bishop>(coordinate, type, (type == 'B') ? 1 : 0); // Bishop
-    } else if (type == ' ' || type = '_') { //These may not be needed but im just having. I dont think it would ever reach it
+    } else if (type == ' ' || type == '_') { //These may not be needed but im just having. I dont think it would ever reach it
         gb[row][col] = getEmptyPiece(coordinate);
     } else {
         // Handle other cases or provide a default behavior

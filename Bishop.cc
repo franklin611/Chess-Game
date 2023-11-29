@@ -3,6 +3,7 @@
 #include "Bishop.h"
 #include "Vec.h"
 
+Bishop::Bishop(Vec coordinate, char type, bool colour): Piece{coordinate, type, colour} {}
 
 // Generates all possible Moves, taking into account the pieces on the GameBoard
 void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
