@@ -5,6 +5,8 @@
 #include "Game.h" // Because we are creating an actual Game object
 
 
+#include "Empty.h"
+#include "Empty.h"
 using namespace std;
 
 class Piece; // Because we are not directly access fields/functions of Piece, a forward declaration suffices
@@ -25,7 +27,7 @@ class GraphicsDisplay;
 
 class ChessBoard: public Observer {
     vector<vector<shared_ptr<Piece>>> gb;
-    vector<vector<unique_ptr<Piece>>> eb;
+    vector<vector<unique_ptr<Empty>>> eb;
     unique_ptr<Observer> playerWhite;
     unique_ptr<Observer> playerBlack;
     unique_ptr<TextDisplay> td;
