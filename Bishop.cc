@@ -2,10 +2,6 @@
 #include "Chessboard.h"
 
 
-void Bishop::resetMoves() {
-	legalMoves.clear();
-}
-
 // Just all possible moves
 // Notes for Chiara
 // I know you said just possibleMoves, but if I create a getter method that takes the type and checks if a piecee exists there
