@@ -52,7 +52,7 @@ class ChessBoard: public ChessBoardObserver {
         bool pawnMovedTwo(Vec coordinate, bool white);
 
         // check if there is a piece at that coordinate
-        bool isThere(Vec coordinate, bool white, vector<vector<unique_ptr<Piece>>> board);
+        bool isThere(Vec coordinate, bool white, vector<vector<shared_ptr<Piece>>> board);
 
         // replace a piece at coordinate with replacement
         void replacePiece(Vec coordinate, shared_ptr<Piece> replacement);

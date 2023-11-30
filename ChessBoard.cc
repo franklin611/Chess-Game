@@ -435,11 +435,7 @@ void ChessBoard::isCheckMateMove(Vec start, Vec end){
             if (p->returnPossibleMoves().size() != 0){ empty = false}
         }
     }
-
-    if (isCheck(turn) && empty){
-        // notify player
-    }
-}
+    
     if (isCheck(turn) && empty){
         if (!turn){ playerWhite->notifyCMM(start, end); } // if the next turn (opponent is white)
         else { playerBlack->notifyCMM(start, end); }
