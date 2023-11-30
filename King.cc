@@ -1,6 +1,4 @@
 #include "King.h"
-#include "Player.h"
-#include "Piece.h"
 
 King::King(Vec coordinate, char type, bool colour): Piece{coordinate, type, colour}, moved{false} {}
 

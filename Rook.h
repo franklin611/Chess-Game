@@ -9,6 +9,7 @@ class Rook : public Piece {
         Rook();
         Rook(const Rook & other);
         Rook(Vec coordinate, char type, bool white);
+        ~Rook() override;
         void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) override;
         bool getMoved();
         shared_ptr<Piece> clone() const override;

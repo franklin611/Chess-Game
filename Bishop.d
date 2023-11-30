@@ -1,1 +1,1 @@
-Bishop.o: Bishop.cc Piece.h Vec.h Bishop.h
+Bishop.o: Bishop.cc Bishop.h Piece.h Vec.h

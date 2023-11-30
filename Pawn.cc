@@ -1,5 +1,12 @@
 #include "Pawn.h"
-#include "ChessBoard.h"
+
+void Pawn::hasMoved(){
+	moved = true;
+}
+
+void Pawn::hasMovedTwo(){
+	movedTwo = true;
+}
 
 Pawn::Pawn(Vec coordinate, char type, bool white) : Piece{coordinate, type, white}, movedTwo{false}, moved{false} {}
 

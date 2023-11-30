@@ -247,5 +247,6 @@ int main() {
     cout << cb;
     cout << "Thank you for playing. We hope you enjoyed!" << endl;
     cout << "Make sure to play again!" << endl;
+    return 0;
 }
 

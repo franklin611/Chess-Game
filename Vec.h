@@ -8,8 +8,8 @@ class Vec {
 			bool operator==(const Vec& other) const;
 			int getX();
 			int getY();
-			void setX(int x);
-			void setY(int y);
+			void setX(int num);
+			void setY(int num);
 			Vec() = default;
 			Vec(Vec&& other);
 			Vec(const Vec& other);
