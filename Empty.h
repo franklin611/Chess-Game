@@ -6,9 +6,11 @@
 class Empty : public Piece {
     public:
         Empty();
+        Empty(const Empty& other);
         Empty(Empty&&) = default;
         Empty(Vec coordinate, char type, bool white);
         void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) override;
+        shared_ptr<Piece> clone() const override;
 };
 
 #endif

@@ -3,6 +3,8 @@
 
 Rook::Rook(): Piece{}, moved{false} {}
 
+Rook::Rook(const Rook& other): Piece{other}, moved{other.moved} {}
+
 Rook::Rook(Vec coordinate, char type, bool white) : Piece{coordinate, type, white}, moved{false} {}
 // To make Chiara's life easier, I can also just check if there is a piece there.
 // If our team, we can't make that move and break the for loop (Assuming we have 4 for loops for each
@@ -75,3 +77,10 @@ void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
 bool Rook::getMoved() {
     return moved;
 }
+
+shared_ptr<Piece> Rook::clone() const {
+    return make_shared<Rook>(*this);
+}
+
+
+

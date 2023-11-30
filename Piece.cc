@@ -26,7 +26,7 @@ Piece::Piece(Piece&& other)
 
 Piece::Piece(const Piece& p): coordinate(p.coordinate), type(p.type), possibleMoves(p.possibleMoves), white(p.white) {}
 
-Piece::Piece(Empty& empty): Piece{empty.coordinate, empty.type, empty.white} {}
+// Piece::Piece(Empty& empty): Piece{empty.coordinate, empty.type, empty.white} {}
 
 void Piece::addTestMove(Vec end){ possibleMoves.push_back(end); }
 
@@ -86,3 +86,8 @@ bool Piece::inBounds(Vec coordinate) {
 vector<Vec> Piece::returnPossibleMoves() {
     return possibleMoves;
 }
+
+
+// shared_ptr<Piece> Piece::clone() const {
+//     return make_shared<Piece>(*this);
+// }

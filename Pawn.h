@@ -8,6 +8,7 @@ class Pawn : public Piece {
 	bool moved;
 	public:
 		Pawn();
+		Pawn(const Pawn& other);
 		Pawn(Vec coordinate, char type, bool white);
 		void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) override;
 		bool canPassantRight(vector<vector<shared_ptr<Piece>>> gb);
@@ -17,6 +18,7 @@ class Pawn : public Piece {
 		void hasMovedTwo();
 		void hasMoved();
 		bool pawnMovedTwo(vector<vector<shared_ptr<Piece>>> gb, Vec coordinate, bool white);
+		shared_ptr<Piece> clone() const override;
 };
 
 #endif

@@ -2,6 +2,7 @@
 #include "Bishop.h"
 
 Bishop::Bishop(Vec coordinate, char type, bool colour): Piece{coordinate, type, colour} {}
+Bishop::Bishop(const Bishop& other): Piece{other} {}
 
 // Generates all possible Moves, taking into account the pieces on the GameBoard
 void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
@@ -60,4 +61,8 @@ void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
             break;
         }
     }
+}
+
+shared_ptr<Piece> Bishop::clone() const {
+    return make_shared<Bishop>(*this);
 }

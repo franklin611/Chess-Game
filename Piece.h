@@ -55,7 +55,7 @@ class Piece{
 			bool white;
 		public:
 			// Piece(const Piece* emptyBase);
-			Piece(Empty& empty);
+			// Piece(Piece& other);
 			// this will respond according to how p moved
 			void resetMoves();
 			// void addLegalMove(Vec end, bool white);  // Not sure if we even need anymore
@@ -75,7 +75,8 @@ class Piece{
 			bool isEmptyPiece(shared_ptr<Piece> p);
 			bool inBounds(Vec coordinate);
 			vector<Vec> returnPossibleMoves();
-};
+			virtual shared_ptr<Piece> clone() const = 0;
+};	
 
 #endif
 

@@ -3,6 +3,8 @@
 
 Queen::Queen(Vec coordinate, char type, bool white) : Piece{coordinate, type, white} {}
 
+Queen::Queen(const Queen& other): Piece{other} {}
+
 void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec move;
     shared_ptr<Piece> p;
@@ -123,3 +125,9 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         } 
     }
 }
+
+shared_ptr<Piece> Queen::clone() const {
+    return make_shared<Queen>(*this);
+}
+
+

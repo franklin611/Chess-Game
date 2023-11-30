@@ -97,7 +97,7 @@ class ChessBoard: public ChessBoardObserver {
         void setupWithPiece(shared_ptr<Piece> p, Vec coordinate);
 
         // returns a DEEP COPY of an empty piece
-        shared_ptr<Piece> getEmptyPiece(Vec coord);
+        shared_ptr<Empty> getEmptyPiece(Vec coord);
 
         // main calls this function if a human wants to forfeit
         void forfeit();

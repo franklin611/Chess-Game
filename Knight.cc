@@ -3,6 +3,7 @@
 // Can just call the Piece's default constructor because no difference between Knight and Piece
 
 Knight::Knight(Vec coordinate, char type, bool colour): Piece{coordinate, type, colour} {}
+Knight::Knight(const Knight& other): Piece{other} {}
 
 void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec topRight1;
@@ -73,3 +74,9 @@ void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         possibleMoves.push_back(move);
     } 
 }
+
+shared_ptr<Piece> Knight::clone() const {
+    return make_shared<Knight>(*this);
+}
+
+

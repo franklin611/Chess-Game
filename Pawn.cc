@@ -3,6 +3,7 @@
 
 Pawn::Pawn(Vec coordinate, char type, bool white) : Piece{coordinate, type, white}, movedTwo{false}, moved{false} {}
 
+Pawn::Pawn(const Pawn& other) : Piece{other}, movedTwo{other.movedTwo}, moved{other.moved} {}
 bool Pawn::getMoved(){
 	return moved; 
 }
@@ -95,3 +96,8 @@ bool Pawn::pawnMovedTwo(vector<vector<shared_ptr<Piece>>> gb, Vec coordinate, bo
 	return false;
 
 }
+
+shared_ptr<Piece> Pawn::clone() const {
+    return make_shared<Pawn>(*this);
+}
+

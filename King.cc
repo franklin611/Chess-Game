@@ -6,6 +6,8 @@ King::King(Vec coordinate, char type, bool colour): Piece{coordinate, type, colo
 
 King::King() : Piece{}, moved{false} {}
 
+King::King(const King& other) : Piece{other}, moved{other.moved} {}
+
 void King::hasMoved(){
     moved = true;
 }
@@ -67,4 +69,9 @@ void King::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
 }
 
 // I need to check the logic for a castle
+
+shared_ptr<Piece> King::clone() const {
+    return make_shared<King>(*this);
+}
+
 

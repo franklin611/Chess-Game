@@ -339,7 +339,7 @@ bool ChessBoard::testMove(Vec start, Vec end){
         for (std::shared_ptr<Piece> p : vec) {
             // Copying data from shared_ptr to unique_ptr
             // COPY CTOR DID NOT WORK
-            shared_ptr<Piece> newPiece = make_shared<Piece>(*p);
+            shared_ptr<Piece> newPiece = p->clone();
             uniqueRow.push_back(newPiece);
         }
         boardCopy.push_back(uniqueRow);
@@ -559,12 +559,15 @@ void ChessBoard::setupWithPiece(shared_ptr<Piece> p, Vec coordinate) {
 }
 
 // DONE
-shared_ptr<Piece> ChessBoard::getEmptyPiece(Vec coord){
+// CHIRA - this was initially shared_ptr<Piece> but i changed to empty
+shared_ptr<Empty> ChessBoard::getEmptyPiece(Vec coord){
     // access the empty board and get the Piece* we want
     int row = coord.getY();
     int col = coord.getX();
     // COPY CTOR DIDNT WORK 
-    shared_ptr<Empty> emptyPiece = make_shared<Empty>(Vec{row, col}, eb[row][col]->getType(), eb[row][col]->getTeam());
+    // shoudl be row col,
+    shared_ptr<Empty> emptyPiece = make_shared<Empty>(Vec{col, row}, eb[row][col]->getType(), eb[row][col]->getTeam()); // TODO CHIARA
+    // shared_ptr<Empty> emptyPiece = eb[row][col]->clone();
     // Assume this copy construtor will work
 
     // return the copied piece
@@ -588,7 +591,8 @@ void ChessBoard::restartGame() {
         for (size_t j = 0; j < eb[i].size(); ++j) { // The column
         // Remmber, we have a vector<vector<>>>>
             // COPY CTOR DIDNT WORK 
-            gb[j][i] = make_shared<Piece>(*(eb[i][j]));
+            // gb[j][i] = make_shared<Piece>(*(eb[i][j]));
+            gb[j][i] = eb[i][j]->clone();
             // Assume the copy assignment operator works
         }
     }
