@@ -30,7 +30,9 @@ class ChessBoard: public ChessBoardObserver {
     vector<vector<unique_ptr<Empty>>> eb;
     unique_ptr<Observer> playerWhite;
     unique_ptr<Observer> playerBlack;
-    vector<unique_ptr<DisplayObserver>> displays;
+    // vector<unique_ptr<DisplayObserver>> displays;
+    unique_ptr<DisplayObserver> textDisplay;
+    unique_ptr<DisplayObserver> graphicsDisplay;
     unique_ptr<TextDisplay> td;
     unique_ptr<GraphicsDisplay> gd;
     Game game;
@@ -42,6 +44,9 @@ class ChessBoard: public ChessBoardObserver {
     bool displayScore;
     // one for td pointer
     public:
+
+        string checkString();
+
         // returns the type of a piece at that coordinate
         char getType(Vec coordinate);
 
