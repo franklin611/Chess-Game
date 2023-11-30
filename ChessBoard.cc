@@ -387,7 +387,11 @@ bool ChessBoard::testMove(Vec start, Vec end){
     // revert the board -> switch the board copy to the gb
     // this swap might not work
     // Yup chatgpt said nada
-    swap(gb, boardCopy);
+    for (int row = 0; row < gb.size(); ++row) {
+        for (int col = 0; col < gb[row].size(); ++col) {
+            gb[row][col] = move(boardCopy[row][col]);
+        }
+    }
 
 
     // revert the king's coordinates
