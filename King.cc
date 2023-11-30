@@ -42,19 +42,19 @@ void King::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         possibleMoves.push_back(castleRight);
     }
     p = pieceAt(gb, moveUp);
-    if (inBounds(moveUp) && (isEmptyPiece(p) || (p->getType() != getType()))) {
+    if (inBounds(moveUp) && (isEmptyPiece(p) || (p->getTeam() != getTeam()))) {
         possibleMoves.push_back(moveUp);
     }
     p = pieceAt(gb, moveLeft);
-    if (inBounds(moveLeft) && (isEmptyPiece(p) || (p->getType() != getType()))) {
+    if (inBounds(moveLeft) && (isEmptyPiece(p) || (p->getTeam() != getTeam()))) {
         possibleMoves.push_back(moveLeft);
     }
     p = pieceAt(gb, moveRight);
-    if (inBounds(moveRight) && (isEmptyPiece(p) || (p->getType() != getType()))) {
+    if (inBounds(moveRight) && (isEmptyPiece(p) || (p->getTeam() != getTeam()))) {
         possibleMoves.push_back(moveRight);
     }
     p = pieceAt(gb, moveDown);
-    if (inBounds(moveDown) && (isEmptyPiece(p) || (p->getType() != getType()))) {
+    if (inBounds(moveDown) && (isEmptyPiece(p) || (p->getTeam() != getTeam()))) {
         possibleMoves.push_back(moveDown);
     }
     // Left Castle
