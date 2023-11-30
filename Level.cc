@@ -18,7 +18,7 @@ vector<vector<Vec>> LevelTwo::createMoves(
     vector<vector<Vec>> checkMateMoves,
     vector<vector<Vec>> avoidCaptureMoves) {
     vector<vector<Vec>> twoMoves = captureMoves;
-    for (int i = 0; i < checkMoves.size(); ++i) {
+    for (size_t i = 0; i < checkMoves.size(); ++i) {
         twoMoves.emplace_back(checkMoves[i]);
     };
     return twoMoves;
@@ -32,10 +32,10 @@ vector<vector<Vec>> LevelThree::createMoves(
     vector<vector<Vec>> checkMateMoves,
     vector<vector<Vec>> avoidCaptureMoves) {
     vector<vector<Vec>> threeMoves = captureMoves;
-    for (int i = 0; i < checkMoves.size(); ++i) {
+    for (size_t i = 0; i < checkMoves.size(); ++i) {
             threeMoves.emplace_back(checkMoves[i]);
     };
-    for (int i = 0; i < avoidCaptureMoves.size(); ++i) {
+    for (size_t i = 0; i < avoidCaptureMoves.size(); ++i) {
         threeMoves.emplace_back(avoidCaptureMoves[i]);
     };
     return threeMoves;
@@ -49,7 +49,7 @@ vector<vector<Vec>> LevelFour::createMoves(
     vector<vector<Vec>> checkMateMoves,
     vector<vector<Vec>> avoidCaptureMoves) {
     vector<vector<Vec>> fourMoves = checkMateMoves;
-    for (int i = 0; i < checkMoves.size(); ++i) {
+    for (size_t i = 0; i < checkMoves.size(); ++i) {
         fourMoves.emplace_back(checkMoves[i]);
     };
     return fourMoves;

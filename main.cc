@@ -81,8 +81,7 @@ int main() {
             cin >> player1 >> player2;
             shared_ptr<Observer> playerWhite, playerBlack;
             int level;
-            if(!usedSetup) cb->defaultBoard(); // In both cases setup board first
-            cout << *(cb);
+            
 
             if(player1 == "human") {
                 playerWhite = make_shared<Human>(1, cb);
@@ -97,7 +96,8 @@ int main() {
                 playerBlack = make_shared<Computer>(0, cb, level);
             }
 
-
+            if(!usedSetup) cb->defaultBoard(); // In both cases setup board first
+            cout << *(cb);
             cb->setupPlayers(playerWhite, playerBlack); // Then players
             string cmd2;
             while(cin >> cmd2) {
@@ -210,7 +210,7 @@ int main() {
                     int y = stoi(coord.substr(1));
                     Vec coordinate = Vec{x, y- 1};
                     // Need to also check that the char was a proper input
-                    if (x == -1 ||(y > 7 && y < 0) && !(piece == 'k' || piece == 'K' || piece == 'q' || piece == 'Q' ||
+                    if ((x == -1 || (y > 7 && y < 0)) && !(piece == 'k' || piece == 'K' || piece == 'q' || piece == 'Q' ||
                         piece == 'b' || piece == 'B' || piece == 'n' || piece == 'N' ||
                         piece == 'r' || piece == 'R' || piece == 'p' || piece == 'P')) {
                         cout << "Invalid Input" << endl;
