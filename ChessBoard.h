@@ -1,3 +1,5 @@
+#ifndef _CHESSBOARD_H_
+#define _CHESSBOARD_H_
 
 #include <vector>
 #include <iostream>
@@ -136,3 +138,4 @@ class ChessBoard: public ChessBoardObserver {
 
 };
 
+#endif

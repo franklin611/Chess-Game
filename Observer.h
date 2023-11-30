@@ -1,3 +1,6 @@
+#ifndef _OBSERVER_H_
+#define _OBSERVER_H_
+
 #include "Vec.h"
 class Observer {
  public:
@@ -7,3 +10,5 @@ class Observer {
   virtual void notifyCMM(Vec start, Vec end) = 0;
   virtual ~Observer();
 };
+
+#endif
