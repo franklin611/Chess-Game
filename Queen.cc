@@ -14,7 +14,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) { // We dont care that 
             possibleMoves.push_back(move);
-        } else if (inBounds(move) && pieceAt(gb, move)->getTeam() != getTeam()) {
+        } else if (inBounds(move) && (p->getTeam() != getTeam())) {
             possibleMoves.push_back(move);
             // Last possible move they can make
             break;
@@ -29,7 +29,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         p = pieceAt(gb, move);
          if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
-        } else if (inBounds(move) && pieceAt(gb, move)->getTeam() != getTeam()) {
+        } else if (inBounds(move) && (p->getTeam() != getTeam())) {
             possibleMoves.push_back(move);
             break;
         } else {
@@ -43,7 +43,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         p = pieceAt(gb, move);
          if(inBounds(move) && isEmptyPiece(p)) { // If it is not an empty piece at that coordinate, then means there is a piece there. 
             possibleMoves.push_back(move);
-        } else if (inBounds(move) && pieceAt(gb, move)->getTeam() != getTeam()) { // If the piece there is a enemy perfect! That is the last move.
+        } else if (inBounds(move) && (p->getTeam() != getTeam())) { // If the piece there is a enemy perfect! That is the last move.
             possibleMoves.push_back(move);
             break;
         } else { // Else a temamate piece, then no more moves so we break
@@ -57,7 +57,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         p = pieceAt(gb, move);
          if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
-        } else if (inBounds(move) && p->getTeam() != getTeam()) {
+        } else if (inBounds(move) && (p->getTeam() != getTeam())) {
             possibleMoves.push_back(move);
             break;
         } else {
@@ -71,7 +71,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
-        } else if (inBounds(move) && !p->getTeam()) {
+        } else if (inBounds(move) && (p->getTeam() != getTeam())) {
             //Either out of bounds or not an empty piece
             // Still in bounds and is an enemy piece
             possibleMoves.push_back(move);
@@ -88,7 +88,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
-        } else if (inBounds(move) && !p->getTeam()) {
+        } else if (inBounds(move) && (p->getTeam() != getTeam())) {
             possibleMoves.push_back(move);
             break;
         } else {
@@ -102,7 +102,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
-        } else if (inBounds(move) && !p->getTeam()) {
+        } else if (inBounds(move) && (p->getTeam() != getTeam())) {
             possibleMoves.push_back(move);
             break;
         } else {
@@ -116,7 +116,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
-        } else if (inBounds(move) && !p->getTeam()) {
+        } else if (inBounds(move) && (p->getTeam() != getTeam())) {
             possibleMoves.push_back(move);
             break;
         } else {
