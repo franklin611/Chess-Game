@@ -301,7 +301,7 @@ void ChessBoard::notify(Vec start, Vec end){
 }
 
 // DONE
-// we can assume that the turn player has no moves 
+// we can assume that the turn player has no moves
 void ChessBoard::endGame() {
     if (turn) {
         if (wCheck) { game.updateWhite(false); }
@@ -372,9 +372,9 @@ bool ChessBoard::testMove(Vec start, Vec end){
     // need to check if that move puts the opponent in check
     bool check = isCheck(!turn);
     bool legal = false;
-    
-    // we decide its legal -> notify player 
-    if (!check){ 
+
+    // we decide its legal -> notify player
+    if (!check){
         if (!turn){ playerWhite->notifyLM(start, end); } // if the next turn (opponent is white)
         else { playerBlack->notifyLM(start, end); }
         isCaptureMove(start, end, boardCopy);
@@ -425,7 +425,7 @@ bool ChessBoard::isCheck(bool white){
 }
 
 void ChessBoard::isCheckMateMove(Vec start, Vec end){
-    // get the possible moves of the current 
+    // get the possible moves of the current
     bool empty = true;
     for (vector<shared_ptr<Piece>> vec : gb){
         for (shared_ptr<Piece> p : vec){
@@ -435,14 +435,14 @@ void ChessBoard::isCheckMateMove(Vec start, Vec end){
             if (p->returnPossibleMoves().size() != 0){ empty = false}
         }
     }
-    
+
     if (isCheck(turn) && empty){
         if (!turn){ playerWhite->notifyCMM(start, end); } // if the next turn (opponent is white)
         else { playerBlack->notifyCMM(start, end); }
     }
 }
 
-//  did this move put the current team in check 
+//  did this move put the current team in check
 void ChessBoard::isCheckMove(Vec start, Vec end){
     if (isCheck(turn)){
         if (!turn){ playerWhite->notifyCheckM(start, end); }
@@ -450,18 +450,18 @@ void ChessBoard::isCheckMove(Vec start, Vec end){
     }
 }
 
-// WILL this move capture any pieces on the opposing team 
+// WILL this move capture any pieces on the opposing team
 void ChessBoard::isCaptureMove(Vec start, Vec end, vector<vector<shared_ptr<Piece>>> ob){
-    // if there is a piece at the end coordinate -> it is a capture move 
-    if (isThere(end, turn, ob)){ 
+    // if there is a piece at the end coordinate -> it is a capture move
+    if (isThere(end, turn, ob)){
         if (!turn){ playerWhite->notifyCapM(start, end); } // if the next turn (opponent is white)
         else { playerBlack->notifyCapM(start, end); }
     }
 }
 
-// did the move take this piece out of a position to be captured 
+// did the move take this piece out of a position to be captured
 void ChessBoard::isAvoidCaptureMove(Vec start, Vec end, vector<vector<shared_ptr<Piece>>> ob){
-    // assume it is not in a position to be captured 
+    // assume it is not in a position to be captured
     bool capture = false;
     // was the piece (on the opponent's team) in a position to be captured in the first place in the old board
     // look at the current team's possible moves if they are equal to the piece's start
@@ -597,324 +597,6 @@ void ChessBoard::setBlackKing(Vec coordinate){
 
 }
 
-//________________________________________________________ HELENAS CODE SORRY IT'S MESSY DONT TOUCH _____________________________
-
-// idk man TODO: how do I have a possibleMoves? what is possibleMoves? is it possibleMoves of a piece? how do I give a piece to
-// player -> computer -> level -> levelone?
-vector<vector<Vec>> generateAllLevelMoves(vector<vector<Vec>> possibleMoves, int level) {
-    vector<vector<Vec>> levelMoves;
-    vector<vector<Vec>> checkmateMoves = generateCheckmateMoves(possibleMoves);
-    vector<vector<Vec>> checkMoves = generateCheckMoves(possibleMoves);
-    vector<vector<Vec>> captureMoves = generateCaptureMoves(possibleMoves);
-    vector<vector<Vec>> avoidCaptureMoves = generateAvoidCaptureMoves(possibleMoves);
-
-    if(level == 1) {
-        return possibleMoves;
-    } else if (level == 2) {
-        levelMoves.insert(levelMoves.end(), checkMoves.start(), checkMoves.end());
-        levelMoves.insert(levelMoves.end(), captureMoves.start(), captureMoves.end());
-    } else if (level == 3) {
-        levelMoves.insert(levelMoves.end(), checkMoves.start(), checkMoves.end());
-        levelMoves.insert(levelMoves.end(), captureMoves.start(), captureMoves.end());
-        levelMoves.insert(levelMoves.end(), avoidCaptureMoves.start(), avoidCaptureMoves.end());
-    } else if (level == 4) {
-        if(!checkmateMoves.empty()) {
-            return checkmateMoves;
-        } else {
-            levelMoves.insert(levelMoves.end(), checkMoves.start(), checkMoves.end());
-            levelMoves.insert(levelMoves.end(), captureMoves.start(), captureMoves.end());
-            levelMoves.insert(levelMoves.end(), avoidCaptureMoves.start(), avoidCaptureMoves.end());
-        }
-    }
-    return levelMoves;
-}
-
-// HELENAS NEW
-// TODO: checkmate basically puts opponent king in check (this part just like chiaras testMove function) and no more legalMoves for opponent (this fucked since never have legalMoves)
-bool ChessBoard::isCheckmateMove(Vec start, Vec end) {
-    // TODO: before from franklins it had isValid() checking start and end, im just gonna assume that it is already valid at this point because of testMove function
-
-    //TODO: copied from chiara testMove
-    // make a deep copy of the gb
-    // consult about making a deep copy of the board
-    // creating a 2D vector of unique pointers by copying from the shared vector
-    vector<vector<unique_ptr<Piece>>> boardCopy;
-
-    for (std::vector<std::shared_ptr<Piece>> vec : gb) {
-        std::vector<std::unique_ptr<Piece>> uniqueRow;
-        for (std::shared_ptr<Piece> p : vec) {
-            // Copying data from shared_ptr to unique_ptr
-            uniqueRow.push_back(std::make_unique<Piece>(*p));
-        }
-        boardCopy.push_back(uniqueRow);
-    }
-
-    char startType = getType(start);
-    Vec wKingCoord;
-    Vec bKingCoord;
-
-    if (turn && startType != 'K'){
-        wKingCoord = wKing;
-    } else if (!turn, startType != 'k'){
-        bKingCoord = bKing;
-    } else if (turn){
-        wKingCoord = start;
-    } else {
-        bKingCoord = start;
-    }
-
-    // now we can make edits on the game board which we will later revert
-    makeMove(start, end);
-    // we can safely update the booleans of pieces and update
-
-    // we will also change the king's booleans
-    if (startType == 'K' || startType == 'k'){
-        updateKingCoord(end, turn);
-        updateKingMoved(end);
-    }
-
-    // check if the piece that moved is a pawn
-    if (startType == 'P' || startType == 'p'){
-        updatePawnMoved(start, end);
-    }
-
-    // TODO: technically to make this more efficient we only have it iterate through the opponent's possible moves
-    for (vector<shared_ptr<Piece>> vec : gb){
-		for (shared_ptr<Piece> p : vec){
-            if (p->getTeam() == turn){ continue; }
-            p->resetMoves(); // clear all the legal moves
-            p->getPossibleMoves(gb); // get the possible moves for this piece
-        }
-    }
-    // TODO: i think somewhere above need break because what if not possible move?
-    // --------------------- at this point ALL the pieces have possible moves -----------------------------
-    // we need to decide if any of these moves will put the opponent's king in check
-
-    // check if put
-    // need to check if that move the opponent
-    bool check = isCheck(turn); // TODO: checking if our move puts the opponent in check? or checking if puts our opponent in check?????
-    // TODO: should be not putting our king in check
-
-    if (check) { // check it's putting opponent king in check
-        if (turn && playerWhite.getLegalMoves().size() == 0) //TODO: smth like this but this is also fucked up because player is observer subclass and observer doesnt have legalMoves???
-        return true;
-    }
-    return false;
-
-}
-
-// FRANKLINS OLD
-// vector<vector<Vec>> generateCheckmateMoves(vector<Vec> possibleMoves) {
-//     vector<vector<Vec>> levelMoves;
-//     for (int i = 0; !possibleMoves.empty(); ++i) {
-//         Vec start = possibleMoves[i][0];
-//         Vec end = possibleMoves[i][1];
-//         if(isValid(start, end)) {
-//             // Asumption: Before we reach this point, the game is not in a "isEnd()" state. Is this valid?
-//             vector<vector<unique_ptr<Piece>>> copyBoard = gb;
-//             notify(start, end);
-//             // Now need to check if this is a check/checkmate Move. But we run into the same issue of we have to make sure that being in checkmate
-//             // Doesn't end the game. From my understanding, I will be calling isEnd() after every move made in main.
-//             // And ending the game if true. If i do this simulation in a function, as long as I revert the move before reaching the isEnd in main
-//             // No issues?
-
-//             if(isEnd()) levelMoves.emplace_back(vector<Vec>{start, end});  // Checks to see if after such a move, if the game is voer.
-
-//             revertBoard(copyBoard, !turn);
-//         }
-//     }
-//     return levelMoves;
-// }
-
-// HELENAS NEW
-bool ChessBoard::isCheckMove(Vec start, Vec end) {
-    // chiara's copied testMove
-
-    // make a deep copy of the gb
-    // consult about making a deep copy of the board
-    // creating a 2D vector of unique pointers by copying from the shared vector
-    vector<vector<unique_ptr<Piece>>> boardCopy;
-
-    for (std::vector<std::shared_ptr<Piece>> vec : gb) {
-        std::vector<std::unique_ptr<Piece>> uniqueRow;
-        for (std::shared_ptr<Piece> p : vec) {
-            // Copying data from shared_ptr to unique_ptr
-            uniqueRow.push_back(std::make_unique<Piece>(*p));
-        }
-        boardCopy.push_back(uniqueRow);
-    }
-
-    char startType = getType(start);
-    Vec wKingCoord;
-    Vec bKingCoord;
-
-    if (turn && startType != 'K'){
-        wKingCoord = wKing;
-    } else if (!turn, startType != 'k'){
-        bKingCoord = bKing;
-    } else if (turn){
-        wKingCoord = start;
-    } else {
-        bKingCoord = start;
-    }
-
-    // now we can make edits on the game board which we will later revert
-    makeMove(start, end);
-    // we can safely update the booleans of pieces and update
-
-    // we will also change the king's booleans
-    if (startType == 'K' || startType == 'k'){
-        updateKingCoord(end, turn);
-        updateKingMoved(end);
-    }
-
-    // check if the piece that moved is a pawn
-    if (startType == 'P' || startType == 'p'){
-        updatePawnMoved(start, end);
-    }
-
-    // TODO: technically to make this more efficient we only have it iterate through the opponent's possible moves
-    for (vector<shared_ptr<Piece>> vec : gb){
-		for (shared_ptr<Piece> p : vec){
-            if (p->getTeam() == turn){ continue; }
-            p->resetMoves(); // clear all the legal moves
-            p->getPossibleMoves(gb); // get the possible moves for this piece
-        }
-    }
-    // TODO: i think somewhere above need break because what if not possible move?
-    // --------------------- at this point ALL the pieces have possible moves -----------------------------
-    // we need to decide if any of these moves will put the opponent's king in check
-
-    // need to check if that move the opponent
-    bool check = isCheck(turn); // TODO: checking if our move puts the opponent in check? or checking if puts our opponent in check?????
-    // TODO: should be not putting our king in check
-
-    // we decide its legal -> notify player
-    if (check){
-       return true;
-    } else {
-        return false;
-    }
-}
-
-// FRANKLINS OLD
-// vector<vector<Vec>> generateCheckMoves(vector<vector<Vec>> possibleMoves) {
-//     vector<vector<Vec>> levelMoves;
-//     for (int i = 0; !possibleMoves.empty(); ++i) {
-//         Vec start = possibleMoves[i][0];
-//         Vec end = possibleMoves[i][1];
-//         if(isValid(start, end)) {
-//             vector<vector<unique_ptr<Piece>>> copyBoard = gb;
-//             notify(start, end);
-//             // Now need to check if this is a check/checkmate Move. But we run into the same issue of we have to make sure that being in checkmate
-//             // Doesn't end the game
-//             // void revertBoard(vector<vector<unique_ptr<Piece>>> oldPieces, bool oldTurn);
-//           levelMoves.emplace_back(vector<V  if(isCheck(turn)) ec>{start, end}); // It is turn, not !turn because if it was white before, calling notify sets turn to black now which is what we wanted to check anyways
-//             revertBoard(copyBoard, !turn);
-//         }
-//     }
-//     return levelMoves;
-// }
-
-// basically have it still observer pattern, calling player's notify to put it inside of the categorized
-// vector of vector of vecs and then based on this, filter the moves (eg have a vectorvectorvec of generateCaptureMoves,
-
-//capture move assume board has not made a move so we can check if move is gonna capture a piece
-// for every other category, assume using board after move made
-// arguments start and end, if passes notify player and append it to right field
-
-// have a bunch of notifies
-
-/// FRANKLINS OLD
-// vector<vector<Vec>> generateCaptureMoves(vector<vector<Vec>> possibleMoves) {
-//     vector<vector<Vec>> levelMoves;
-//     for (int i = 0; !possibleMoves.empty(); ++i) {
-//         Vec start = possibleMoves[i][0];
-//         Vec end = possibleMoves[i][1];
-//         if(isValid(start, end)) {
-//             if(isThere(end)) levelMoves.emplace_back(vector<Vec>{start, end});
-//             // No need to simulate any moves because if it is a valid move and there is a piece at end, then it is a capture move
-//         }
-//     }
-//     return levelMoves;
-// }
-
-// HELENAS NEW
-vector<vector<Vec>> isAvoidCaptureMove(vector<vector<Vec>> possibleMoves) {
-// 1. We need to know the enemy moves firstly, not our piece’s move. We need to use the enemy piece’s end coordinates
-// 2. Check compare all of the enemy piece’s capture move’s end points. Compare those end points to our our pieces current pieces start points.
-// 3. If they match, check if these piece’s end points are outside/dont exist in the enemy’s move’s end points.
-// I am going to classify as an avoidCapture move as singular. If it avoids atleast 1 piece's capture/end point
-// wherever I land after make ssaid avoidCapture move, I dont care whether it puts me in another capture spot or not. ()
-// Technically, the move itself is already avoiding A capture, I will still code the idea for avoiding both captuyres.
-    vector<vector<Vec>> enemyMoves = cb->getLegalMoves(!turn); // TODO: this is the issue, won't work because we don't have legalMoves because testMoves iterates 1 by 1
-    vector<vector<Vec>> levelMoves;
-    for(int i = 0; !possibleMoves.empty(); ++i) {
-        bool check1 = false;
-        bool check2 = false;
-        Vec start = possibleMoves[i][0];
-        Vec end = possibleMoves[i][1];
-
-        // Simple Avoid Capture
-        for (int j = 0; !enemyMoves.empty(); ++j) {
-            if (enemyMoves[j][1] == start) {
-                levelMoves.emplace_back(start, end);
-                break; // Simple avoid capture move
-            }
-        }
-
-        // // More complicated Avoid Capture
-        // // We can use this for higher levels of computer instead
-        // // Avoids not only capture of their stard coordinate, but also their end coordinate
-        // for (int k = 0; !enemyMoves.empty(); ++k) {
-        //     if(enemyMoves[k][1] == start) check1 = true;getEmp
-        // }
-        // for(int l = 0; !enemyMoves.empty(); ++l) {
-        //     if(enemyMoves[l][1] == end) break;
-        //     // This means the move's end position is also in danger of being captured.
-        // }
-        // if(check! && check2) levelMoves.emplace_back(vector<Vec>{start, end});
-    }
-}
-
-// FRANKLINS OLD
-// vector<vector<Vec>> generateAvoidCaptureMoves(vector<vector<Vec>> possibleMoves) {
-// // 1. We need to know the enemy moves firstly, not our piece’s move. We need to use the enemy piece’s end coordinates
-// // 2. Check compare all of the enemy piece’s capture move’s end points. Compare those end points to our our pieces current pieces start points.
-// // 3. If they match, check if these piece’s end points are outside/dont exist in the enemy’s move’s end points.
-// // I am going to classify as an avoidCapture move as singular. If it avoids atleast 1 piece's capture/end point
-// // wherever I land after make ssaid avoidCapture move, I dont care whether it puts me in another capture spot or not. ()
-// // Technically, the move itself is already avoiding A capture, I will still code the idea for avoiding both captuyres.
-//     vector<vector<Vec>> enemyMoves = cb->getLegalMoves(!turn);
-//     vector<vector<Vec>> levelMoves;
-//     for(int i = 0; !possibleMoves.empty(); ++i) {
-//         bool check1 = false;
-//         bool check2 = false;
-//         Vec start = possibleMoves[i][0];
-//         Vec end = possibleMoves[i][1];
-
-//         // Simple Avoid Capture
-//         for (int j = 0; !enemyMoves.empty(); ++j) {
-//             if (enemyMoves[j][1] == start) {
-//                 levelMoves.emplace_back(start, end);
-//                 break; // Simple avoid capture move
-//             }
-//         }
-
-//         // // More complicated Avoid Capture
-//         // // We can use this for higher levels of computer instead
-//         // // Avoids not only capture of their stard coordinate, but also their end coordinate
-//         // for (int k = 0; !enemyMoves.empty(); ++k) {
-//         //     if(enemyMoves[k][1] == start) check1 = true;getEmp
-//         // }
-//         // for(int l = 0; !enemyMoves.empty(); ++l) {
-//         //     if(enemyMoves[l][1] == end) break;
-//         //     // This means the move's end position is also in danger of being captured.
-//         // }
-//         // if(check! && check2) levelMoves.emplace_back(vector<Vec>{start, end});
-//     }
-// }
-
 // possible moves in pieces (making sure there's no piece there) legal moves ()
 void ChessBoard::defaultBoard() {
 
@@ -969,5 +651,5 @@ void ChessBoard::defaultBoard() {
 
 ostream& operator<<(ChessBoard& cb, ostream& out) {
     out << *(cb.td);
-    if (displayScore) out << cb.game << endl;
+    if (cb.displayScore) out << cb.game << endl;
 }
