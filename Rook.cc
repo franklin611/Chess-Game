@@ -21,7 +21,7 @@ void Rook::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
-        } else if (inBounds(move) && !p->getTeam()) {
+        } else if (inBounds(move) && !(p->getTeam() == getTeam())) {
             //Either out of bounds or not an empty piece
             // Still in bounds and is an enemy piece
             possibleMoves.push_back(move);
@@ -50,7 +50,7 @@ void Rook::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
-        } else if (inBounds(move) && !p->getTeam()) {
+        } else if (inBounds(move) && !(p->getTeam() == getTeam())) {
             possibleMoves.push_back(move);
             break;
         } else {
@@ -63,7 +63,7 @@ void Rook::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
-        } else if (inBounds(move) && !p->getTeam()) {
+        } else if (inBounds(move) && !(p->getTeam() == getTeam())) {
             possibleMoves.push_back(move);
             break;
         } else {
