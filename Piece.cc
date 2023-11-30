@@ -1,6 +1,7 @@
 #include "Piece.h"
 #include "ChessBoard.h"
 #include "Observer.h"
+#include "Empty.h"
 
 void Piece::resetMoves(){ possibleMoves.clear(); }
 
@@ -9,41 +10,53 @@ void Piece::resetMoves(){ possibleMoves.clear(); }
 // 	else { playerBlack->notify(coordinate, end); }
 // }
 
+// Piece::Piece(const Piece* emptyBase) {
+//         // Initialize Piece using information from the Empty object
+//         coordinate = emptyBase->getCoordinate();
+//         type = emptyBase->getType();
+//         white = emptyBase->getTeam();
+//         // You may want to initialize other members based on the Empty object
+//     }
+
+Piece::Piece(Piece&& other)
+        : coordinate(move(other.coordinate)),
+          type(move(other.type)),
+          possibleMoves(move(other.possibleMoves)),
+          white(move(other.white)) {}
+
+Piece::Piece(const Piece& p): coordinate(p.coordinate), type(p.type), possibleMoves(p.possibleMoves), white(p.white) {}
+
+Piece::Piece(Empty& empty): Piece{empty.coordinate, empty.type, empty.white} {}
+
 void Piece::addTestMove(Vec end){ possibleMoves.push_back(end); }
 
-char Piece::getType(){ return type; }
+char Piece::getType() const { return type; }
 
-bool Piece::getTeam(){ return white; }
+bool Piece::getTeam() const { return white; }
 
 Piece::Piece(struct Vec coordinate, char type, bool colour): coordinate{coordinate}, type{type}, white{colour} {}
 
-Piece::Piece(Piece& other) {
-        // Copy member variables
-        // if (other.playerWhite) {
-        //     playerWhite = make_unique<Observer>(*other.playerWhite);
-        // } else {
-        //     playerWhite = nullptr;
-        // }
+// Piece::Piece(Piece& other) {
+//         // Copy member variables
+//         // if (other.playerWhite) {
+//         //     playerWhite = make_unique<Observer>(*other.playerWhite);
+//         // } else {
+//         //     playerWhite = nullptr;
+//         // }
 
-        // if (other.playerBlack) {
-        //     playerBlack = make_unique<Observer>(*other.playerBlack);
-        // } else {
-        //     playerBlack = nullptr;
-        // }
+//         // if (other.playerBlack) {
+//         //     playerBlack = make_unique<Observer>(*other.playerBlack);
+//         // } else {
+//         //     playerBlack = nullptr;
+//         // }
 
-        coordinate = other.coordinate;
-        type = other.type;
-        possibleMoves = other.possibleMoves;
-        white = other.white;
-}
+//         coordinate = other.get;
+//         type = other.type;
+//         possibleMoves = other.possibleMoves;
+//         white = other.white;
+// }
 
-void Piece::attachWhite(unique_ptr<Observer> o){ playerWhite = move(o); } // We need to use move because we are transferring ownership
-
-void Piece::attachBlack(unique_ptr<Observer> o){ playerBlack = move(o); }
-
-// vector<Vec> Piece::getLegalMoves(){ return legalMoves; }
-
-Vec Piece::getCoordinate(){ return coordinate; }
+Vec Piece::getCoordinate() const { return coordinate; }
 
 void Piece::setCoordinate(Vec coord){ coordinate = coord; }
 

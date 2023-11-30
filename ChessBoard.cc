@@ -67,6 +67,8 @@ bool ChessBoard::boardIsValid() {
             } // Sets up that piece'possible moves
         }
     }
+    // confirm with franklin this logic works
+    return true;
 }
 
 
@@ -165,11 +167,13 @@ ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_s
             // Top left corner, the colour of the board is white. Bottom right (7,7) is white as well
             if(back) { // Alternating of black and white
                 ebRow.push_back(make_unique<Empty>(Empty(Vec{row, col}, ' ', true)));
-                gbRow.push_back(make_shared<Piece>(Empty(Vec{row, col}, ' ', true)));
+                shared_ptr<Empty> emptyPtr = std::make_shared<Empty>(Vec{row, col}, ' ', true);
+                gbRow.push_back(dynamic_pointer_cast<Piece>(emptyPtr));
                 back = false;
             } else {
                 ebRow.push_back(make_unique<Empty>(Empty(Vec{row, col}, '_', false)));
-                gbRow.push_back(make_shared<Piece>(Empty(Vec{row, col}, '_', false)));
+                shared_ptr<Empty> emptyPtr = std::make_shared<Empty>(Vec{row, col}, '_', false);
+                gbRow.push_back(dynamic_pointer_cast<Piece>(emptyPtr));
                 back = true;
             }
         }
@@ -177,7 +181,6 @@ ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_s
         gb.push_back(move(gbRow));
     }
     // graphicsDisplay = gd;
-    textDisplay = td; // TODO: not sure how to resolve this, but basically doesn't work because we initialized td as textDisplay but then want to make it an obserer? isn't working
 }
 
 void ChessBoard::regMove(Vec start, Vec end){
@@ -207,11 +210,11 @@ void ChessBoard::castleMove(Vec start, Vec end){
     // the y coordinate tells us which colour we want -> keep the y coordinate the same to get the correct rook
     rookCoord.setY(end.getY());
 
-    if (endX = startX + 2){ // moved to the right -> move the rook to the right TO the left
+    if (endX == startX + 2){ // moved to the right -> move the rook to the right TO the left
         rookCoord.setY(7);
         Vec endCoord = Vec(end.getX() - 1, end.getY());
         regMove(rookCoord, endCoord);
-    } else if (endX = startX - 3){ // moved to the left -> move the rook to the left TO the right
+    } else if (endX == startX - 3){ // moved to the left -> move the rook to the left TO the right
         rookCoord.setY(0);
         Vec endCoord = Vec(end.getX() + 1, end.getY());
         regMove(rookCoord, endCoord);
@@ -296,11 +299,11 @@ void ChessBoard::notify(Vec start, Vec end){
     // notify the gd and td
     char startChar = emptyPiece->getType();
     char endChar = endPiece->getType();
-    textDisplay->notifyMoves(start, startChar, end, endChar, checkString());
+    td->notifyMoves(start, startChar, end, endChar, checkString());
     // graphicsDisplay->notifyMoves(start, startChar, end, endChar, checkString());
 
     // change the turn
-    turn? false : true;
+    turn = !turn;
 
     if (isEnd) { endGame(); displayScore = true;  }
 }
@@ -335,7 +338,8 @@ bool ChessBoard::testMove(Vec start, Vec end){
         std::vector<std::shared_ptr<Piece>> uniqueRow;
         for (std::shared_ptr<Piece> p : vec) {
             // Copying data from shared_ptr to unique_ptr
-            uniqueRow.push_back(std::make_shared<Piece>(*p));
+            shared_ptr<Piece> newPiece = make_shared<Piece>(p->getCoordinate(), );
+            uniqueRow.push_back(newPiece);
         }
         boardCopy.push_back(uniqueRow);
     }
@@ -346,7 +350,7 @@ bool ChessBoard::testMove(Vec start, Vec end){
 
     if (turn && startType != 'K'){
         wKingCoord = wKing;
-    } else if (!turn, startType != 'k'){
+    } else if (!turn && startType != 'k'){
         bKingCoord = bKing;
     } else if (turn){
         wKingCoord = start;
@@ -398,8 +402,8 @@ bool ChessBoard::testMove(Vec start, Vec end){
     // revert the board -> switch the board copy to the gb
     // this swap might not work
     // Yup chatgpt said nada
-    for (int row = 0; row < gb.size(); ++row) {
-        for (int col = 0; col < gb[row].size(); ++col) {
+    for (size_t row = 0; row < gb.size(); ++row) {
+        for (size_t col = 0; col < gb[row].size(); ++col) {
             gb[row][col] = move(boardCopy[row][col]);
         }
     }
@@ -486,7 +490,7 @@ void ChessBoard::isAvoidCaptureMove(Vec start, Vec end, vector<vector<shared_ptr
             p->resetMoves();
             p->getPossibleMoves(ob);
             for (Vec move: p->returnPossibleMoves()){
-                if (move == start){ capture == true; break;}
+                if (move == start){ capture = true; break;}
             }
         }
     }
@@ -501,7 +505,7 @@ void ChessBoard::isAvoidCaptureMove(Vec start, Vec end, vector<vector<shared_ptr
             p->resetMoves();
             p->getPossibleMoves(gb);
             for (Vec move: p->returnPossibleMoves()){
-                if (move == end){ capture == true; break;}
+                if (move == end){ capture = true; break;}
             }
         }
     }
@@ -672,4 +676,5 @@ void ChessBoard::setTurn(bool turn) {
 ostream& operator<<(ostream& out, const ChessBoard& cb) {
     out << *(cb.td);
     if (cb.displayScore) out << cb.game << endl;
+    return out;
 }

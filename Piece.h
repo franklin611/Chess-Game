@@ -42,6 +42,8 @@ using namespace std;
 // case 4: capture diagonal
 // only allowed if the opposite team is on that square
 
+class Empty;
+
 class Piece{
 		// not sure if this needs to be protected ****
 		protected:
@@ -52,19 +54,22 @@ class Piece{
 			vector<Vec> possibleMoves;
 			bool white;
 		public:
+			// Piece(const Piece* emptyBase);
+			Piece(Empty& empty);
 			// this will respond according to how p moved
 			void resetMoves();
 			// void addLegalMove(Vec end, bool white);  // Not sure if we even need anymore
 			void addTestMove(Vec end);
 			// Directly edits possibleMoves
 			virtual void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) = 0;
-			char getType();
-			bool getTeam();
+			char getType() const;
+			bool getTeam() const;
 			Piece() = default;
 			Piece(Vec coordinate, char type, bool white);
-			Piece(Piece& p);
+			Piece(const Piece& p);
+			Piece(Piece&& p);
 			vector<Vec> getLegalMoves();
-			Vec getCoordinate();
+			Vec getCoordinate() const;
 			void setCoordinate(Vec coord);
 			shared_ptr<Piece> pieceAt(vector<vector<shared_ptr<Piece>>> gb, Vec coordinate);
 			bool isEmptyPiece(shared_ptr<Piece> p);

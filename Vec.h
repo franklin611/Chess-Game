@@ -11,6 +11,9 @@ class Vec {
 			void setX(int x);
 			void setY(int y);
 			Vec() = default;
+			Vec(Vec&& other);
+			Vec(const Vec& other);
+			Vec& operator=(const Vec& other);
 };
 
 #endif

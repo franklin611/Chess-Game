@@ -19,22 +19,12 @@ class TextDisplay;
 class GraphicsDisplay;
 class DisplayObserver;
 
-
-
-// CASTLE MOVE
-// to make a castle move -> validate that we are moving a king two spaces to the left or right -> have a function that returns true or false so if it is a castle move we know to move the rook as well
-
-// remember that we want to make DEEP copies of pieces so then we need UNIQUE pointers to make sure that we don't accidentally make shallow copies
-
-//td is observer, chessboard is subject
-
 class ChessBoard: public ChessBoardObserver {
     vector<vector<shared_ptr<Piece>>> gb;
     vector<vector<unique_ptr<Empty>>> eb;
     unique_ptr<Observer> playerWhite;
     unique_ptr<Observer> playerBlack;
-    // vector<unique_ptr<DisplayObserver>> displays;
-    shared_ptr<DisplayObserver> textDisplay;
+    // shared_ptr<DisplayObserver> textDisplay;
     // shared_ptr<DisplayObserver> graphicsDisplay;
     shared_ptr<TextDisplay> td;
     // shared_ptr<GraphicsDisplay> gd;
