@@ -291,13 +291,19 @@ void ChessBoard::notify(Vec start, Vec end){
     // notify the gd and td
     char startChar = emptyPiece->getType();
     char endChar = endPiece->getType();
-    for (unique_ptr<DisplayObserver> o: displays){
-        o->notify(start, startChar, end, endChar);
-    }
+    textDisplay->notifyMoves(start, startChar, end, endChar, checkString());
+    graphicsDisplay->notifyMoves(start, startChar, end, endChar, checkString());
+
     // change the turn
     turn? false : true;
 
     if (isEnd) { endGame(); displayScore = true;  }
+}
+
+string ChessBoard::checkString(){
+    if (wCheck){ return "White"; }
+    else if (bCheck) { return "Black"; }
+    return "";
 }
 
 // DONE
