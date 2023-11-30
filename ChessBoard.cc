@@ -58,7 +58,7 @@ bool ChessBoard::boardIsValid() {
 
 	for (vector<shared_ptr<Piece>> vec : gb) {
 		for (shared_ptr<Piece> p : vec) {
-            if(p->getTeam() = turn) {
+            if(p->getTeam() == turn) {
                 p->getPossibleMoves();
                 for (Vec end : p->returnPossibleMoves()) {
                     testMove(p->getCoordinate(), end);
