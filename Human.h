@@ -6,7 +6,7 @@
 
 class Human: public Player {
     public:
-        Human(bool colour, unique_ptr<Observer> cb);
+        Human(bool colour, unique_ptr<ChessBoardObserver> cb);
         bool makeHumanMove(Vec start, Vec end);
 };
 

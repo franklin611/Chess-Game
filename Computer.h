@@ -9,7 +9,7 @@ class Computer : public Player {
     int userLevel;
     unique_ptr<Level> level = nullptr;
     public:
-        Computer(bool colour, unique_ptr<Observer> cb, int userLevel);
+        Computer(bool colour, unique_ptr<ChessBoardObserver> cb, int userLevel);
         Vec makeComputerMove(int userLevel);
         vector<Vec> selectRandomMove(vector<vector<Vec>> &vectors);
 };

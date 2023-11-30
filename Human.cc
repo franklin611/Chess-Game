@@ -1,6 +1,6 @@
 #include "Human.h"
 
-Human::Human(bool colour, unique_ptr<Observer> cb) : Player{colour, std::move(cb)} {}
+Human::Human(bool colour, unique_ptr<ChessBoardObserver> cb) : Player{colour, std::move(cb)} {}
 
 bool Human::makeHumanMove(Vec start, Vec end){
 
