@@ -17,6 +17,7 @@ class Vec;
 class Player;
 class TextDisplay;
 class GraphicsDisplay;
+class DisplayObserver;
 
 
 

@@ -23,8 +23,8 @@ bool ChessBoard::boardIsValid() {
     bool oneBlack = false;
     bool oneWhite = false;
 
-    int rowSize = eb.size();
-    int colSize = eb[1].size();
+    // int rowSize = eb.size();
+    // int colSize = eb[1].size();
 
 	for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
@@ -59,7 +59,7 @@ bool ChessBoard::boardIsValid() {
 	for (vector<shared_ptr<Piece>> vec : gb) {
 		for (shared_ptr<Piece> p : vec) {
             if(p->getTeam() == turn) {
-                p->getPossibleMoves();
+                p->getPossibleMoves(gb);
                 for (Vec end : p->returnPossibleMoves()) {
                     testMove(p->getCoordinate(), end);
                 }
@@ -118,7 +118,7 @@ bool ChessBoard::isThere(Vec coordinate, bool white, vector<vector<shared_ptr<Pi
 bool twoStep(Vec start, Vec end){
     int startY = start.getY();
     int endY = end.getY();
-    if (startY = endY - 2 || startY == endY + 2){ return true; }
+    if (startY == endY - 2 || startY == endY + 2){ return true; }
     return false;
 }
 
@@ -172,8 +172,8 @@ ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_s
         eb.push_back(move(ebRow));
         gb.push_back(move(gbRow));
     }
-    graphicsDisplay = make_shared<DisplayObserver>(*gd);
-    textDisplay = make_shared<DisplayObserver>(*td);
+    graphicsDisplay = gd;
+    textDisplay = td;
 }
 
 // DONE
