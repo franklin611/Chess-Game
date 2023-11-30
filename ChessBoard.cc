@@ -638,9 +638,9 @@ void ChessBoard::defaultBoard() {
 
     // Setup Rooks
     setupWithChar('R', Vec{0,0});
-    setupWithChar('R', Vec{0, 7}); // Whites
-    setupWithChar('r', Vec{7,0});
-    setupWithChar('r', Vec{7, 7}); // Whites
+    setupWithChar('R', Vec{7, 0}); // Whites
+    setupWithChar('r', Vec{0,7});
+    setupWithChar('r', Vec{7, 7}); // Black
 
     // Setup Knights
     setupWithChar('N', Vec{1,0});
