@@ -524,31 +524,6 @@ bool ChessBoard::getTurn(){
 }
 
 // DONE
-// I need to do dynamic type casting.
-void ChessBoard::setupWithChar(char type, Vec coordinate) {
-    int row = coordinate.getY();
-    int col = coordinate.getX();
-
-    if (type == 'K' || type == 'k') {
-        gb[row][col] = make_shared<King>(coordinate, type, (type == 'K') ? 1 : 0); // King
-    } else if (type == 'Q' || type == 'q') {
-        gb[row][col] = make_shared<Queen>(coordinate, type, (type == 'Q') ? 1 : 0); // Queen
-    } else if (type == 'P' || type == 'p') {
-        gb[row][col] = make_shared<Pawn>(coordinate, type, (type == 'P') ? 1 : 0); // Pawn
-    } else if (type == 'N' || type == 'n') {
-        gb[row][col] = make_shared<Knight>(coordinate, type, (type == 'N') ? 1 : 0); // Knight
-    } else if (type == 'R' || type == 'r') {
-        gb[row][col] = make_shared<Rook>(coordinate, type, (type == 'R') ? 1 : 0); // Rook
-    } else if (type == 'B' || type == 'b') {
-        gb[row][col] = make_shared<Bishop>(coordinate, type, (type == 'B') ? 1 : 0); // Bishop
-    } else if (type == ' ' || type == '_') { //These may not be needed but im just having. I dont think it would ever reach it
-        gb[row][col] = getEmptyPiece(coordinate);
-    } else {
-        // Handle other cases or provide a default behavior
-    }
-}
-
-// DONE
 void ChessBoard::setupWithPiece(shared_ptr<Piece> p, Vec coordinate) {
     int row = coordinate.getY();
     int col = coordinate.getX();
@@ -623,13 +598,39 @@ void ChessBoard::setBlackKing(Vec coordinate){
 
 }
 
+// DONE
+// I need to do dynamic type casting.
+void ChessBoard::setupWithChar(char type, Vec coordinate) {
+    int row = coordinate.getY();
+    int col = coordinate.getX();
+
+    if (type == 'K' || type == 'k') {
+        gb[row][col] = make_shared<King>(coordinate, type, (type == 'K') ? 1 : 0); // King
+    } else if (type == 'Q' || type == 'q') {
+        gb[row][col] = make_shared<Queen>(coordinate, type, (type == 'Q') ? 1 : 0); // Queen
+    } else if (type == 'P' || type == 'p') {
+        gb[row][col] = make_shared<Pawn>(coordinate, type, (type == 'P') ? 1 : 0); // Pawn
+    } else if (type == 'N' || type == 'n') {
+        gb[row][col] = make_shared<Knight>(coordinate, type, (type == 'N') ? 1 : 0); // Knight
+    } else if (type == 'R' || type == 'r') {
+        gb[row][col] = make_shared<Rook>(coordinate, type, (type == 'R') ? 1 : 0); // Rook
+    } else if (type == 'B' || type == 'b') {
+        gb[row][col] = make_shared<Bishop>(coordinate, type, (type == 'B') ? 1 : 0); // Bishop
+    } else if (type == ' ' || type == '_') { //These may not be needed but im just having. I dont think it would ever reach it
+        gb[row][col] = getEmptyPiece(coordinate);
+    } 
+
+    td->notify(coordinate, type);
+    // gd->notify(coordinate, type);
+}
+
 // possible moves in pieces (making sure there's no piece there) legal moves ()
 void ChessBoard::defaultBoard() {
 
     // First setup pawns
     for (int i = 0; i < 8; ++i) {
         setupWithChar('P', Vec{i, 1}); // White pawns
-        setupWithChar('p', Vec{i, 7}); // Black
+        setupWithChar('p', Vec{i, 6}); // Black
         // x, y. This corresponds to second row
     }
 
@@ -663,16 +664,16 @@ void ChessBoard::defaultBoard() {
     setupWithChar('Q', Vec{0,4}); // White Queen
     setupWithChar('q', Vec{7, 4}); // Black Queen
 
-    for (vector<shared_ptr<Piece>> vec : gb) {
-		for (shared_ptr<Piece> p : vec) {
-            if(p->getTeam() == turn) {
-                p->getPossibleMoves(gb);
-                for (Vec end : p->returnPossibleMoves()) {
-                    testMove(p->getCoordinate(), end);
-                }
-            } // Sets up that piece'possible moves
-        }
-    }
+    // for (vector<shared_ptr<Piece>> vec : gb) {
+	// 	for (shared_ptr<Piece> p : vec) {
+    //         if(p->getTeam() == turn) {
+    //             p->getPossibleMoves(gb);
+    //             for (Vec end : p->returnPossibleMoves()) {
+    //                 testMove(p->getCoordinate(), end);
+    //             }
+    //         } // Sets up that piece'possible moves
+    //     }
+    // }
 }
 
 void ChessBoard::setTurn(bool turn) {
@@ -690,7 +691,7 @@ shared_ptr<Observer> ChessBoard::getPlayerBlack() {
 
 
 ostream& operator<<(ostream& out, const ChessBoard& cb) {
-    out << *(cb.td);
+    out << *(cb.td) << endl;
     if (cb.displayScore) out << cb.game << endl;
     return out;
 }

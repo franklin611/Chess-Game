@@ -82,6 +82,7 @@ int main() {
             shared_ptr<Observer> playerWhite, playerBlack;
             int level;
             if(!usedSetup) cb->defaultBoard(); // In both cases setup board first
+            cout << *(cb);
 
             if(player1 == "human") {
                 playerWhite = make_shared<Human>(1, cb);
@@ -125,7 +126,7 @@ int main() {
                             } else cin.ignore();
                             // cin.ignore(std::numeric_limits<std::streamsize>::max()); // ChatGPT suggested
                             // Ignore the single next character input by the user. (Cuz we can't assume just one character)
-                            cout << cb;
+                            cout << *(cb);
 
                         } else {
                             cout << "Invalid move. Please retry" << endl;
@@ -140,7 +141,7 @@ int main() {
                         if(cb->upgradePawn(end)){
                             cb->setupWithChar('Q', end);
                         }
-                        cout << cb;
+                        cout << *(cb);
                     } else if(cmd2 == "resign") {
                         //Player1 now has to lose
                         cb->forfeit(); // This function will update the white and black score
@@ -167,7 +168,7 @@ int main() {
                                 cin >> newPiece;
                                 cb->setupWithChar(newPiece, coordinate2);
                             } else cin.ignore();
-                            cout << cb;
+                            cout << *(cb);
                         } else {
                             cout << "Invalid move. Please retry" << endl;
                         }
@@ -180,7 +181,7 @@ int main() {
                         if(cb->upgradePawn(end)){
                             cb->setupWithChar('q', end);
                         }
-                        cout << cb;
+                        cout << *(cb);
                     } else if(cmd2 == "resign") {
                         // Player2 has to lose
                         cb->forfeit();
@@ -200,6 +201,7 @@ int main() {
             char piece;
 
             while(cin >> cmd2) {
+
                 if(cmd2 == "+") {
                     cin >> piece >> coord;
                     // e1, is Column 3 (starting from  0 to 7), Row 0
@@ -217,7 +219,7 @@ int main() {
                     if(piece == 'k') cb->setBlackKing(coordinate);
                     if(piece == 'K') cb->setWhiteKing(coordinate);
                     cb->setupWithChar(piece, coordinate);
-                    cout << cb;
+                    cout << *(cb);
                 } else if (cmd2 == "-") {
                     cin >> coord;
                     int x = convertToInt(coord.substr(0,1)[0]);
@@ -225,6 +227,8 @@ int main() {
                     // Remove a piece on a board by placing an empty piece on that coordinate
                     Vec coordinate = Vec{x, y - 1}; // We have to minus one because we are 0-7
                     cb->setupWithPiece(cb->getEmptyPiece(coordinate), coordinate);
+
+                
                 } else if (cmd2 == "=") {
                     // From my understanding, "makes it colors turn to go next" means when the game start, it is their turn
                     while (cin >> colour) {
@@ -236,7 +240,9 @@ int main() {
                             cout << "Invalid input, please try again." << endl;
                         }
                     }
-                    cout << cb;
+                    cout << *(cb);
+
+                
                 } else if (cmd == "done") {
                     if(cb->boardIsValid()) {
                         usedSetup = true;
@@ -249,12 +255,14 @@ int main() {
                     break;
                 }
             }
+
+
         } else { // Invalid Input
             cout << "Invalid Input, try Again" << endl;
         }
     }
     // END OF GAME
-    cout << cb;
+    cout << *(cb);
     cout << "Thank you for playing. We hope you enjoyed!" << endl;
     cout << "Make sure to play again!" << endl;
     return 0;
