@@ -661,7 +661,12 @@ void ChessBoard::defaultBoard() {
     }
 }
 
-ostream& operator<<(ChessBoard& cb, ostream& out) {
+void ChessBoard::setTurn(bool turn) {
+    this->turn = turn;
+}
+
+
+ostream& operator<<(ostream& out, ChessBoard& cb) {
     out << *(cb.td);
     if (cb.displayScore) out << cb.game << endl;
 }

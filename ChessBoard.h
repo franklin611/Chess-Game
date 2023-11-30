@@ -130,8 +130,9 @@ class ChessBoard: public ChessBoardObserver {
         // Check if it is a valid board
         bool boardIsValid();
 
+        void setTurn(bool turn);
 
-        friend ostream& operator<<(ChessBoard& cb, ostream& out);
+        friend ostream& operator<<(ostream& out, ChessBoard& cb);
 
 };
 

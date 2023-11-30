@@ -6,6 +6,7 @@
 #include "Computer.h"
 #include "Piece.h"
 #include "Observer.h"
+#include "Level.h"
 
 using namespace std;
 
@@ -27,8 +28,8 @@ void outputRules() {
     "|                                                    |\n"
     "|          By: Chiara, Franklin, Helena              |\n"
     "|                                                    |\n"
-    "+----------------------------------------------------+\n";  
-    cout << art << endl; 
+    "+----------------------------------------------------+\n";
+    cout << art << endl;
     cout << "Welcome to our chess game. Please follow the rules and commands strictly.\n";
     cout << "Commands:\n";
     cout << "  - game white-player black-player: Starts a new game. 'white-player' and 'black-player' can be 'human' or 'computer[1-4]'.\n";
@@ -60,7 +61,7 @@ int main() {
     ChessBoard cb; // Default chessBoard constructor
     outputRules();
 
-    while (cin >> cmd) {   
+    while (cin >> cmd) {
         // Make a prompt output to get enter game or setup
         // We prompt the user to enter game or setup
         // If they enter game, they immediately start a game. THey are prompted for player 1 and player 2
@@ -68,7 +69,7 @@ int main() {
         // use the default board. If true, that means they used setup beforehand so we use that custome board.
         // If we are to use the default board, we simply default construct that gameboard and get players
         // If we we are to use the custom board, we just get players cuz we already created this custom board in setup.
-        // On top of this, we have a isEnd that resets the gameBoard and players. 
+        // On top of this, we have a isEnd that resets the gameBoard and players.
 
         if(cmd == "game") {
             //To setup a new game, we take two input playerWhite playerBlack.
@@ -76,23 +77,23 @@ int main() {
             // Observer -> Player -> Computer or Human. They are subclasses of Observer
             string player1, player2;
             cin >> player1 >> player2;
-            unique_ptr<Observer> playerWhite, playerBlack;
+            // unique_ptr<Observer> playerWhite, playerBlack;
 
             if(player1 == "human") {
-                playerWhite = make_unique<Human>(1, cb);
+                unique_ptr<Human> playerWhite = make_unique<Human>(1, cb);
             } else {
                 int level = stoi(player1.substr(9)); // Not sure if we can use stoi But this should level = the number in the brackets
-                playerWhite = make_unique<Computer>(1, level);
+                unique_ptr<Computer> playerWhite = make_unique<Computer>(1, cb, level);
             }
             if(player2 == "human") {
-                playerBlack = make_unique<Human>(0, cb);
+                unique_ptr<Human> playerBlack = make_unique<Human>(0, cb);
             } else {
                 int level = stoi(player2.substr(9)); // The number
-                playerBlack = make_unique<Computer>(0, level);
+                unique_ptr<Computer> playerBlack = make_unique<Computer>(0, cb, level);
             }
 
-            if(!usedSetup) cb.defaultBoard(); // In both cases setup board first 
-            
+            if(!usedSetup) cb.defaultBoard(); // In both cases setup board first
+
             cb.setupPlayers(playerWhite, playerBlack); // Then players
             string cmd2;
             while(cin >> cmd2) {
@@ -119,23 +120,24 @@ int main() {
                             } else cin.ignore();
                             // cin.ignore(std::numeric_limits<std::streamsize>::max()); // ChatGPT suggested
                             // Ignore the single next character input by the user. (Cuz we can't assume just one character)
-                            cout  << cb;
+                            cout << cb;
 
                         } else {
                             cout << "Invalid move. Please retry" << endl;
-                        } 
+                        }
                     } else if(cmd2 == "move" && player1 == "computer") {
                         // Make Computer Move
-                        Vec end = cb.makeComputerMove(level); // TO DO UPDATE WITH HELENA'S NEW FUNCTION
+                        int level = playerWhite.userLevel;
+                        Vec end = playerWhite->makeComputerMove(level); // TO DO UPDATE WITH HELENA'S NEW FUNCTION
                         if(cb.upgradePawn(end)){
                             cb.setupWithChar('Q', end);
                         }
                         cout << cb;
                     } else if(cmd2 == "resign") {
-                        //Player1 now has to lose 
+                        //Player1 now has to lose
                         cb.forfeit(); // This function will update the white and black score
                         cb.restartGame(); // Restart match
-                    } 
+                    }
                 } else {
                     if (cmd2 == "move" && player2 == "human") {
                         string start, end;
@@ -163,16 +165,17 @@ int main() {
                             cout << "Invalid move. Please retry" << endl;
                         }
                     } else if (cmd == "move" && player2 == "computer") {
-                        Vec end = cb.makeComputerMove(level);
+                        int level = playerBlack.userLevel;
+                        Vec end = playerBlack->makeComputerMove(level);
                         if(cb.upgradePawn(end)){
                             cb.setupWithChar('q', end);
                         }
                         cout << cb;
                     } else if(cmd2 == "resign") {
                         // Player2 has to lose
-                        cb.forfeit(); 
+                        cb.forfeit();
                         cb.restartGame();
-                    } 
+                    }
                 }
                 // // 1. Check if game is over
                 // if(cb.isEnd()) { // will check players legalMoves to see if they are empoty or not
@@ -182,7 +185,7 @@ int main() {
                 //     break;
                 // } // No longer needed
             }
-        } else if (cmd == "setup") { 
+        } else if (cmd == "setup") {
             string cmd2, coord, colour;
             char piece;
 
@@ -195,7 +198,7 @@ int main() {
                     int y = stoi(coord.substr(1));
                     Vec coordinate = Vec{x, y- 1};
                     // Need to also check that the char was a proper input
-                    if (x == -1 ||(y > 7 && y < 0) !(piece == 'k' || piece == 'K' || piece == 'q' || piece == 'Q' ||
+                    if (x == -1 ||(y > 7 && y < 0) && !(piece == 'k' || piece == 'K' || piece == 'q' || piece == 'Q' ||
                         piece == 'b' || piece == 'B' || piece == 'n' || piece == 'N' ||
                         piece == 'r' || piece == 'R' || piece == 'p' || piece == 'P')) {
                         cout << "Invalid Input" << endl;
@@ -203,7 +206,7 @@ int main() {
                     }
                     if(piece == 'k') cb.setBlackKing(coordinate);
                     if(piece == 'K') cb.setWhiteKing(coordinate);
-                    cb.setupWithChar(piece, coordinate); 
+                    cb.setupWithChar(piece, coordinate);
                     cout << cb;
                 } else if (cmd2 == "-") {
                     cin >> coord;
@@ -211,27 +214,27 @@ int main() {
                     int y = stoi(coord.substr(1));
                     // Remove a piece on a board by placing an empty piece on that coordinate
                     Vec coordinate = Vec{x, y - 1}; // We have to minus one because we are 0-7
-                    cb.setupWithPiece(getEmptyPiece(coordinate), coordinate);
-                } else if (cmd2 == "=") { 
+                    cb.setupWithPiece(cb.getEmptyPiece(coordinate), coordinate);
+                } else if (cmd2 == "=") {
                     // From my understanding, "makes it colors turn to go next" means when the game start, it is their turn
                     while (cin >> colour) {
                         if(colour == "black") {
-                            cb.setTurn(0); 
+                            cb.setTurn(0);
                         } else if (colour == "white") {
                             cb.setTurn(1);
                         } else {
                             cout << "Invalid input, please try again." << endl;
                         }
-                    } 
+                    }
                     cout << cb;
-                } else if (cmd == "done") { 
+                } else if (cmd == "done") {
                     if(cb.boardIsValid()) {
                         usedSetup = true;
                         break; // Only case where we break
                         // Now a flag has been raised telling the main that the game has been setup with a gameboard.
                     }
                     cout << "Invalid Board Setup" << endl;
-                    // Now we have to reset the board (as well as Players) and bring the user all the way back up again. 
+                    // Now we have to reset the board (as well as Players) and bring the user all the way back up again.
                     cb.restartGame();
                     break;
                 }
@@ -239,9 +242,9 @@ int main() {
         } else { // Invalid Input
             cout << "Invalid Input, try Again" << endl;
         }
-    } 
+    }
     // END OF GAME
-    cout << cb.game;
+    cout << cb;
     cout << "Thank you for playing. We hope you enjoyed!" << endl;
     cout << "Make sure to play again!" << endl;
 }
