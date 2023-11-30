@@ -655,14 +655,14 @@ void ChessBoard::defaultBoard() {
     setupWithChar('b', Vec{5, 7}); // Black
 
     // Setup Kings
-    setupWithChar('K', Vec{0,3}); // White King
-    setupWithChar('k', Vec{7, 3}); // Black King
-    setWhiteKing(Vec{0,3});
-    setBlackKing(Vec{7, 3});
+    setupWithChar('K', Vec{3,0}); // White King
+    setupWithChar('k', Vec{3, 7}); // Black King
+    setWhiteKing(Vec{3,0});
+    setBlackKing(Vec{3, 7});
 
     // Setup Queens
-    setupWithChar('Q', Vec{0,4}); // White Queen
-    setupWithChar('q', Vec{7, 4}); // Black Queen
+    setupWithChar('Q', Vec{4,0}); // White Queen
+    setupWithChar('q', Vec{4, 7}); // Black Queen
 
     // for (vector<shared_ptr<Piece>> vec : gb) {
 	// 	for (shared_ptr<Piece> p : vec) {
