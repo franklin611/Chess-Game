@@ -79,7 +79,7 @@ class ChessBoard: public ChessBoardObserver {
         void updateKingCoord(Vec end, bool white);
 
         // change the gameboard based on validated move
-        void notify(Vec start, Vec end) override; 
+        void notify(Vec start, Vec end) override;
 
         bool testMove(Vec start, Vec end);
 
@@ -124,10 +124,6 @@ class ChessBoard: public ChessBoardObserver {
 
         // Check if it is a valid board
         bool boardIsValid();
-
-        bool isCheckmateMove(Vec start, Vec end);
-        bool isCheckMove(Vec start, Vec end);
-        bool isCaptureMove(Vec start, Vec end);
 
 
         friend ostream& operator<<(ChessBoard& cb, ostream& out);
