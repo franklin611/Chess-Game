@@ -273,14 +273,14 @@ void ChessBoard::notify(Vec start, Vec end){
     }
 
      // reset the legal moves of every piece // only go through the opponents
-    bool end = true;
+    bool isEnd = true;
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
             p->resetMoves(); // clear all the legal moves
             p->getPossibleMoves(gb); // get the possible moves for this piece
             // test every possible move -> which will add it to the legal moves if it passes
-            for (Vec move : p->returnPossibleMoves(gb)){
-                if (testMove(p->getCoordinate(), move)){ end = false; };
+            for (Vec move : p->returnPossibleMoves()){
+                if (testMove(p->getCoordinate(), move)){ isEnd = false; };
             }
         }
     }
@@ -291,18 +291,18 @@ void ChessBoard::notify(Vec start, Vec end){
     // notify the gd and td
     char startChar = emptyPiece->getType();
     char endChar = endPiece->getType();
-    td->notify(start, startChar, end, endChar);
-    gd->notify(start, startChar, end, endChar);
-
+    for (unique_ptr<DisplayObserver> o: displays){
+        o->notify(start, startChar, end, endChar);
+    }
     // change the turn
     turn? false : true;
 
-    if (end) { isEnd(); }
+    if (isEnd) { endGame(); displayScore = true;  }
 }
 
 // DONE
-// we can assume that the turn player has no moves
-void ChessBoard::isEnd() {
+// we can assume that the turn player has no moves 
+void ChessBoard::endGame() {
     if (turn) {
         if (wCheck) { game.updateWhite(false); }
         else { game.updateWhite(true); }
@@ -314,17 +314,17 @@ void ChessBoard::isEnd() {
 
 
 // DONE
-void ChessBoard::testMove(Vec start, Vec end){
+bool ChessBoard::testMove(Vec start, Vec end){
     // make a deep copy of the gb
     // consult about making a deep copy of the board
     // creating a 2D vector of unique pointers by copying from the shared vector
-    vector<vector<unique_ptr<Piece>>> boardCopy;
+    vector<vector<shared_ptr<Piece>>> boardCopy;
 
     for (std::vector<std::shared_ptr<Piece>> vec : gb) {
-        std::vector<std::unique_ptr<Piece>> uniqueRow;
+        std::vector<std::shared_ptr<Piece>> uniqueRow;
         for (std::shared_ptr<Piece> p : vec) {
             // Copying data from shared_ptr to unique_ptr
-            uniqueRow.push_back(std::make_unique<Piece>(*p));
+            uniqueRow.push_back(std::make_shared<Piece>(*p));
         }
         boardCopy.push_back(uniqueRow);
     }
@@ -371,22 +371,18 @@ void ChessBoard::testMove(Vec start, Vec end){
 
     // need to check if that move puts the opponent in check
     bool check = isCheck(!turn);
-
-    // we decide its legal -> notify player
-    if (!check){
-
-    // we decide its legal -> notify player
-    if (!check){
+    bool legal = false;
+    
+    // we decide its legal -> notify player 
+    if (!check){ 
         if (!turn){ playerWhite->notifyLM(start, end); } // if the next turn (opponent is white)
         else { playerBlack->notifyLM(start, end); }
-        isCaptureMove(start, end);
+        isCaptureMove(start, end, boardCopy);
         isCheckMove(start, end);
         isCheckMateMove(start, end);
-        isAvoidCaptureMove(start, end);
-        return true;
+        isAvoidCaptureMove(start, end, boardCopy);
+        legal = true;
     }
-    return false;
-}
 
     // revert the board -> switch the board copy to the gb
     // this swap might not work
@@ -401,6 +397,7 @@ void ChessBoard::testMove(Vec start, Vec end){
         swap(bKingCoord, bKing);
     }
 
+    return legal;
     // unique pointers will go out of scope once the function returns
 }
 
@@ -427,10 +424,8 @@ bool ChessBoard::isCheck(bool white){
     return false;
 }
 
-void isCheckMateMove(){
-    // get the possible moves of the current
-void isCheckMateMove(Vec start, Vec end){
-    // get the possible moves of the current
+void ChessBoard::isCheckMateMove(Vec start, Vec end){
+    // get the possible moves of the current 
     bool empty = true;
     for (vector<shared_ptr<Piece>> vec : gb){
         for (shared_ptr<Piece> p : vec){
@@ -451,31 +446,31 @@ void isCheckMateMove(Vec start, Vec end){
     }
 }
 
-//  did this move put the current team in check
-void isCheckMove(Vec start, Vec end){
+//  did this move put the current team in check 
+void ChessBoard::isCheckMove(Vec start, Vec end){
     if (isCheck(turn)){
         if (!turn){ playerWhite->notifyCheckM(start, end); }
         else { playerBlack->notifyCheckM(start, end); }
     }
 }
 
-// WILL this move capture any pieces on the opposing team
-void isCaptureMove(Vec start, Vec end, vector<vector<shared_ptr<Piece>>> ob){
-    // if there is a piece at the end coordinate -> it is a capture move
-    if (isThere(end, turn, ob)){
+// WILL this move capture any pieces on the opposing team 
+void ChessBoard::isCaptureMove(Vec start, Vec end, vector<vector<shared_ptr<Piece>>> ob){
+    // if there is a piece at the end coordinate -> it is a capture move 
+    if (isThere(end, turn, ob)){ 
         if (!turn){ playerWhite->notifyCapM(start, end); } // if the next turn (opponent is white)
         else { playerBlack->notifyCapM(start, end); }
     }
 }
 
-// did the move take this piece out of a position to be captured
-void isAvoidCaptureMove(Vec start, Vec end, vector<vector<shared_ptr<Piece>>> ob){
-    // assume it is not in a position to be captured
+// did the move take this piece out of a position to be captured 
+void ChessBoard::isAvoidCaptureMove(Vec start, Vec end, vector<vector<shared_ptr<Piece>>> ob){
+    // assume it is not in a position to be captured 
     bool capture = false;
     // was the piece (on the opponent's team) in a position to be captured in the first place in the old board
     // look at the current team's possible moves if they are equal to the piece's start
     for (vector<shared_ptr<Piece>> vec : ob){
-        for (<shared_ptr<Piece> p : vec){
+        for (shared_ptr<Piece> p : vec){
             if (p->getTeam() != turn){ continue; }
             p->resetMoves();
             p->getPossibleMoves(ob);
@@ -833,13 +828,6 @@ bool ChessBoard::isCheckMove(Vec start, Vec end) {
 // arguments start and end, if passes notify player and append it to right field
 
 // have a bunch of notifies
-
-// HELENAS NEW
-bool ChessBoard::isCaptureMove(Vec start, Vec end) {
-    if(isThere(end)) return true;
-    return false;
-    // No need to simulate any moves because if it is a valid move and there is a piece at end, then it is a capture move
-}
 
 /// FRANKLINS OLD
 // vector<vector<Vec>> generateCaptureMoves(vector<vector<Vec>> possibleMoves) {

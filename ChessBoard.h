@@ -30,6 +30,7 @@ class ChessBoard: public ChessBoardObserver {
     vector<vector<unique_ptr<Empty>>> eb;
     unique_ptr<Observer> playerWhite;
     unique_ptr<Observer> playerBlack;
+    vector<unique_ptr<DisplayObserver>> displays;
     unique_ptr<TextDisplay> td;
     unique_ptr<GraphicsDisplay> gd;
     Game game;
@@ -38,7 +39,7 @@ class ChessBoard: public ChessBoardObserver {
     bool turn; // true is for white, false is for black
     Vec bKing;
     Vec wKing;
-    // unique_ptr<TextDisplay> tdOutput; //TODO: i dont really understand why we have a pointer to display observer td, but we need
+    bool displayScore;
     // one for td pointer
     public:
         // returns the type of a piece at that coordinate
@@ -51,7 +52,7 @@ class ChessBoard: public ChessBoardObserver {
         bool pawnMovedTwo(Vec coordinate, bool white);
 
         // check if there is a piece at that coordinate
-        bool isThere(Vec coordinate);
+        bool isThere(Vec coordinate, bool white, vector<vector<unique_ptr<Piece>>> board);
 
         // replace a piece at coordinate with replacement
         void replacePiece(Vec coordinate, shared_ptr<Piece> replacement);
@@ -78,10 +79,14 @@ class ChessBoard: public ChessBoardObserver {
         void updateKingCoord(Vec end, bool white);
 
         // change the gameboard based on validated move
-        void notify(Vec start, Vec end) override; //TODO: what are we notifying for here????
+        void notify(Vec start, Vec end) override; 
 
-        void testMove(Vec start, Vec end);
-        // Why was it override before? void testMove(Vec start, Vec end) override;
+        bool testMove(Vec start, Vec end);
+
+        void isAvoidCaptureMove(Vec start, Vec end, vector<vector<shared_ptr<Piece>>> ob);
+        void isCaptureMove(Vec start, Vec end, vector<vector<shared_ptr<Piece>>> ob);
+        void isCheckMove(Vec start, Vec end);
+        void isCheckMateMove(Vec start, Vec end);
 
         // checks if the king is in check -> ie. any of the opponents legal moves capture king
         bool isCheck(bool white);
@@ -100,7 +105,7 @@ class ChessBoard: public ChessBoardObserver {
         void forfeit();
 
         // main calls this function to check if the game has ended
-        bool isEnd();
+        void endGame();
 
         // main calls this function to restart a game this will reset gameboard, reset turn, reset playerWhite and playerBlack
         void restartGame();
