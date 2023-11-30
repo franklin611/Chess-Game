@@ -127,12 +127,12 @@ bool twoStep(Vec start, Vec end){
 
 // Attach the player observers to each piece
 // It will also now attach the playerWhite and playerBlack pointers
-void ChessBoard::setupPlayers(unique_ptr<Observer> pWhite, unique_ptr<Observer> pBlack) {
+void ChessBoard::setupPlayers(shared_ptr<Observer> pWhite, shared_ptr<Observer> pBlack) {
     // You can make a unique to a shared, but not other way around
     // shared_ptr<Observer> sharedWhite = make_shared<Observer>(pWhite);
     // shared_ptr<Observer> sharedBlack = make_shared<Observer>(pBlack);
-    playerWhite = move(pWhite);
-    playerBlack = move(pBlack);
+    playerWhite = pWhite;
+    playerBlack = pBlack;
 
     // Iterate through the game board and set up observers for each piece
     // for (auto& row : gb) {
@@ -679,9 +679,20 @@ void ChessBoard::setTurn(bool turn) {
     this->turn = turn;
 }
 
+shared_ptr<Observer> ChessBoard::getPlayerWhite() {
+    return playerWhite;
+}
+
+shared_ptr<Observer> ChessBoard::getPlayerBlack() {
+    return playerBlack;
+}
+
+
 
 ostream& operator<<(ostream& out, const ChessBoard& cb) {
     out << *(cb.td);
     if (cb.displayScore) out << cb.game << endl;
     return out;
 }
+
+

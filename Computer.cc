@@ -37,3 +37,8 @@ Vec Computer::makeComputerMove(int userLevel) {
         return onlyLegalMove[1];
     }
 }
+
+
+int Computer::getLevel() {
+    return userLevel;
+}

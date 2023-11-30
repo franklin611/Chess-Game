@@ -77,22 +77,23 @@ int main() {
             // Observer -> Player -> Computer or Human. They are subclasses of Observer
             string player1, player2;
             cin >> player1 >> player2;
-            // unique_ptr<Observer> playerWhite, playerBlack;
+            shared_ptr<Observer> playerWhite, playerBlack;
+            int level;
+            if(!usedSetup) cb.defaultBoard(); // In both cases setup board first
 
             if(player1 == "human") {
-                unique_ptr<Human> playerWhite = make_unique<Human>(1, cb);
+                playerWhite = make_shared<Human>(1, cb);
             } else {
-                int level = stoi(player1.substr(9)); // Not sure if we can use stoi But this should level = the number in the brackets
-                unique_ptr<Computer> playerWhite = make_unique<Computer>(1, cb, level);
+                level = stoi(player1.substr(9)); // Not sure if we can use stoi But this should level = the number in the brackets
+                playerWhite = make_shared<Computer>(1, cb, level);
             }
             if(player2 == "human") {
-                unique_ptr<Human> playerBlack = make_unique<Human>(0, cb);
+                playerBlack = make_shared<Human>(0, cb);
             } else {
-                int level = stoi(player2.substr(9)); // The number
-                unique_ptr<Computer> playerBlack = make_unique<Computer>(0, cb, level);
+                level = stoi(player2.substr(9)); // The number
+                playerBlack = make_shared<Computer>(0, cb, level);
             }
 
-            if(!usedSetup) cb.defaultBoard(); // In both cases setup board first
 
             cb.setupPlayers(playerWhite, playerBlack); // Then players
             string cmd2;
@@ -107,11 +108,13 @@ int main() {
                         int y = stoi(start.substr(1));;
                         Vec coordinate1 = Vec{x, y - 1};
 
-                        int x = convertToInt(end.substr(0,1)[0]);
-                        int y = stoi(end.substr(1));
-                        Vec coordinate2 = Vec{x, y - 1};
+                        int x2 = convertToInt(end.substr(0,1)[0]);
+                        int y2 = stoi(end.substr(1));
+                        Vec coordinate2 = Vec{x2, y2 - 1};
 
-                        if(playerWhite->makeHumanMove(coordinate1, coordinate2)) {
+                        auto humanWhite = dynamic_pointer_cast<Human>(cb.getPlayerWhite());
+
+                        if(humanWhite->makeHumanMove(coordinate1, coordinate2)) {
                             // Valid Move
                             if(cb.upgradePawn(coordinate2)) {
                                 char newPiece;
@@ -127,8 +130,11 @@ int main() {
                         }
                     } else if(cmd2 == "move" && player1 == "computer") {
                         // Make Computer Move
-                        int level = playerWhite.userLevel;
-                        Vec end = playerWhite->makeComputerMove(level); // TO DO UPDATE WITH HELENA'S NEW FUNCTION
+
+                        auto computerWhite = dynamic_pointer_cast<Computer>(cb.getPlayerWhite());
+                        int level = computerWhite->getLevel();
+
+                        Vec end = computerWhite->makeComputerMove(level); // TO DO UPDATE WITH HELENA'S NEW FUNCTION
                         if(cb.upgradePawn(end)){
                             cb.setupWithChar('Q', end);
                         }
@@ -143,18 +149,17 @@ int main() {
                         string start, end;
                         cin >> start >> end;
 
-                        string start, end;
-                        cin >> start >> end;
-
                         int x = convertToInt(start.substr(0,1)[0]);
                         int y = stoi(start.substr(1));
                         Vec coordinate1 = Vec{x, y - 1};
 
-                        int x = convertToInt(end.substr(0,1)[0]);
-                        int y = stoi(end.substr(1));
-                        Vec coordinate2 = Vec{x, y - 1}; // Start at row 0
+                        int x2 = convertToInt(end.substr(0,1)[0]);
+                        int y2 = stoi(end.substr(1));
+                        Vec coordinate2 = Vec{x2, y2 - 1}; // Start at row 0
+                        
+                        auto humanBlack = dynamic_pointer_cast<Human>(cb.getPlayerBlack());
 
-                        if(playerBlack->makeHumanMove(coordinate1, coordinate2)) {
+                        if(humanBlack->makeHumanMove(coordinate1, coordinate2)) {
                             if(cb.upgradePawn(coordinate2)) {
                                 char newPiece;
                                 cin >> newPiece;
@@ -165,8 +170,11 @@ int main() {
                             cout << "Invalid move. Please retry" << endl;
                         }
                     } else if (cmd == "move" && player2 == "computer") {
-                        int level = playerBlack.userLevel;
-                        Vec end = playerBlack->makeComputerMove(level);
+
+                        auto computerBlack = dynamic_pointer_cast<Computer>(cb.getPlayerWhite());
+                        int level = computerBlack->getLevel();
+
+                        Vec end = computerBlack->makeComputerMove(level);
                         if(cb.upgradePawn(end)){
                             cb.setupWithChar('q', end);
                         }

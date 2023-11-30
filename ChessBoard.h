@@ -22,8 +22,10 @@ class DisplayObserver;
 class ChessBoard: public ChessBoardObserver {
     vector<vector<shared_ptr<Piece>>> gb;
     vector<vector<unique_ptr<Empty>>> eb;
-    unique_ptr<Observer> playerWhite;
-    unique_ptr<Observer> playerBlack;
+    // unique_ptr<Observer> playerWhite;
+    // unique_ptr<Observer> playerBlack;
+    shared_ptr<Observer> playerWhite;
+    shared_ptr<Observer> playerBlack;
     // shared_ptr<DisplayObserver> textDisplay;
     // shared_ptr<DisplayObserver> graphicsDisplay;
     shared_ptr<TextDisplay> td;
@@ -62,7 +64,8 @@ class ChessBoard: public ChessBoardObserver {
         ChessBoard();
 
         // setUp players
-        void setupPlayers(unique_ptr<Observer> pWhite, unique_ptr<Observer> pblack);
+        // void setupPlayers(unique_ptr<Observer> pWhite, unique_ptr<Observer> pblack);
+        void setupPlayers(shared_ptr<Observer> pWhite, shared_ptr<Observer> pblack);
 
         void regMove(Vec start, Vec end);
 
@@ -124,6 +127,11 @@ class ChessBoard: public ChessBoardObserver {
         bool boardIsValid();
 
         void setTurn(bool turn);
+
+        shared_ptr<Observer> getPlayerWhite();
+        shared_ptr<Observer> getPlayerBlack();
+
+
 
         friend ostream& operator<<(ostream& out, const ChessBoard& cb);
 
