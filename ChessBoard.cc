@@ -148,7 +148,7 @@ void ChessBoard::setupPlayers(unique_ptr<Observer> pWhite, unique_ptr<Observer> 
 // To create the empty construcotr, what do I actually pass? (Empty(Vec{row,col}, _ or ' ', true or false)))
 
 // FRANKLIN
-ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_unique<TextDisplay>()}, gd{make_unique<GraphicsDisplay>()}, game{}, bCheck{false}, wCheck{false}, turn{true}, bKing{}, wKing{} {
+ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_shared<TextDisplay>()}, gd{make_shared<GraphicsDisplay>()}, game{}, bCheck{false}, wCheck{false}, turn{true}, bKing{}, wKing{} {
     // Setup the empty board and gameboard
     // unique_ptr<TextDisplay> td, unique_ptr<GraphicDisplay> gd, I have to make this here
 
@@ -172,6 +172,8 @@ ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_u
         eb.push_back(move(ebRow));
         gb.push_back(move(gbRow));
     }
+    graphicsDisplay = make_shared<DisplayObserver>(*gd);
+    textDisplay = make_shared<DisplayObserver>(*td);
 }
 
 // DONE
