@@ -1,4 +1,3 @@
-#include "Piece.h"
 #include "Bishop.h"
 
 Bishop::Bishop(Vec coordinate, char type, bool colour): Piece{coordinate, type, colour} {}

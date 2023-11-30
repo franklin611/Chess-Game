@@ -1,1 +1,1 @@
-Empty.o: Empty.cc Piece.h Vec.h Empty.h
+Empty.o: Empty.cc Empty.h Piece.h Vec.h

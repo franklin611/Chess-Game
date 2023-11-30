@@ -1,4 +1,3 @@
-#include "Piece.h"
 #include "Queen.h"
 
 Queen::Queen(Vec coordinate, char type, bool white) : Piece{coordinate, type, white} {}

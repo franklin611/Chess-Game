@@ -19,3 +19,11 @@ Vec::Vec(Vec&& other)
         : x(std::move(other.x)), y(std::move(other.y)) {}
 
 Vec::Vec(int x, int y): x{x}, y{y} {}
+
+int Vec::getX(){ return x; }
+
+int Vec::getY(){ return y; }
+
+void Vec::setX(int num){ x = num; }
+
+void Vec::setY(int num){ y = num; }

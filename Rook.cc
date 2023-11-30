@@ -1,5 +1,6 @@
-#include "Piece.h"
 #include "Rook.h"
+
+Rook::~Rook(){}
 
 Rook::Rook(): Piece{}, moved{false} {}
 
@@ -9,7 +10,7 @@ Rook::Rook(Vec coordinate, char type, bool white) : Piece{coordinate, type, whit
 // To make Chiara's life easier, I can also just check if there is a piece there.
 // If our team, we can't make that move and break the for loop (Assuming we have 4 for loops for each
 // direction) if it is an enemy team, capturing is the last move we can make then break. 
-void Piece::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
+void Rook::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec move;
     shared_ptr<Piece> p;
     

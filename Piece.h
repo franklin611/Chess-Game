@@ -42,7 +42,7 @@ using namespace std;
 // case 4: capture diagonal
 // only allowed if the opposite team is on that square
 
-class Empty;
+// class Empty;
 
 class Piece{
 		// not sure if this needs to be protected ****
@@ -68,6 +68,7 @@ class Piece{
 			Piece(Vec coordinate, char type, bool white);
 			Piece(const Piece& p);
 			Piece(Piece&& p);
+			virtual ~Piece() = default;
 			vector<Vec> getLegalMoves();
 			Vec getCoordinate() const;
 			void setCoordinate(Vec coord);

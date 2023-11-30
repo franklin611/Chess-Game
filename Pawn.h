@@ -2,6 +2,7 @@
 #define _PAWN_H_
 
 #include "Piece.h"
+#include "ChessBoard.h"
 
 class Pawn : public Piece {
 	bool movedTwo;
