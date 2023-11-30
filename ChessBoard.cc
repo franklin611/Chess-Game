@@ -154,7 +154,7 @@ ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_u
 
     bool back = true;
     for (int row = 0; row < 8; row++) {
-        vector<unique_ptr<Piece>> ebRow;
+        vector<unique_ptr<Empty>> ebRow;
         vector<shared_ptr<Piece>> gbRow;
         for (int col = 0; col < 8; ++col) {
             // gb[row][col] = make_shared<Piece>();
