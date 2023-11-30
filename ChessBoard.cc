@@ -154,7 +154,7 @@ void ChessBoard::setupPlayers(shared_ptr<Observer> pWhite, shared_ptr<Observer> 
 
 // TODO: temporarily taking out graphics display stuff
 // gd{make_shared<GraphicsDisplay>()}
-ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_shared<TextDisplay>()}, game{}, bCheck{false}, wCheck{false}, turn{true}, bKing{}, wKing{} {
+ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_shared<TextDisplay>()}, game{}, bCheck{false}, wCheck{false}, turn{true}, bKing{}, wKing{}, displayScore{false} {
     // Setup the empty board and gameboard
     // unique_ptr<TextDisplay> td, unique_ptr<GraphicDisplay> gd, I have to make this here
 
@@ -385,14 +385,19 @@ bool ChessBoard::testMove(Vec start, Vec end){
     // --------------------- at this point ALL the pieces have possible moves -----------------------------
     // we need to decide if any of these moves will put the opponent's king in check
 
+
     // need to check if that move puts the opponent in check
     bool check = isCheck(!turn);
     bool legal = false;
 
     // we decide its legal -> notify player
     if (!check){
-        if (!turn){ playerWhite->notifyLM(start, end); } // if the next turn (opponent is white)
-        else { playerBlack->notifyLM(start, end); }
+        if (!turn){ 
+            playerWhite->notifyLM(start, end); 
+        } // if the next turn (opponent is white)
+        else { 
+            playerBlack->notifyLM(start, end); 
+        }
         isCaptureMove(start, end, boardCopy);
         isCheckMove(start, end);
         isCheckMateMove(start, end);
@@ -664,16 +669,16 @@ void ChessBoard::defaultBoard() {
     setupWithChar('Q', Vec{4,0}); // White Queen
     setupWithChar('q', Vec{4, 7}); // Black Queen
 
-    // for (vector<shared_ptr<Piece>> vec : gb) {
-	// 	for (shared_ptr<Piece> p : vec) {
-    //         if(p->getTeam() == turn) {
-    //             p->getPossibleMoves(gb);
-    //             for (Vec end : p->returnPossibleMoves()) {
-    //                 testMove(p->getCoordinate(), end);
-    //             }
-    //         } // Sets up that piece'possible moves
-    //     }
-    // }
+    for (vector<shared_ptr<Piece>> vec : gb) {
+		for (shared_ptr<Piece> p : vec) {
+            if(p->getTeam() == turn) {
+                p->getPossibleMoves(gb);
+                for (Vec end : p->returnPossibleMoves()) {
+                    testMove(p->getCoordinate(), end);
+                }
+            } // Sets up that piece'possible moves
+        }
+    }
 }
 
 void ChessBoard::setTurn(bool turn) {

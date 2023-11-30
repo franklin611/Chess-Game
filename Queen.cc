@@ -7,7 +7,6 @@ Queen::Queen(const Queen& other): Piece{other} {}
 void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec move;
     shared_ptr<Piece> p;
-
     // To top left diagonal
     for (int i = 1; i < 7; ++i) {
         move = Vec{coordinate.getX() - i, coordinate.getY() - i};

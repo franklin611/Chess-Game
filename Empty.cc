@@ -5,6 +5,7 @@ Empty::Empty(const Empty& other) : Piece{other} {}
 void Empty::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     // Do nothing
     // It is virtual so it has to be overriden
+    // cout << "empty" << endl;
 }
 
 shared_ptr<Piece> Empty::clone() const {

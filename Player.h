@@ -10,9 +10,8 @@ using namespace std;
 
 // player is an observer to pieces, and a subject for chessboard to observe
 class Player : public Observer {
-    bool colour;
-
     protected:
+    bool colour;
     vector<vector<Vec>> legalMoves;
     vector<vector<Vec>> captureMoves;
     vector<vector<Vec>> checkMoves;

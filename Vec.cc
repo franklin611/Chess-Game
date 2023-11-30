@@ -1,5 +1,7 @@
 #include "Vec.h"
+
 #include <utility>
+using namespace std;
 
 bool Vec::operator==(const Vec& other) const {
    return (x == other.x) && (y == other.y);
@@ -27,3 +29,9 @@ int Vec::getY(){ return y; }
 void Vec::setX(int num){ x = num; }
 
 void Vec::setY(int num){ y = num; }
+
+ostream &operator<<(ostream &out, Vec &v) {
+
+    cout << "(" << char(v.getX() + 97) << ", " << v.getY() + 1<< ")";
+    return out;
+}

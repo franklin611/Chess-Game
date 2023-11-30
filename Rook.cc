@@ -1,5 +1,6 @@
 #include "Rook.h"
 
+
 Rook::~Rook(){}
 
 Rook::Rook(): Piece{}, moved{false} {}
@@ -13,7 +14,6 @@ Rook::Rook(Vec coordinate, char type, bool white) : Piece{coordinate, type, whit
 void Rook::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec move;
     shared_ptr<Piece> p;
-    
 
     for(int i = 1; i < 7; ++i) {
         // Going Down

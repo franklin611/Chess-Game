@@ -1,6 +1,8 @@
 #ifndef _PIECE_H_
 #define _PIECE_H_
 
+#include <iostream>
+
 // #include "Observer.h"
 #include <vector>
 #include "Vec.h"

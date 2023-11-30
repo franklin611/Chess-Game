@@ -1,10 +1,14 @@
 #include "Player.h"
+#include "Vec.h"
+#include <iostream>
 
 Player::Player(bool colour, shared_ptr<ChessBoardObserver> cb) : colour{colour}, cb{nullptr} {}
 
 void Player::notifyLM(Vec start, Vec end) {
     vector<Vec> newMove = {start, end};
     legalMoves.emplace_back(newMove);
+    // cout << "move: " << newMove[0] << ", " << newMove[1] << endl;
+    // cout << "MOVES: " << legalMoves.size() << endl;
 }
 
 void Player::notifyCapM(Vec start, Vec end) {

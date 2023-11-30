@@ -72,6 +72,7 @@ int main() {
         // If we are to use the default board, we simply default construct that gameboard and get players
         // If we we are to use the custom board, we just get players cuz we already created this custom board in setup.
         // On top of this, we have a isEnd that resets the gameBoard and players.
+        shared_ptr<Human> playerWhite;
 
         if(cmd == "game") {
             //To setup a new game, we take two input playerWhite playerBlack.
@@ -79,31 +80,44 @@ int main() {
             // Observer -> Player -> Computer or Human. They are subclasses of Observer
             string player1, player2;
             cin >> player1 >> player2;
-            shared_ptr<Observer> playerWhite, playerBlack;
-            int level;
+            // shared_ptr<Player> playerWhite, playerBlack;
+            int level, level2;
             
+            if(player1 == "human" && player2 == "human") {
+                playerWhite = move(make_unique<Human>(1, cb));
+                cout << "MEMORY ADDRESS: " << playerWhite << endl;
+                shared_ptr<Human> playerBlack = move(make_unique<Human>(0, cb));
+                cb->setupPlayers(playerWhite, playerBlack); // Then players
 
-            if(player1 == "human") {
-                playerWhite = make_shared<Human>(1, cb);
-            } else {
-                level = stoi(player1.substr(9)); // Not sure if we can use stoi But this should level = the number in the brackets
-                playerWhite = make_shared<Computer>(1, cb, level);
-            }
-            if(player2 == "human") {
-                playerBlack = make_shared<Human>(0, cb);
-            } else {
-                level = stoi(player2.substr(9)); // The number
-                playerBlack = make_shared<Computer>(0, cb, level);
+            } else if (player1 == "human" && player2 == "computer" ) {
+                // shared_ptr<Human> playerWhite = move(make_unique<Human>(1, cb));
+                // level = stoi(player2.substr(9)); // Not sure if we can use stoi But this should level = the number in the brackets
+                // shared_ptr<Computer> playerBlack = move(make_unique<Computer>(0, cb, level));
+                // cb->setupPlayers(playerWhite, playerBlack); // Then players
+
+            } else if (player1 == "computer" && player2 == "human" ) {
+                // level = stoi(player1.substr(9)); 
+                // shared_ptr<Computer> playerWhite = move(make_unique<Computer>(1, cb, level));
+                // shared_ptr<Human> playerBlack = move(make_unique<Human>(0, cb));
+                // cb->setupPlayers(playerWhite, playerBlack); // Then players
+
+            } else if (player1 == "computer" && player2 == "computer" ) {
+                // level = stoi(player1.substr(9)); // Not sure if we can use stoi But this should level = the number in the brackets
+                // level2 = stoi(player2.substr(9));
+                // shared_ptr<Computer> playerWhite = move(make_unique<Computer>(1, cb, level));
+                // shared_ptr<Computer> playerBlack = move(make_unique<Computer>(0, cb, level2));
+                // cb->setupPlayers(playerWhite, playerBlack); // Then players
             }
 
+            
             if(!usedSetup) cb->defaultBoard(); // In both cases setup board first
             cout << *(cb);
-            cb->setupPlayers(playerWhite, playerBlack); // Then players
             string cmd2;
             while(cin >> cmd2) {
 
                 if(cb->getTurn()) { //If passes means playerWhite turn
                     if (cmd2 == "move" && player1 == "human") {
+
                         string start, end;
                         cin >> start >> end;
 
@@ -115,9 +129,13 @@ int main() {
                         int y2 = stoi(end.substr(1));
                         Vec coordinate2 = Vec{x2, y2 - 1};
 
-                        auto humanWhite = dynamic_pointer_cast<Human>(cb->getPlayerWhite());
-
-                        if(humanWhite->makeHumanMove(coordinate1, coordinate2)) {
+                        // shared_ptr<Human> humanWhite = dynamic_pointer_cast<Human>(cb->getPlayerWhite());
+                        cout << "before" << endl;
+                        cout << "TURN: " << cb->getTurn() << endl;
+                        // cout << "MEMORY ADDRESS: " << humanWhite << endl;
+ 
+                        if(playerWhite->makeHumanMove(coordinate1, coordinate2)) {
+                            cout << "MOVE MADE" << endl;
                             // Valid Move
                             if(cb->upgradePawn(coordinate2)) {
                                 char newPiece;

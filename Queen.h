@@ -2,6 +2,7 @@
 #define _QUEEN_H_
 
 #include "Piece.h"
+#include <iostream>
 
 class Queen : public Piece {
     public:

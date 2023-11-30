@@ -1,5 +1,8 @@
 #ifndef _VEC_H_
 #define _VEC_H_
+
+#include <iostream>
+using namespace std;
 class Vec {
 		int x;
 		int y;
@@ -14,6 +17,7 @@ class Vec {
 			Vec(Vec&& other);
 			Vec(const Vec& other);
 			Vec& operator=(const Vec& other);
+			friend ostream &operator<<(ostream &out, Vec &v);
 };
 
 #endif

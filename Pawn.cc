@@ -42,11 +42,11 @@ void Pawn::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
 	// Or En Passant Right option. Where there is an empty piece there
 	// First we have to check that it actually is a valid coordinate there. 
 	shared_ptr<Piece> p = pieceAt(gb, CaptureRight);
-	if ((inBounds(CaptureRight) && (!isEmptyPiece(p) && (p->getTeam() != this->getTeam()))) || (isEmptyPiece(p) && canPassantRight(gb))){
+	if ((inBounds(CaptureRight) && (!isEmptyPiece(p) && (p->getTeam() != this->getTeam()))) || inBounds(CaptureRight) && (isEmptyPiece(p) && canPassantRight(gb))){
 		possibleMoves.push_back(CaptureRight);
 	}
 	p = pieceAt(gb,CaptureLeft);
-	if ((inBounds(CaptureLeft) && (!isEmptyPiece(p) && (p->getTeam() != this->getTeam()))) || (isEmptyPiece(p) && canPassantRight(gb))){
+	if ((inBounds(CaptureLeft) && (!isEmptyPiece(p) && (p->getTeam() != this->getTeam()))) || inBounds(CaptureLeft) && (isEmptyPiece(p) && canPassantRight(gb))){
 		possibleMoves.push_back(CaptureLeft);
 	}	
 	p = pieceAt(gb,moveUp);

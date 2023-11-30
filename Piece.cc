@@ -61,7 +61,7 @@ Vec Piece::getCoordinate() const { return coordinate; }
 void Piece::setCoordinate(Vec coord){ coordinate = coord; }
 
 shared_ptr<Piece> Piece::pieceAt(vector<vector<shared_ptr<Piece>>> gb, Vec coordinate) {
-    if ((!(coordinate.getX() <= 7 && coordinate.getX() >= 0)) && (!(coordinate.getY() <= 7 && coordinate.getY() >= 0))) return nullptr;
+    if ((!(coordinate.getX() <= 7 && coordinate.getX() >= 0)) || (!(coordinate.getY() <= 7 && coordinate.getY() >= 0))) return nullptr;
 
     int row = coordinate.getY();
     int col = coordinate.getX();
@@ -70,7 +70,7 @@ shared_ptr<Piece> Piece::pieceAt(vector<vector<shared_ptr<Piece>>> gb, Vec coord
 }
 
 bool Piece::isEmptyPiece(shared_ptr<Piece> p) {
-    if (p->getType() != ' ' && p->getType() != '_') {
+    if (p->getType() == ' ' || p->getType() == '_') {
         return true;
     } else {
         return false;
