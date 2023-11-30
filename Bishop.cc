@@ -1,7 +1,6 @@
 #include "Piece.h"
 #include "ChessBoard.h"
 #include "Bishop.h"
-#include "Vec.h"
 
 Bishop::Bishop(Vec coordinate, char type, bool colour): Piece{coordinate, type, colour} {}
 

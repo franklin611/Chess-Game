@@ -7,9 +7,7 @@
 #include <memory>
 using namespace std;
 
-class ChessBoard;
 // class Vec;
-class Observer;
 
 // queen
 // employ the same logic as bishop and rook combined
@@ -65,8 +63,6 @@ class Piece{
 			Piece() = default;
 			Piece(Vec coordinate, char type, bool white);
 			Piece(Piece& p);
-			void attachWhite(unique_ptr<Observer> o);
-			void attachBlack(unique_ptr<Observer> o);
 			vector<Vec> getLegalMoves();
 			Vec getCoordinate();
 			void setCoordinate(Vec coord);
