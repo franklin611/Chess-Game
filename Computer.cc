@@ -1,6 +1,20 @@
 #include "Computer.h"
 #include "Level.h"
 #include <random>
+using namespace std;
+
+// function to randomly select a vector from the level's moves
+// info was sourced from https://en.cppreference.com/w/cpp/numeric/random
+vector<Vec> Computer::selectRandomMove(vector<vector<Vec>> &vectors) {
+    // seeding random number generator
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    std::uniform_int_distribution<size_t> outerDist(0, vectors.size() - 1);
+    size_t outerIndex = outerDist(gen);
+
+    return vectors[outerIndex];
+}
 
 Computer::Computer(bool colour, unique_ptr<Observer> cb, int userLevel) : Player{colour, std::move(cb)}, userLevel{userLevel} {
     if (userLevel == 1) {level = make_unique<LevelOne>();}
@@ -9,26 +23,17 @@ Computer::Computer(bool colour, unique_ptr<Observer> cb, int userLevel) : Player
     else if (userLevel == 4) {level = make_unique<LevelFour>();}
 }
 
-vector<vector<Vec>> Computer::selectMove() {
-
-}
-
 // DONE
-void Computer::makeComputerMove(bool white, int userLevel){
+Vec Computer::makeComputerMove(int userLevel) {
 
-    vector<vector<Vec>> legalMoves = level->createMoves( );
-        // n = l->createMove(*this);
-    }
-
-    // // get the legal moves for the player
-    // vector<vector<Vec>> legalMoves = getLegalMoves(turn);
-    vector<Vec> move; // there are two Vecs [start, end]
-    // vector<vector<Vec>> levelMoves = generateAllLevelMoves(legalMoves, level);
-
-    if (turn){
-        move = playerWhite->selectMove(legalMoves); // we do not have a selectMove
+    vector<vector<Vec>> levelsMoves = level->createMoves(legalMoves, captureMoves, checkMoves, checkMateMoves, avoidCaptureMoves);
+    vector<Vec> selectedMove = selectRandomMove(levelsMoves);
+    if (!selectedMove.empty()) {
+        cb->notify(selectedMove[0], selectedMove[1]);
+        return selectedMove[1];
     } else {
-        move = playerBlack->selectMove(legalMoves);
+        vector<Vec> onlyLegalMove = selectRandomMove(legalMoves);
+        cb->notify(onlyLegalMove[0], onlyLegalMove[1]);
+        return onlyLegalMove[1];
     }
-    notify(move[0], move[1]);
 }

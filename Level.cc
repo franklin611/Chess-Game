@@ -1,11 +1,59 @@
 #include "Level.h"
 
-vector<vector<Vec>> LevelOne::createMove() {
-    return cb->possibleMoves; //TODO: idk where possible moves is but i have it in chessboard
+// Level 1: random legal moves.
+vector<vector<Vec>> LevelOne::createMoves(
+    vector<vector<Vec>> legalMoves,
+    vector<vector<Vec>> captureMoves,
+    vector<vector<Vec>> checkMoves,
+    vector<vector<Vec>> checkMateMoves,
+    vector<vector<Vec>> avoidCaptureMoves) {
+    return legalMoves;
+}
+
+// Level 2: prefers capturing moves and checks over other moves.
+vector<vector<Vec>> LevelTwo::createMoves(
+    vector<vector<Vec>> legalMoves,
+    vector<vector<Vec>> captureMoves,
+    vector<vector<Vec>> checkMoves,
+    vector<vector<Vec>> checkMateMoves,
+    vector<vector<Vec>> avoidCaptureMoves) {
+    vector<vector<Vec>> twoMoves = captureMoves;
+    for (int i = 0; i < checkMoves.size(); ++i) {
+        twoMoves.emplace_back(checkMoves[i]);
+    };
+    return twoMoves;
+}
+
+// Level 3: prefers avoiding capture, capturing moves, and checks.
+vector<vector<Vec>> LevelThree::createMoves(
+    vector<vector<Vec>> legalMoves,
+    vector<vector<Vec>> captureMoves,
+    vector<vector<Vec>> checkMoves,
+    vector<vector<Vec>> checkMateMoves,
+    vector<vector<Vec>> avoidCaptureMoves) {
+    vector<vector<Vec>> threeMoves = captureMoves;
+    for (int i = 0; i < checkMoves.size(); ++i) {
+            threeMoves.emplace_back(checkMoves[i]);
+    };
+    for (int i = 0; i < avoidCaptureMoves.size(); ++i) {
+        threeMoves.emplace_back(avoidCaptureMoves[i]);
+    };
+    return threeMoves;
+}
+
+// Level 4: prefers checkmate moves and checks
+vector<vector<Vec>> LevelFour::createMoves(
+    vector<vector<Vec>> legalMoves,
+    vector<vector<Vec>> captureMoves,
+    vector<vector<Vec>> checkMoves,
+    vector<vector<Vec>> checkMateMoves,
+    vector<vector<Vec>> avoidCaptureMoves) {
+    vector<vector<Vec>> fourMoves = checkMateMoves;
+    for (int i = 0; i < checkMoves.size(); ++i) {
+        fourMoves.emplace_back(checkMoves[i]);
+    };
+    return fourMoves;
 }
 
 
-vector<vector<Vec>> LevelTwo::createMove() {
-    return cb->possibleMoves //TODO: idk where possible moves is but i have it in chessboard
-}
 

@@ -3,10 +3,10 @@
 #include <iostream>
 #include <memory>
 #include "Game.h" // Because we are creating an actual Game object
-
-
 #include "Empty.h"
-#include "Empty.h"
+#include "King.h"
+#include "Pawn.h"
+#include "ChessBoardObserver.h"
 using namespace std;
 
 class Piece; // Because we are not directly access fields/functions of Piece, a forward declaration suffices
@@ -25,7 +25,7 @@ class GraphicsDisplay;
 
 //td is observer, chessboard is subject
 
-class ChessBoard: public Observer {
+class ChessBoard: public ChessBoardObserver {
     vector<vector<shared_ptr<Piece>>> gb;
     vector<vector<unique_ptr<Empty>>> eb;
     unique_ptr<Observer> playerWhite;
@@ -38,7 +38,7 @@ class ChessBoard: public Observer {
     bool turn; // true is for white, false is for black
     Vec bKing;
     Vec wKing;
-    unique_ptr<TextDisplay> tdOutput; //TODO: i dont really understand why we have a pointer to display observer td, but we need
+    // unique_ptr<TextDisplay> tdOutput; //TODO: i dont really understand why we have a pointer to display observer td, but we need
     // one for td pointer
     public:
         // returns the type of a piece at that coordinate

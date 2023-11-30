@@ -7,6 +7,19 @@ void Player::notifyLM(Vec start, Vec end) {
     legalMoves.emplace_back(newMove);
 }
 
-vector<vector<Vec>> Player::getLegalMoves() {
-    return legalMoves;
+void Player::notifyCapM(Vec start, Vec end) {
+    vector<Vec> newMove = {start, end};
+    captureMoves.emplace_back(newMove);
 }
+
+void Player::notifyCheckM(Vec start, Vec end) {
+    vector<Vec> newMove = {start, end};
+    checkMoves.emplace_back(newMove);
+}
+void Player::notifyCMM(Vec start, Vec end) {
+    vector<Vec> newMove = {start, end};
+    checkMateMoves.emplace_back(newMove);
+}
+// vector<vector<Vec>> Player::getLegalMoves() {
+//     return legalMoves;
+// }

@@ -10,11 +10,8 @@ class Computer : public Player {
     unique_ptr<Level> level = nullptr;
     public:
         Computer(bool colour, unique_ptr<Observer> cb, int userLevel);
-        void makeComputerMove(bool white, int userLevel);
-        vector<vector<Vec>> selectMove();
-        void notifyCapM(Vec start, Vec end); // TODO: idk if right here or in observer.h????
-        void notifyCheckM(Vec start, Vec end);
-        void notifyCMM(Vec start, Vec end); // then use these to make levels accordingly 
+        Vec makeComputerMove(int userLevel);
+        vector<Vec> selectRandomMove(vector<vector<Vec>> &vectors);
 };
 
 #endif
@@ -27,3 +24,4 @@ class Computer : public Player {
 // then based on turn (maybe colour since player has that?) it calls chessboard's notify (check if chessbord's notify takes in a colour/turn already)
 // and then in chessboard's move it calls td notify
 
+// TODO: add game output operator rewritten and add that in chessboard's output operator to display score, confirm how main calls it
