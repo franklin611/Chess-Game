@@ -6,8 +6,9 @@
 
 class Human: public Player {
     public:
-        Human(bool colour, unique_ptr<ChessBoardObserver> cb);
+        Human(bool colour, shared_ptr<ChessBoardObserver> cb);
         bool makeHumanMove(Vec start, Vec end);
+        // shared_ptr<Player> clone() const override;
 };
 
 #endif

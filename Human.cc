@@ -1,6 +1,6 @@
 #include "Human.h"
 
-Human::Human(bool colour, unique_ptr<ChessBoardObserver> cb) : Player{colour, std::move(cb)} {}
+Human::Human(bool colour, shared_ptr<ChessBoardObserver> cb) : Player{colour, cb} {}
 
 bool Human::makeHumanMove(Vec start, Vec end){
 
@@ -13,3 +13,8 @@ bool Human::makeHumanMove(Vec start, Vec end){
     return false;
 
 }
+
+
+// shared_ptr<Player> Human::clone() const {
+//     return make_shared<Human>(*this);
+// }

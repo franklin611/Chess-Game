@@ -16,7 +16,7 @@ vector<Vec> Computer::selectRandomMove(vector<vector<Vec>> &vectors) {
     return vectors[outerIndex];
 }
 
-Computer::Computer(bool colour, unique_ptr<ChessBoardObserver> cb, int userLevel) : Player{colour, std::move(cb)}, userLevel{userLevel} {
+Computer::Computer(bool colour, shared_ptr<ChessBoardObserver> cb, int userLevel) : Player{colour, cb}, userLevel{userLevel} {
     if (userLevel == 1) {level = make_unique<LevelOne>();}
     else if (userLevel == 2) {level = make_unique<LevelTwo>();}
     else if (userLevel == 3) {level = make_unique<LevelThree>();}
@@ -42,3 +42,9 @@ Vec Computer::makeComputerMove(int userLevel) {
 int Computer::getLevel() {
     return userLevel;
 }
+
+
+// shared_ptr<Player> Computer::clone() const {
+//     return make_shared<Computer>(*this);
+// }
+

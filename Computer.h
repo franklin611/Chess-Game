@@ -9,10 +9,12 @@ class Computer : public Player {
     int userLevel;
     unique_ptr<Level> level = nullptr;
     public:
-        Computer(bool colour, unique_ptr<ChessBoardObserver> cb, int userLevel);
+        // Computer(bool colour, unique_ptr<ChessBoardObserver> cb, int userLevel); // This was original
+        Computer(bool colour, shared_ptr<ChessBoardObserver> cb, int userLevel);
         Vec makeComputerMove(int userLevel);
         vector<Vec> selectRandomMove(vector<vector<Vec>> &vectors);
         int getLevel();
+        // shared_ptr<Player> clone() const override; // Franklin changes dont worry
 };
 
 #endif

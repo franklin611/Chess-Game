@@ -58,7 +58,9 @@ int main() {
     string cmd;
     // Xwindow xw;
     bool usedSetup = false;
-    ChessBoard cb; // Default chessBoard constructor
+    // ChessBoard cb; // Default chessBoard constructor
+    shared_ptr<ChessBoard> cb = make_shared<ChessBoard>();
+
     outputRules();
 
     while (cin >> cmd) {
@@ -79,7 +81,7 @@ int main() {
             cin >> player1 >> player2;
             shared_ptr<Observer> playerWhite, playerBlack;
             int level;
-            if(!usedSetup) cb.defaultBoard(); // In both cases setup board first
+            if(!usedSetup) cb->defaultBoard(); // In both cases setup board first
 
             if(player1 == "human") {
                 playerWhite = make_shared<Human>(1, cb);
@@ -95,11 +97,11 @@ int main() {
             }
 
 
-            cb.setupPlayers(playerWhite, playerBlack); // Then players
+            cb->setupPlayers(playerWhite, playerBlack); // Then players
             string cmd2;
             while(cin >> cmd2) {
 
-                if(cb.getTurn()) { //If passes means playerWhite turn
+                if(cb->getTurn()) { //If passes means playerWhite turn
                     if (cmd2 == "move" && player1 == "human") {
                         string start, end;
                         cin >> start >> end;
@@ -112,14 +114,14 @@ int main() {
                         int y2 = stoi(end.substr(1));
                         Vec coordinate2 = Vec{x2, y2 - 1};
 
-                        auto humanWhite = dynamic_pointer_cast<Human>(cb.getPlayerWhite());
+                        auto humanWhite = dynamic_pointer_cast<Human>(cb->getPlayerWhite());
 
                         if(humanWhite->makeHumanMove(coordinate1, coordinate2)) {
                             // Valid Move
-                            if(cb.upgradePawn(coordinate2)) {
+                            if(cb->upgradePawn(coordinate2)) {
                                 char newPiece;
                                 cin >> newPiece;
-                                cb.setupWithChar(newPiece, coordinate2);
+                                cb->setupWithChar(newPiece, coordinate2);
                             } else cin.ignore();
                             // cin.ignore(std::numeric_limits<std::streamsize>::max()); // ChatGPT suggested
                             // Ignore the single next character input by the user. (Cuz we can't assume just one character)
@@ -131,18 +133,18 @@ int main() {
                     } else if(cmd2 == "move" && player1 == "computer") {
                         // Make Computer Move
 
-                        auto computerWhite = dynamic_pointer_cast<Computer>(cb.getPlayerWhite());
+                        auto computerWhite = dynamic_pointer_cast<Computer>(cb->getPlayerWhite());
                         int level = computerWhite->getLevel();
 
                         Vec end = computerWhite->makeComputerMove(level); // TO DO UPDATE WITH HELENA'S NEW FUNCTION
-                        if(cb.upgradePawn(end)){
-                            cb.setupWithChar('Q', end);
+                        if(cb->upgradePawn(end)){
+                            cb->setupWithChar('Q', end);
                         }
                         cout << cb;
                     } else if(cmd2 == "resign") {
                         //Player1 now has to lose
-                        cb.forfeit(); // This function will update the white and black score
-                        cb.restartGame(); // Restart match
+                        cb->forfeit(); // This function will update the white and black score
+                        cb->restartGame(); // Restart match
                     }
                 } else {
                     if (cmd2 == "move" && player2 == "human") {
@@ -157,13 +159,13 @@ int main() {
                         int y2 = stoi(end.substr(1));
                         Vec coordinate2 = Vec{x2, y2 - 1}; // Start at row 0
                         
-                        auto humanBlack = dynamic_pointer_cast<Human>(cb.getPlayerBlack());
+                        auto humanBlack = dynamic_pointer_cast<Human>(cb->getPlayerBlack());
 
                         if(humanBlack->makeHumanMove(coordinate1, coordinate2)) {
-                            if(cb.upgradePawn(coordinate2)) {
+                            if(cb->upgradePawn(coordinate2)) {
                                 char newPiece;
                                 cin >> newPiece;
-                                cb.setupWithChar(newPiece, coordinate2);
+                                cb->setupWithChar(newPiece, coordinate2);
                             } else cin.ignore();
                             cout << cb;
                         } else {
@@ -171,18 +173,18 @@ int main() {
                         }
                     } else if (cmd == "move" && player2 == "computer") {
 
-                        auto computerBlack = dynamic_pointer_cast<Computer>(cb.getPlayerWhite());
+                        auto computerBlack = dynamic_pointer_cast<Computer>(cb->getPlayerWhite());
                         int level = computerBlack->getLevel();
 
                         Vec end = computerBlack->makeComputerMove(level);
-                        if(cb.upgradePawn(end)){
-                            cb.setupWithChar('q', end);
+                        if(cb->upgradePawn(end)){
+                            cb->setupWithChar('q', end);
                         }
                         cout << cb;
                     } else if(cmd2 == "resign") {
                         // Player2 has to lose
-                        cb.forfeit();
-                        cb.restartGame();
+                        cb->forfeit();
+                        cb->restartGame();
                     }
                 }
                 // // 1. Check if game is over
@@ -212,9 +214,9 @@ int main() {
                         cout << "Invalid Input" << endl;
                         // I should not be breaking. I should be in the while loop waiting for commands
                     }
-                    if(piece == 'k') cb.setBlackKing(coordinate);
-                    if(piece == 'K') cb.setWhiteKing(coordinate);
-                    cb.setupWithChar(piece, coordinate);
+                    if(piece == 'k') cb->setBlackKing(coordinate);
+                    if(piece == 'K') cb->setWhiteKing(coordinate);
+                    cb->setupWithChar(piece, coordinate);
                     cout << cb;
                 } else if (cmd2 == "-") {
                     cin >> coord;
@@ -222,28 +224,28 @@ int main() {
                     int y = stoi(coord.substr(1));
                     // Remove a piece on a board by placing an empty piece on that coordinate
                     Vec coordinate = Vec{x, y - 1}; // We have to minus one because we are 0-7
-                    cb.setupWithPiece(cb.getEmptyPiece(coordinate), coordinate);
+                    cb->setupWithPiece(cb->getEmptyPiece(coordinate), coordinate);
                 } else if (cmd2 == "=") {
                     // From my understanding, "makes it colors turn to go next" means when the game start, it is their turn
                     while (cin >> colour) {
                         if(colour == "black") {
-                            cb.setTurn(0);
+                            cb->setTurn(0);
                         } else if (colour == "white") {
-                            cb.setTurn(1);
+                            cb->setTurn(1);
                         } else {
                             cout << "Invalid input, please try again." << endl;
                         }
                     }
                     cout << cb;
                 } else if (cmd == "done") {
-                    if(cb.boardIsValid()) {
+                    if(cb->boardIsValid()) {
                         usedSetup = true;
                         break; // Only case where we break
                         // Now a flag has been raised telling the main that the game has been setup with a gameboard.
                     }
                     cout << "Invalid Board Setup" << endl;
                     // Now we have to reset the board (as well as Players) and bring the user all the way back up again.
-                    cb.restartGame();
+                    cb->restartGame();
                     break;
                 }
             }

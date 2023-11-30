@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(bool colour, unique_ptr<ChessBoardObserver> cb) : colour{colour}, cb{nullptr} {}
+Player::Player(bool colour, shared_ptr<ChessBoardObserver> cb) : colour{colour}, cb{nullptr} {}
 
 void Player::notifyLM(Vec start, Vec end) {
     vector<Vec> newMove = {start, end};
@@ -23,3 +23,4 @@ void Player::notifyCMM(Vec start, Vec end) {
 // vector<vector<Vec>> Player::getLegalMoves() {
 //     return legalMoves;
 // }
+
