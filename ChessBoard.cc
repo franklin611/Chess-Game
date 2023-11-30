@@ -444,7 +444,7 @@ void ChessBoard::isCheckMateMove(Vec start, Vec end){
             if (p->getTeam() != turn){ continue;}
             p->resetMoves();
             p->getPossibleMoves(gb);
-            if (p->returnPossibleMoves().size() != 0){ empty = false}
+            if (p->returnPossibleMoves().size() != 0){ empty = false; }
         }
     }
 
@@ -652,7 +652,7 @@ void ChessBoard::defaultBoard() {
     for (vector<shared_ptr<Piece>> vec : gb) {
 		for (shared_ptr<Piece> p : vec) {
             if(p->getTeam() == turn) {
-                p->getPossibleMoves();
+                p->getPossibleMoves(gb);
                 for (Vec end : p->returnPossibleMoves()) {
                     testMove(p->getCoordinate(), end);
                 }
