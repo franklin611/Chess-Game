@@ -2,6 +2,7 @@
 #define _GAME_H_
 
 #include <iostream>
+using namespace std;
 
 class Game {
     float blackScore;

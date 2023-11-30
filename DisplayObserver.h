@@ -1,6 +1,8 @@
 #ifndef _DISPLAYOBSERVER_H_
 #define _DISPLAYOBSERVER_H_
 #include "Vec.h"
+#include <string>
+using namespace std;
 
 class DisplayObserver {
     public:

@@ -2,6 +2,7 @@
 #define _OBSERVER_H_
 
 #include "Vec.h"
+#include <memory> // Not sure if we need
 class Observer {
  public:
   virtual void notifyLM(Vec start, Vec end) = 0;

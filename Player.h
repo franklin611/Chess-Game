@@ -1,6 +1,7 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 #include "Observer.h"
+#include "ChessBoardObserver.h"
 #include <memory> // Not sure if we need
 #include "Vec.h"
 #include <vector> // if I have the include in .h then don't need in .cc
@@ -21,7 +22,7 @@ class Player : public Observer {
     // vector of vectors that contain vec (start and end)
     // friend class Computer;
     public:
-        Player(bool colour, unique_ptr<Observer> cb); // since it's not a vector of observers then don't need attach and detach, just in ctor
+        Player(bool colour, unique_ptr<ChessBoardObserver> cb); // since it's not a vector of observers then don't need attach and detach, just in ctor
 
         // TODO: this should be that it gets notified by chessboard
         // this is so it can get notified by Pieces

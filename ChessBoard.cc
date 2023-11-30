@@ -6,6 +6,7 @@
 #include "Knight.h"
 #include "Bishop.h"
 #include "Empty.h"
+#include "Game.h"
 #include <utility>
 
 #include "TextDisplay.h"
@@ -148,7 +149,10 @@ void ChessBoard::setupPlayers(unique_ptr<Observer> pWhite, unique_ptr<Observer> 
 // To create the empty construcotr, what do I actually pass? (Empty(Vec{row,col}, _ or ' ', true or false)))
 
 // FRANKLIN
-ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_shared<TextDisplay>()}, gd{make_shared<GraphicsDisplay>()}, game{}, bCheck{false}, wCheck{false}, turn{true}, bKing{}, wKing{} {
+
+// TODO: temporarily taking out graphics display stuff
+// gd{make_shared<GraphicsDisplay>()}
+ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_shared<TextDisplay>()}, game{}, bCheck{false}, wCheck{false}, turn{true}, bKing{}, wKing{} {
     // Setup the empty board and gameboard
     // unique_ptr<TextDisplay> td, unique_ptr<GraphicDisplay> gd, I have to make this here
 
@@ -172,11 +176,10 @@ ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_s
         eb.push_back(move(ebRow));
         gb.push_back(move(gbRow));
     }
-    graphicsDisplay = gd;
-    textDisplay = td;
+    // graphicsDisplay = gd;
+    textDisplay = td; // TODO: not sure how to resolve this, but basically doesn't work because we initialized td as textDisplay but then want to make it an obserer? isn't working
 }
 
-// DONE
 void ChessBoard::regMove(Vec start, Vec end){
     shared_ptr<Piece> startPiece = getPiece(start);
     shared_ptr<Piece> endPiece = getPiece(end);
@@ -294,7 +297,7 @@ void ChessBoard::notify(Vec start, Vec end){
     char startChar = emptyPiece->getType();
     char endChar = endPiece->getType();
     textDisplay->notifyMoves(start, startChar, end, endChar, checkString());
-    graphicsDisplay->notifyMoves(start, startChar, end, endChar, checkString());
+    // graphicsDisplay->notifyMoves(start, startChar, end, endChar, checkString());
 
     // change the turn
     turn? false : true;
@@ -666,7 +669,7 @@ void ChessBoard::setTurn(bool turn) {
 }
 
 
-ostream& operator<<(ostream& out, ChessBoard& cb) {
+ostream& operator<<(ostream& out, const ChessBoard& cb) {
     out << *(cb.td);
     if (cb.displayScore) out << cb.game << endl;
 }

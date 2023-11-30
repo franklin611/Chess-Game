@@ -35,9 +35,9 @@ class ChessBoard: public ChessBoardObserver {
     unique_ptr<Observer> playerBlack;
     // vector<unique_ptr<DisplayObserver>> displays;
     shared_ptr<DisplayObserver> textDisplay;
-    shared_ptr<DisplayObserver> graphicsDisplay;
+    // shared_ptr<DisplayObserver> graphicsDisplay;
     shared_ptr<TextDisplay> td;
-    shared_ptr<GraphicsDisplay> gd;
+    // shared_ptr<GraphicsDisplay> gd;
     Game game;
     bool bCheck;
     bool wCheck;
@@ -135,7 +135,7 @@ class ChessBoard: public ChessBoardObserver {
 
         void setTurn(bool turn);
 
-        friend ostream& operator<<(ostream& out, ChessBoard& cb);
+        friend ostream& operator<<(ostream& out, const ChessBoard& cb);
 
 };
 

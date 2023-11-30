@@ -14,7 +14,7 @@ $(EXEC): $(OBJECTS)
 
 -include ${DEPENDS}
 
-.PHONY: clean 
+.PHONY: clean
 clean:
 	rm -f $(OBJECTS) $(DEPENDS) $(EXEC)
 

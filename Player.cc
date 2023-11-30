@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(bool colour, unique_ptr<Observer> cb) : colour{colour}, cb{make_unique<Observer>()} {}
+Player::Player(bool colour, unique_ptr<ChessBoardObserver> cb) : colour{colour}, cb{make_unique<ChessBoardObserver>()} {}
 
 void Player::notifyLM(Vec start, Vec end) {
     vector<Vec> newMove = {start, end};
