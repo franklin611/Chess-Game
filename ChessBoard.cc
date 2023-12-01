@@ -685,6 +685,8 @@ void ChessBoard::defaultBoard() {
             if(p->getTeam() != turn) {
                 p->getPossibleMoves(gb); 
                 for (Vec end : p->returnPossibleMoves()) {
+                    // First run through of Knight itis b1,second it is c3 to a3??
+                    // a3 is a correct end move but c3 isnt
                      if (p->getType() == 'N')  cout  << p->getType() << " = " << char(p->getCoordinate().getX() + 97) << ' ' << p->getCoordinate().getY() + 1 << " to " << end << endl;
                     testMove(p->getCoordinate(), end);
                 }
