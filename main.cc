@@ -164,6 +164,8 @@ int main() {
                         //Player1 now has to lose
                         cb->forfeit(); // This function will update the white and black score
                         cb->restartGame(); // Restart match
+                    } else if (cmd2 == "skip") {
+                        cb->setTurn(!cb->getTurn()); // CHIARA SKIP TURN
                     }
                 } else {
                     if (cmd2 == "move" && player2 == "human") {
@@ -206,6 +208,8 @@ int main() {
                         // Player2 has to lose
                         cb->forfeit();
                         cb->restartGame();
+                    } else if (cmd2 == "skip") {
+                        cb->setTurn(!cb->getTurn()); // CHIARA SKIPO TURN
                     }
                 }
                 // // 1. Check if game is over
@@ -275,8 +279,6 @@ int main() {
                     break;
                 }
             }
-
-
         } else { // Invalid Input
             cout << "Invalid Input, try Again" << endl;
         }
