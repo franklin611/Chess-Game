@@ -8,7 +8,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec move;
     shared_ptr<Piece> p;
     // To top left diagonal
-    for (int i = 1; i < 7; ++i) {
+    for (int i = 1; i < 8; ++i) {
         move = Vec{coordinate.getX() - i, coordinate.getY() - i};
         p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) { // We dont care that 
@@ -23,7 +23,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     }
 
     // To top right Diagonal
-    for (int i = 1; i < 7; ++i) {
+    for (int i = 1; i < 8; ++i) {
         move = Vec{coordinate.getX() + i, coordinate.getY() -i};
         p = pieceAt(gb, move);
          if(inBounds(move) && isEmptyPiece(p)) {
@@ -37,7 +37,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     }
 
     // To bottom left Diagonal
-    for (int i = 1; i < 7; ++i) {
+    for (int i = 1; i < 8; ++i) {
         move = Vec{coordinate.getX() - i, coordinate.getY() + i};
         p = pieceAt(gb, move);
          if(inBounds(move) && isEmptyPiece(p)) { // If it is not an empty piece at that coordinate, then means there is a piece there. 
@@ -51,7 +51,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     }
 
     // To bottom right Diagonal
-    for (int i = 1; i < 7; ++i) {
+    for (int i = 1; i < 8; ++i) {
         move = Vec{coordinate.getX() + i, coordinate.getY() + i};
         p = pieceAt(gb, move);
          if(inBounds(move) && isEmptyPiece(p)) {
@@ -64,7 +64,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         }
     }
 
-    for(int i = 1; i < 7; ++i) {
+    for (int i = 1; i < 8; ++i) {
         // Going Down
         move = Vec{coordinate.getX(), coordinate.getY() + i};
         p = pieceAt(gb, move);
@@ -81,7 +81,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         }   // Elseit is a teammate piece there so we can no longer go further
     }
 
-    for(int i = 1; i < 7; ++i) {
+    for (int i = 1; i < 8; ++i) {
         // Going Up
         move = Vec{coordinate.getX(), coordinate.getY() - i};
         p = pieceAt(gb, move);
@@ -95,7 +95,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         } 
     }
 
-    for(int i = 1; i < 7; ++i) {
+    for (int i = 1; i < 8; ++i) {
         // Going right
         move = Vec{coordinate.getX() + i, coordinate.getY()};
         p = pieceAt(gb, move);
@@ -109,7 +109,7 @@ void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         } 
     }
     
-    for(int i = 1; i < 7; ++i) {
+    for (int i = 1; i < 8; ++i) {
       // Going Left
         move = Vec{coordinate.getX() - i, coordinate.getY()};
         p = pieceAt(gb, move);

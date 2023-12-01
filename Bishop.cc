@@ -8,7 +8,7 @@ void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec move;
     // To top left Diagonal
     shared_ptr<Piece> p;
-    for (int i = 1; i < 7; ++i) {
+    for (int i = 1; i < 8; ++i) {
         move = Vec{coordinate.getX() - i, coordinate.getY() - i};
         p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
@@ -22,7 +22,7 @@ void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         }
     }
     // To top right Diagonal
-    for (int i = 1; i < 7; ++i) {
+    for (int i = 1; i < 8; ++i) {
         move = Vec{coordinate.getX() + i, coordinate.getY() -i};
         p = pieceAt(gb, move);
          if(inBounds(move) && isEmptyPiece(p)) {
@@ -35,7 +35,7 @@ void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         }
     }
     // To bottom left Diagonal
-    for (int i = 1; i < 7; ++i) {
+    for (int i = 1; i < 8; ++i) {
         move = Vec{coordinate.getX() - i, coordinate.getY() + i};
         p = pieceAt(gb, move);
          if(inBounds(move) && isEmptyPiece(p)) { // If it is not an empty piece at that coordinate, then means there is a piece there. 
@@ -48,7 +48,7 @@ void Bishop::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         }
     }
     // To bottom right Diagonal
-    for (int i = 1; i < 7; ++i) {
+    for (int i = 1; i < 8; ++i) {
         move = Vec{coordinate.getX() + i, coordinate.getY() + i};
         p = pieceAt(gb, move);
          if(inBounds(move) && isEmptyPiece(p)) {
