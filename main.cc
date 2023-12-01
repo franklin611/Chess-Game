@@ -143,8 +143,12 @@ int main() {
                             // Valid Move
                             if(cb->upgradePawn(coordinate2)) { // CURRENT ISSUE 5:47 PM
                                 char newPiece;
-                                cin >> newPiece;
-                                cb->setupWithChar(newPiece, coordinate2);
+                                cout << "Please input the character you wnat the Pawn to be upgraded to : " << endl;
+                                while (cin >> newPiece) {
+                                    if (!((newPiece == 'Q') || (newPiece == 'R')  || (newPiece == 'N')  || (newPiece == 'B'))){ cout << "Invalid Input. Try Again!"  << endl; continue;}
+                                    cb->setupWithChar(newPiece, coordinate2);
+                                    break;
+                                }
                             } else cin.ignore();
                             // cin.ignore(std::numeric_limits<std::streamsize>::max()); // ChatGPT suggested
                             // Ignore the single next character input by the user. (Cuz we can't assume just one character)
@@ -208,12 +212,13 @@ int main() {
                                 char newPiece;
                                 cout << "Please input the character you wnat the Pawn to be upgraded to : " << endl;
                                 while (cin >> newPiece) {
-                                    if (newPiece != ('p' || 'q' || 'n' || 'b' || 'r')) { cout << "Invalid Input. Try Again!"  << endl; continue;}
+                                    if (!((newPiece == 'q') || (newPiece == 'r')  || (newPiece == 'n')  || (newPiece == 'n'))) { cout << "Invalid Input. Try Again!"  << endl; continue;}
+                                    cb->setupWithChar(newPiece, coordinate2);
                                 }
-                                cin >> newPiece;
+                                // cin >> newPiece;
                                 // Make sure to check what they input
                                 // Prompt them to input them again if they input the wrong oclour
-                                cb->setupWithChar(newPiece, coordinate2);
+                                
                             } else cin.ignore();
                             // cout << *(cb);
 
