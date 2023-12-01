@@ -99,7 +99,8 @@ bool ChessBoard::pawnMovedTwo(Vec coordinate, bool white){
     if (type == 'P' || type == 'p'){ shared_ptr<Pawn> pawn = dynamic_pointer_cast<Pawn>(p); }
     else { return false; }
 
-    if (pawn->pawnMovedTwo(gb, coordinate, white)){ // Idk why has issues
+    if (pawn->pawnMovedTwo(gb, coordinate, !white)){ // Idk why has issues
+    // It has to be !white 
         return true;
     }
     return false;

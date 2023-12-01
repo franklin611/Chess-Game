@@ -81,7 +81,6 @@ int main() {
             // Observer -> Player -> Computer or Human. They are subclasses of Observer
             string player1, player2;
             cin >> player1 >> player2;
-            // shared_ptr<Player> playerWhite, playerBlack;
             int level, level2;
             
             if(player1 == "human" && player2 == "human") {
@@ -90,36 +89,32 @@ int main() {
                 // cout << "MEMORY ADDRESS: " << playerWhite << endl;
                 playerBlack = make_shared<Human>(0, cb);
                 cb->setupPlayers(playerWhite, playerBlack); // Then players
-
-            } else if (player1 == "human" && player2 == "computer" ) {
+            } else if (player1 == "human" && player2.substr(0,8) == "computer" ) {
                 // cout << "here" << endl;
-                playerWhite = move(make_unique<Human>(1, cb));
-                level = stoi(player2.substr(9)); // Not sure if we can use stoi But this should level = the number in the brackets
-                playerBlack = move(make_unique<Computer>(0, cb, level));
+                level2 = stoi(player2.substr(9, 1));
+                playerWhite = make_shared<Human>(1, cb);
+                playerBlack = make_shared<Computer>(0, cb, level);
                 cb->setupPlayers(playerWhite, playerBlack); // Then players
 
-            } else if (player1 == "computer" && player2 == "human" ) {
+            } else if (player1.substr(0,8) == "computer" && player2 == "human" ) {
                 // cout << "here" << endl;
-                level = stoi(player1.substr(9)); 
-                shared_ptr<Computer> playerWhite = move(make_unique<Computer>(1, cb, level));
-                shared_ptr<Human> playerBlack = move(make_unique<Human>(0, cb));
+                level = stoi(player1.substr(9, 1));
+                playerWhite = make_shared<Computer>(1, cb, level);
+                playerBlack = make_shared<Human>(0, cb);
                 cb->setupPlayers(playerWhite, playerBlack); // Then players
 
-            } else if (player1 == "computer" && player2 == "computer" ) {
-                level = stoi(player1.substr(9)); // Not sure if we can use stoi But this should level = the number in the brackets
-                level2 = stoi(player2.substr(9));
-                shared_ptr<Computer> playerWhite = move(make_unique<Computer>(1, cb, level));
-                shared_ptr<Computer> playerBlack = move(make_unique<Computer>(0, cb, level2));
+            } else if (player1.substr(0,8) == "computer" && player2.substr(0,8) == "computer" ) {
+                level = stoi(player1.substr(9, 1)); // Not sure if we can use stoi But this should level = the number in the brackets
+                level2 = stoi(player2.substr(9, 1));
+                playerWhite = make_shared<Computer>(1, cb, level);
+                playerBlack = make_shared<Computer>(0, cb, level2);
                 cb->setupPlayers(playerWhite, playerBlack); // Then players
             }
-
             if(!usedSetup) cb->defaultBoard(); // In both cases setup board first
-            // cout << "reached out of notifyLM" << endl; // fucks up in default board
             cout << *(cb);
+
             string cmd2;
             while(cin >> cmd2) {
-
-                // Cuz we started with turn as false, we take the opposite
                 if(!cb->getTurn()) { //If passes means playerWhite turn
                     if (cmd2 == "move" && player1 == "human") {
 
@@ -154,10 +149,10 @@ int main() {
                         } else {
                             cout << "Invalid move. Please retry" << endl;
                         }
-                    } else if(cmd2 == "move" && player1 == "computer") {
+                    } else if(cmd2 == "move" && player1.substr(0,8) == "computer") {
                         // Make Computer Move
 
-                        auto computerWhite = dynamic_pointer_cast<Computer>(cb->getPlayerWhite());
+                        shared_ptr<Computer>  computerWhite = dynamic_pointer_cast<Computer>(cb->getPlayerWhite());
                         int level = computerWhite->getLevel();
 
                         Vec end = computerWhite->makeComputerMove(level); // TO DO UPDATE WITH HELENA'S NEW FUNCTION
@@ -183,7 +178,7 @@ int main() {
                         int y2 = stoi(end.substr(1));
                         Vec coordinate2 = Vec{x2, y2 - 1}; // Start at row 0
                         
-                        auto humanBlack = dynamic_pointer_cast<Human>(cb->getPlayerBlack());
+                        shared_ptr<Human> humanBlack = dynamic_pointer_cast<Human>(cb->getPlayerBlack());
 
                         // cout << "playerBlack" << endl;
                         if(humanBlack->makeHumanMove(coordinate1, coordinate2)) {
@@ -197,9 +192,9 @@ int main() {
                         } else {
                             cout << "Invalid move. Please retry" << endl;
                         }
-                    } else if (cmd == "move" && player2 == "computer") {
+                    } else if (cmd == "move" && player2.substr(0,8) == "computer") {
 
-                        auto computerBlack = dynamic_pointer_cast<Computer>(cb->getPlayerWhite());
+                        shared_ptr<Computer> computerBlack = dynamic_pointer_cast<Computer>(cb->getPlayerWhite());
                         int level = computerBlack->getLevel();
 
                         Vec end = computerBlack->makeComputerMove(level);

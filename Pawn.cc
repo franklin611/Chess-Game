@@ -46,7 +46,10 @@ void Pawn::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
 		possibleMoves.push_back(CaptureRight);
 	}
 	p = pieceAt(gb,CaptureLeft);
-	if ((inBounds(CaptureLeft) && (!isEmptyPiece(p) && (p->getTeam() != this->getTeam()))) || inBounds(CaptureLeft) && (isEmptyPiece(p) && canPassantRight(gb))){
+	if ((inBounds(CaptureLeft) && (!isEmptyPiece(p) && (p->getTeam() != this->getTeam()))) || inBounds(CaptureLeft) && (isEmptyPiece(p) && canPassantLeft(gb))){
+		cout << char(p->getCoordinate().getX() + 97) << p->getCoordinate().getY() + 1 << endl;
+		cout << CaptureLeft << endl;
+		cout << "enter this if statement" << endl;
 		possibleMoves.push_back(CaptureLeft);
 	}	
 	p = pieceAt(gb,moveUp);
@@ -62,10 +65,13 @@ void Pawn::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
 // make sure you check there is actually a piece to capture 
 
 bool Pawn::canPassantRight(vector<vector<shared_ptr<Piece>>> gb) {
-	Vec passantRight = Vec(coordinate.getX() + 1, coordinate.getY());
-	if (getTeam() && coordinate.getY() == 4 && pawnMovedTwo(gb, passantRight, this->getTeam())){
+	Vec passantRight;
+	if (getTeam()) passantRight = Vec(coordinate.getX() - 1, coordinate.getY());
+	else if (!getTeam()) passantRight = Vec(coordinate.getX() + 1, coordinate.getY());
+
+	if (getTeam() && coordinate.getY() == 4 && pawnMovedTwo(gb, passantRight, !this->getTeam())){
 		return true;
-	} else if(!this->getType() && coordinate.getY() == 3 && pawnMovedTwo(gb, passantRight, !this->getTeam())) {
+	} else if(!this->getType() && coordinate.getY() == 3 && pawnMovedTwo(gb, passantRight, this->getTeam())) {
 		return true;
 	} else {
 		return false; 
@@ -73,18 +79,20 @@ bool Pawn::canPassantRight(vector<vector<shared_ptr<Piece>>> gb) {
 }
 
 bool Pawn::canPassantLeft(vector<vector<shared_ptr<Piece>>> gb) {
-	Vec passantLeft = Vec(coordinate.getX() - 1, coordinate.getY());
-	if (getTeam() && coordinate.getY() == 4 && pawnMovedTwo(gb, passantLeft, this->getTeam())){
+	// cout << "enter enPassantLeft" << endl;
+	Vec passantLeft;
+	if (getTeam()) passantLeft = Vec(coordinate.getX() + 1, coordinate.getY());
+	else if (!getTeam()) passantLeft = Vec(coordinate.getX() - 1, coordinate.getY());
+
+	if (getTeam() && coordinate.getY() == 4 && pawnMovedTwo(gb, passantLeft, !this->getTeam())){
 		return true;
-	} else if(!this->getTeam() && coordinate.getY() == 3 && pawnMovedTwo(gb, passantLeft, !this->getTeam())) {
+	} else if(!this->getTeam() && coordinate.getY() == 3 && pawnMovedTwo(gb, passantLeft, this->getTeam())) { // We pass true
 		return true;
 	} else {
 		return false; 
 	}
 }
 
-// Chessboard has one but this is specifically to the Pawn Piece
-// Logic is pawnMovedTwo
 
 // Check that the piece at the coordinate is a Pawn
 // Also checks that it is an enemy

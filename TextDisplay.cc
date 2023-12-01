@@ -45,6 +45,15 @@ ostream &operator<<(ostream &out, const TextDisplay &td) {
         out << endl; // since each row printed on newline
         --num;
     }
+    // int num = 0;
+    // for (int i = 0; i <= td.theDisplay.size() - 1; ++i) {
+    //     out << to_string(num) + ' ';
+    //     for (int j = td.theDisplay.size(); j > 0; --j) {
+    //         out << td.theDisplay[i][j];
+    //     }
+    //     out << endl; // since each row printed on newline
+    //     ++num;
+    // }
     out << endl;
     out << "  abcdefgh" << endl;
     if (td.str_check.size() > 1) {out << td.str_check << "is in check." << endl;} // empty string is true, so if not empty string output
