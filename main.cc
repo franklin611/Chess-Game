@@ -115,6 +115,8 @@ int main() {
             }
             if(!usedSetup) cb->defaultBoard(); // In both cases setup board first
             else cb->setUpStartMoves(); 
+
+            cout << "afterstart  " << endl;
             
 
             string cmd2;
@@ -208,6 +210,8 @@ int main() {
                             if(cb->upgradePawn(coordinate2)) {
                                 char newPiece;
                                 cin >> newPiece;
+                                // Make sure to check what they input
+                                // Prompt them to input them again if they input the wrong oclour
                                 cb->setupWithChar(newPiece, coordinate2);
                             } else cin.ignore();
                             // cout << *(cb);
@@ -299,9 +303,9 @@ int main() {
 
                 
                 } else if (cmd2 == "done") {
-                    cout << "do we get here in done" << endl;
+                    // cout << "do we get here in done" << endl;
                     if(cb->boardIsValid()) {
-                        cout << "do we get here in main" << endl;
+                        // cout << "do we get here in main" << endl;
                         usedSetup = true;
                         break; // Only case where we break
                         // Now a flag has been raised telling the main that the game has been setup with a gameboard.

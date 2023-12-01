@@ -22,26 +22,40 @@ void King::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
 
     Vec castleLeft = Vec{coordinate.getX() - 2, coordinate.getY()};
     Vec castleRight = Vec{coordinate.getX() + 3, coordinate.getY()};
-    // My bad left is bigger
-
-    // Verify that left castle move is possible
-    // Not moved means we are at the base position of such a king.
 
     // Consider two cases of "Left" for White and Black
     // Check image in Discord
     // Need to dynamically cast the piece pointers to King pointers
     shared_ptr<King> king = dynamic_pointer_cast<King>(gb[coordinate.getY()][coordinate.getX()]);
+
+    Vec move;
+    Vec move2;
     shared_ptr<Piece> p = pieceAt(gb,Vec{coordinate.getX() - 1, coordinate.getY()});
     shared_ptr<Piece> p2 = pieceAt(gb,Vec{coordinate.getX() - 2, coordinate.getY()});
+
+    move = Vec{coordinate.getX() - 1, coordinate.getY()};
+    move2 = Vec{coordinate.getX() - 2, coordinate.getY()};
     
-    if (!moved && !(king->getMoved()) && isEmptyPiece(p) && isEmptyPiece(p2)){
-        possibleMoves.push_back(castleLeft);
+    // I need to check as well that there is a rook to castle
+    if (!moved &&  inBounds(move) && inBounds(move2) && (!(king->getMoved()) && isEmptyPiece(p) && isEmptyPiece(p2))) {
+        if ((pieceAt(gb, Vec{coordinate.getX() - 3, coordinate.getY()})->getType() == 'R' && getTeam()) || (pieceAt(gb, Vec{coordinate.getX() - 3, coordinate.getY()})->getType() == 'r' && !getTeam())) {
+            possibleMoves.push_back(castleLeft);
+        }
     }
+
     p = pieceAt(gb, Vec{coordinate.getX() + 1, coordinate.getY()});
     p2 = pieceAt(gb, Vec{coordinate.getX() + 2, coordinate.getY()});
-    if (!moved && !(king->getMoved()) && isEmptyPiece(p) && isEmptyPiece(p2)) {
-        possibleMoves.push_back(castleRight);
+    shared_ptr<Piece> p3 = pieceAt(gb, Vec{coordinate.getX() + 3, coordinate.getY()});
+    move = Vec{coordinate.getX() + 1, coordinate.getY()};
+    move2 = Vec{coordinate.getX() + 2, coordinate.getY()};
+
+    // We have to account for the 3 pieces to the right
+    if (!moved && inBounds(move) && inBounds(move2) && (!(king->getMoved()) && isEmptyPiece(p) && isEmptyPiece(p2) && isEmptyPiece(p3))) {
+        if ((pieceAt(gb, Vec{coordinate.getX() + 4, coordinate.getY()})->getType() == 'R' && getTeam()) || (pieceAt(gb, Vec{coordinate.getX() + 4, coordinate.getY()})->getType() == 'r' && !getTeam())) {
+            possibleMoves.push_back(castleRight);
+        }
     }
+
     p = pieceAt(gb, moveUp);
     if (inBounds(moveUp) && (isEmptyPiece(p) || (p->getTeam() != getTeam()))) {
         possibleMoves.push_back(moveUp);

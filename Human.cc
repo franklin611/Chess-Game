@@ -12,8 +12,8 @@ bool Human::makeHumanMove(Vec start, Vec end){
     for (int i = 0; i < legalMoves.size(); ++i) {
         // cout << "start: " << start << endl;
         // cout << "end: " << end << endl;
-        // cout << "start legal move: " << legalMoves[i][0] << endl;
-        // cout << "end legal move: " << legalMoves[i][1] << endl;
+        cout << "start legal move: " << legalMoves[i][0] << endl;
+        cout << "end legal move: " << legalMoves[i][1] << endl;
         // cout << i << endl;
 
         // lot of duplicates

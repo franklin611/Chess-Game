@@ -87,8 +87,9 @@ void ChessBoard::setUpStartMoves(){
 		for (shared_ptr<Piece> p : vec) {
             // cout << "do we get here in for loop" << endl;
             // cout << p->getType() << endl;
-            if (p == nullptr) break;
-            if(p->getTeam() == turn) {
+            // if (p == nullptr) break;
+            if (p->getTeam() == turn || p->getType() == ' ' || p->getType() == '_' || p == nullptr){ continue; }
+            if(p->getTeam() != turn) { // SHOULD BE NEGATION?
                 p->getPossibleMoves(gb);
                 Vec v = p->getCoordinate();
                 vector<Vec> moves = p->returnPossibleMoves();
@@ -803,8 +804,8 @@ void ChessBoard::defaultBoard() {
         setupWithChar('P', Vec{i, 1}); // White pawns
         setupWithChar('p', Vec{i, 6}); // Black
         // x, y. This corresponds to second row
-        cout << char(getPiece(Vec{i,1})->getCoordinate().getX() + 97) << " ";
-        cout << getPiece(Vec{i, 1})->getCoordinate().getY() + 1 << getPiece(Vec{i,1})->getType() << endl;
+        // cout << char(getPiece(Vec{i,1})->getCoordinate().getX() + 97) << " ";
+        // cout << getPiece(Vec{i, 1})->getCoordinate().getY() + 1 << getPiece(Vec{i,1})->getType() << endl;
     }
 
     // Whites are the top side of the board. 0,0
