@@ -28,17 +28,20 @@ Computer::Computer(bool colour, shared_ptr<ChessBoardObserver> cb, int userLevel
 Vec Computer::makeComputerMove(int userLevel) {
 
     vector<vector<Vec>> levelsMoves = level->createMoves(legalMoves, captureMoves, checkMoves, checkMateMoves, avoidCaptureMoves);
-    cout << "level Moves size: " << levelsMoves.size() << endl;
+    // cout << "level Moves size: " << levelsMoves.size() << endl;
     // for (int i = 0; i < levelsMove.size)
-    vector<Vec> selectedMove = selectRandomMove(levelsMoves);
-    cout << "selected Moves size: " << selectedMove.size() << endl;
-    if (!selectedMove.empty()) {
+    // vector<Vec> selectedMove = selectRandomMove(levelsMoves);
+    if (!levelsMoves.empty()) {
+        vector<Vec> selectedMove = selectRandomMove(levelsMoves);
+        cout << "level Moves size: " << levelsMoves.size() << endl;
         cout << "selected move: " << selectedMove[0] << selectedMove[1] << endl;
         cb->notify(selectedMove[0], selectedMove[1]);
+        legalMoves.clear();
         return selectedMove[1];
     } else {
         vector<Vec> onlyLegalMove = selectRandomMove(legalMoves);
         cb->notify(onlyLegalMove[0], onlyLegalMove[1]);
+        cout << "legal Moves size: " << legalMoves.size() << endl;
         legalMoves.clear();
         return onlyLegalMove[1];
     }

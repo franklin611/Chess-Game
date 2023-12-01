@@ -57,9 +57,12 @@ bool ChessBoard::boardIsValid() {
         if(p->getType() == 'p' || p->getType() == 'P') return false;
     }
     // After board is determined to be valid
-    cout << "do we get here before for loop" << endl;
+    // We shouldnt be running over this because we dont have any player to notify
 	for (vector<shared_ptr<Piece>> vec : gb) {
 		for (shared_ptr<Piece> p : vec) {
+            cout << "do we get here in for loop" << endl;
+            // cout << p->getType() << endl;
+            if (p == nullptr) break;
             if(p->getTeam() == turn) {
                 p->getPossibleMoves(gb);
                 Vec v = p->getCoordinate();
