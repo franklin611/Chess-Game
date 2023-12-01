@@ -169,6 +169,7 @@ int main() {
 
                         cb->forfeit(); // This function will update the white and black score
                         cout << *(cb);
+                        cout <<"do we get1" << endl;
                         cb->restartGame(); // Restart match
 
                     } else if (cmd2 == "skip") {
@@ -223,6 +224,7 @@ int main() {
                         // Player2 has to lose
                         cb->forfeit();
                         cout << *(cb);
+                        cout <<"do we get" << endl;
                         cb->restartGame();
 
                     } else if (cmd2 == "skip") {

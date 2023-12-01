@@ -641,6 +641,7 @@ shared_ptr<Empty> ChessBoard::getEmptyPiece(Vec coord){
 // DONE
 void ChessBoard::forfeit(){
      // We have to change this?
+    displayScore = true;
     if (turn){
         // update score +1 for black
         game.updateBlack(false);
@@ -664,6 +665,7 @@ void ChessBoard::restartGame() {
     turn = false; // Default turn is always white
     bCheck = false;
     wCheck = false;
+    displayScore = false;
     // We don't need to reset bKing and wKing because it will be reset in next
     // game or if not, will just be destroyed.
 }
@@ -793,6 +795,7 @@ void ChessBoard::defaultBoard() {
 
 void ChessBoard::setTurn(bool turn) {
     this->turn = turn;
+    td->notify(turn);
 }
 
 shared_ptr<Observer> ChessBoard::getPlayerWhite() {
