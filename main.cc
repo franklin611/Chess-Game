@@ -151,7 +151,7 @@ int main() {
                         }
                     } else if(cmd2 == "move" && player1.substr(0,8) == "computer") {
                         // Make Computer Move
-
+                        cout << "computer white" << endl;
                         shared_ptr<Computer>  computerWhite = dynamic_pointer_cast<Computer>(cb->getPlayerWhite());
                         int level = computerWhite->getLevel();
 
@@ -181,8 +181,7 @@ int main() {
                         Vec coordinate2 = Vec{x2, y2 - 1}; // Start at row 0
                         
                         shared_ptr<Human> humanBlack = dynamic_pointer_cast<Human>(cb->getPlayerBlack());
-
-                        // cout << "playerBlack" << endl;
+                        
                         if(humanBlack->makeHumanMove(coordinate1, coordinate2)) {
                             // cout << "MOVE MADE" << endl;
                             if(cb->upgradePawn(coordinate2)) {
@@ -194,11 +193,10 @@ int main() {
                         } else {
                             cout << "Invalid move. Please retry" << endl;
                         }
-                    } else if (cmd == "move" && player2.substr(0,8) == "computer") {
+                    } else if (cmd2 == "move" && player2.substr(0,8) == "computer") {
 
                         shared_ptr<Computer> computerBlack = dynamic_pointer_cast<Computer>(cb->getPlayerWhite());
                         int level = computerBlack->getLevel();
-
                         Vec end = computerBlack->makeComputerMove(level);
                         if(cb->upgradePawn(end)){
                             cb->setupWithChar('q', end);
