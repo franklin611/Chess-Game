@@ -99,8 +99,7 @@ bool ChessBoard::pawnMovedTwo(Vec coordinate, bool white){
     if (type == 'P' || type == 'p'){ shared_ptr<Pawn> pawn = dynamic_pointer_cast<Pawn>(p); }
     else { return false; }
 
-    if (pawn->pawnMovedTwo(gb, coordinate, !white)){ // Idk why has issues
-    // It has to be !white 
+    if (pawn->pawnMovedTwo(gb, coordinate, !white)){
         return true;
     }
     return false;
@@ -239,7 +238,6 @@ void ChessBoard::castleMove(Vec start, Vec end){
 }
 
 void ChessBoard::isCastleMove(Vec start, Vec end){
-    int row = start.getY();
     int col = start.getX();
     int endRow = end.getY();
     int endCol = end.getX();
@@ -261,6 +259,40 @@ void ChessBoard::isCastleMove(Vec start, Vec end){
 }
 
 // DONE
+void ChessBoard::passantMove(Vec start, Vec end){
+    // we consider the board before the move is made 
+
+    // move diagonal and captures sideways 
+    shared_ptr<Piece> p = getPiece(start);
+    char type = p->getType();
+
+
+    Vec rightDiagonal = Vec(start.getX() - 1, start.getY() - 1);
+    Vec leftDiagonal  = Vec(start.getX() + 1, start.getY() - 1);
+
+    // y stays the same 
+    Vec captureRight = Vec(start.getX() + 1, start.getY());
+    Vec captureLeft = Vec(start.getX() - 1, start.getY());
+
+    if (type == 'p'){
+        rightDiagonal = Vec(start.getX() + 1, start.getY() - 1);
+        leftDiagonal = Vec(start.getX() - 1, start.getY() - 1);
+        if (end == rightDiagonal){ 
+            if (pawnMovedTwo(captureRight, true)){ td->notify(captureRight, getEmptyPiece(captureRight)->getType()); } 
+        } else if ( end == leftDiagonal ){
+            if (pawnMovedTwo(captureLeft, true)) { td->notify(captureLeft, getEmptyPiece(captureLeft)->getType()); }
+        }  
+    } else if (type == 'P'){
+        rightDiagonal = Vec(start.getX() + 1, start.getY() + 1);
+        leftDiagonal = Vec(start.getX() - 1, start.getY() + 1);
+        if ( end == rightDiagonal ){
+             if (pawnMovedTwo(captureRight, false)){ td->notify(captureRight, getEmptyPiece(captureRight)->getType()); }
+        } else if ( end == leftDiagonal ){
+             if (pawnMovedTwo(captureLeft, false)) { td->notify(captureLeft, getEmptyPiece(captureLeft)->getType()); }
+        }
+    }
+}
+
 void  ChessBoard::makeMove(Vec start, Vec end){
     char startType = getType(start);
     // check if it was a castle move and if it was make the appropriate rook move
@@ -325,7 +357,7 @@ void ChessBoard::notify(Vec start, Vec end){
     turn = !turn;
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
-            if (p->getTeam() == turn) {continue; }
+            if (p->getTeam() == turn) { continue; }
             p->resetMoves(); // clear all the legal moves
             p->getPossibleMoves(gb); // get the possible moves for this piece
             // test every possible move -> which will add it to the legal moves if it passes
@@ -344,8 +376,8 @@ void ChessBoard::notify(Vec start, Vec end){
     char startChar = emptyPiece->getType();
     char endChar = endPiece->getType();
     td->notifyMoves(start, startChar, end, endChar, checkString());
-    // NEED TO NOTIFY TD OF THE CASTLE MOVE !!!!!
     isCastleMove(start, end);
+    passantMove(start, end);
     td->notify(turn);
     // graphicsDisplay->notifyMoves(start, startChar, end, endChar, checkString());
     
@@ -382,6 +414,16 @@ void ChessBoard::endGame() {
 
 // DONE
 bool ChessBoard::testMove(Vec start, Vec end){
+    // cout << !turn << endl;
+
+    shared_ptr<Piece> p = gb[end.getY()][end.getX()];
+
+    if (p->getType() == 'p'){
+        shared_ptr<Pawn> pawn = dynamic_pointer_cast<Pawn>(p);
+        // cout << pawn->getMovedTwo() << endl;
+    }
+    // cout << "start: " << start << endl;
+    // cout << "end: " << end << endl;
     // make a deep copy of the gb
     // consult about making a deep copy of the board
     // creating a 2D vector of unique pointers by copying from the shared vector
@@ -432,29 +474,29 @@ bool ChessBoard::testMove(Vec start, Vec end){
     }
 
     // check if the piece that moved is a pawn
+    // TODO: ADD EN PASSANT 
     if (startType == 'P' || startType == 'p'){
         updatePawnMoved(start, end);
     }
 
-
-
-    // TODO: technically to make this more efficient we only have it iterate through the current's possible moves
+    // int i = 0;
+    // cout << "here" << endl;
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
             if (p->getTeam() != turn || p->getType() == ' ' || p->getType() == '_'){ continue; }
             p->resetMoves(); // clear all the legal moves
+            // cout << p->getType() << endl;
             p->getPossibleMoves(gb); // get the possible moves for this piece
-            // seg fault on the last pawn 
         }
     }
 
-    // cout << "here"<< endl;
     // --------------------- at this point ALL the pieces have possible moves -----------------------------
     // we need to decide if any of these moves will put the opponent's king in check
 
 
     // need to check if that move puts the opponent in check
     bool check = isCheck(!turn);
+    // there are no legal moves 
     bool legal = false;
 
     // we decide its legal -> notify player
@@ -478,8 +520,8 @@ bool ChessBoard::testMove(Vec start, Vec end){
     // knight should be at (c, 3) end 
 
     // after the move was made 
-    int row = start.getY();
-    int col = start.getX();
+    // int row = start.getY();
+    // int col = start.getX();
     // should be knight
     // cout << "OLD BOARD : " << start << ' ' << boardCopy[row][col]->getType() << endl;
     // should be empty
@@ -640,7 +682,7 @@ shared_ptr<Empty> ChessBoard::getEmptyPiece(Vec coord){
 
 // DONE
 void ChessBoard::forfeit(){
-     // We have to change this?
+    displayScore = true;
     if (turn){
         // update score +1 for black
         game.updateBlack(false);
@@ -650,7 +692,8 @@ void ChessBoard::forfeit(){
     }
 }
 
-// CHIARA
+
+// DONE 
 void ChessBoard::restartGame() {
     for(size_t i = 0; i < eb.size(); ++i) { //The row
         for (size_t j = 0; j < eb[i].size(); ++j) { // The column
@@ -664,6 +707,7 @@ void ChessBoard::restartGame() {
     turn = false; // Default turn is always white
     bCheck = false;
     wCheck = false;
+    displayScore = false;
     // We don't need to reset bKing and wKing because it will be reset in next
     // game or if not, will just be destroyed.
 }
@@ -793,6 +837,24 @@ void ChessBoard::defaultBoard() {
 
 void ChessBoard::setTurn(bool turn) {
     this->turn = turn;
+    td->notify(turn);
+    bool isEnd = true;
+    // set up the turn's moves 
+    // reset all turn's moves 
+    for (vector<shared_ptr<Piece>> vec : gb){
+		for (shared_ptr<Piece> p : vec){
+            if (p->getTeam() == turn) { continue; }
+            p->resetMoves(); // clear all the legal moves
+            p->getPossibleMoves(gb); // get the possible moves for this piece
+            // test every possible move -> which will add it to the legal moves if it passes
+            Vec v = p->getCoordinate();
+            vector<Vec> moves = p->returnPossibleMoves();
+            for (Vec move : moves){
+                if (testMove(v, move)){ isEnd = false; };
+            }
+        }
+    }
+    if (isEnd) { endGame(); displayScore = true;  }
 }
 
 shared_ptr<Observer> ChessBoard::getPlayerWhite() {
