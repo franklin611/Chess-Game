@@ -42,6 +42,8 @@ class ChessBoard: public ChessBoardObserver {
 
         string checkString();
 
+        void setUpStartMoves();
+
         // returns the type of a piece at that coordinate
         char getType(Vec coordinate);
 

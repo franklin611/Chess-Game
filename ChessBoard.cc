@@ -59,9 +59,33 @@ bool ChessBoard::boardIsValid() {
     }
     // After board is determined to be valid
     // We shouldnt be running over this because we dont have any player to notify
-	for (vector<shared_ptr<Piece>> vec : gb) {
+	// for (vector<shared_ptr<Piece>> vec : gb) {
+	// 	for (shared_ptr<Piece> p : vec) {
+    //         cout << "do we get here in for loop" << endl;
+    //         // cout << p->getType() << endl;
+    //         if (p == nullptr) break;
+    //         if(p->getTeam() == turn) {
+    //             p->getPossibleMoves(gb);
+    //             Vec v = p->getCoordinate();
+    //             vector<Vec> moves = p->returnPossibleMoves();
+    //             for (Vec end : moves) {
+    //                 testMove(v, end);
+    //             }
+    //         } // Sets up that piece'possible moves
+    //     }
+    // }
+    // turn = !turn;
+    td->notify(turn);
+    // cout << "do we get here final" << endl;
+
+    // confirm with franklin this logic works
+    return true;
+}
+
+void ChessBoard::setUpStartMoves(){
+    for (vector<shared_ptr<Piece>> vec : gb) {
 		for (shared_ptr<Piece> p : vec) {
-            cout << "do we get here in for loop" << endl;
+            // cout << "do we get here in for loop" << endl;
             // cout << p->getType() << endl;
             if (p == nullptr) break;
             if(p->getTeam() == turn) {
@@ -74,12 +98,6 @@ bool ChessBoard::boardIsValid() {
             } // Sets up that piece'possible moves
         }
     }
-    // turn = !turn;
-    td->notify(turn);
-    cout << "do we get here final" << endl;
-
-    // confirm with franklin this logic works
-    return true;
 }
 
 
