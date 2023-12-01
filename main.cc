@@ -173,6 +173,7 @@ int main() {
                     } else if (cmd2 == "skip") {
 
                         cb->setTurn(!cb->getTurn()); // CHIARA SKIP TURN
+                        cout << *(cb);
 
                     }
                 } else {
@@ -225,6 +226,7 @@ int main() {
                     } else if (cmd2 == "skip") {
 
                         cb->setTurn(!cb->getTurn()); // CHIARA SKIPO TURN
+                        cout << *(cb);
 
                     }
                 }
