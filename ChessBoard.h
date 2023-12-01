@@ -135,6 +135,8 @@ class ChessBoard: public ChessBoardObserver {
         shared_ptr<Observer> getPlayerWhite();
         shared_ptr<Observer> getPlayerBlack();
 
+        void passantMove(Vec start, Vec end);
+
 
 
         friend ostream& operator<<(ostream& out, const ChessBoard& cb);
