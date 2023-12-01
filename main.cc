@@ -114,6 +114,7 @@ int main() {
                 cb->setupPlayers(playerWhite, playerBlack); // Then players
             }
             if(!usedSetup) cb->defaultBoard(); // In both cases setup board first
+            else cb->setUpStartMoves(); 
             
 
             string cmd2;

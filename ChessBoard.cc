@@ -28,6 +28,7 @@ bool ChessBoard::boardIsValid() {
     // int rowSize = eb.size();
     // int colSize = eb[1].size();
 
+
 	for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
             // CHECKS THAT THERE IS ONLY ONE BLACK PIECE
@@ -141,6 +142,7 @@ void ChessBoard::setupPlayers(shared_ptr<Observer> pWhite, shared_ptr<Observer> 
     // You can make a unique to a shared, but not other way around
     // shared_ptr<Observer> sharedWhite = make_shared<Observer>(pWhite);
     // shared_ptr<Observer> sharedBlack = make_shared<Observer>(pBlack);
+    if (playerWhite != nullptr && playerBlack != nullptr) return;
     playerWhite = pWhite;
     playerBlack = pBlack;
 
