@@ -45,6 +45,7 @@ Vec Computer::makeComputerMove(int userLevel) {
         legalMoves.clear();
         return onlyLegalMove[1];
     }
+
 }
 
 
