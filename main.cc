@@ -92,23 +92,25 @@ int main() {
                 cb->setupPlayers(playerWhite, playerBlack); // Then players
 
             } else if (player1 == "human" && player2 == "computer" ) {
+                // cout << "here" << endl;
                 playerWhite = move(make_unique<Human>(1, cb));
                 level = stoi(player2.substr(9)); // Not sure if we can use stoi But this should level = the number in the brackets
                 playerBlack = move(make_unique<Computer>(0, cb, level));
                 cb->setupPlayers(playerWhite, playerBlack); // Then players
 
             } else if (player1 == "computer" && player2 == "human" ) {
-                // level = stoi(player1.substr(9)); 
-                // shared_ptr<Computer> playerWhite = move(make_unique<Computer>(1, cb, level));
-                // shared_ptr<Human> playerBlack = move(make_unique<Human>(0, cb));
-                // cb->setupPlayers(playerWhite, playerBlack); // Then players
+                // cout << "here" << endl;
+                level = stoi(player1.substr(9)); 
+                shared_ptr<Computer> playerWhite = move(make_unique<Computer>(1, cb, level));
+                shared_ptr<Human> playerBlack = move(make_unique<Human>(0, cb));
+                cb->setupPlayers(playerWhite, playerBlack); // Then players
 
             } else if (player1 == "computer" && player2 == "computer" ) {
-                // level = stoi(player1.substr(9)); // Not sure if we can use stoi But this should level = the number in the brackets
-                // level2 = stoi(player2.substr(9));
-                // shared_ptr<Computer> playerWhite = move(make_unique<Computer>(1, cb, level));
-                // shared_ptr<Computer> playerBlack = move(make_unique<Computer>(0, cb, level2));
-                // cb->setupPlayers(playerWhite, playerBlack); // Then players
+                level = stoi(player1.substr(9)); // Not sure if we can use stoi But this should level = the number in the brackets
+                level2 = stoi(player2.substr(9));
+                shared_ptr<Computer> playerWhite = move(make_unique<Computer>(1, cb, level));
+                shared_ptr<Computer> playerBlack = move(make_unique<Computer>(0, cb, level2));
+                cb->setupPlayers(playerWhite, playerBlack); // Then players
             }
 
             if(!usedSetup) cb->defaultBoard(); // In both cases setup board first
@@ -138,7 +140,7 @@ int main() {
                         // cout << "MEMORY ADDRESS: " << humanWhite << endl;
 
                         if(humanWhite->makeHumanMove(coordinate1, coordinate2)) {
-                            // cout << "MOVE MADE" << endl;
+                            //cout << "MOVE MADE" << endl;
                             // Valid Move
                             if(cb->upgradePawn(coordinate2)) { // CURRENT ISSUE 5:47 PM
                                 char newPiece;

@@ -15,7 +15,7 @@ void Rook::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec move;
     shared_ptr<Piece> p;
 
-    for(int i = 1; i < 7; ++i) {
+    for(int i = 1; i < 8; ++i) {
         // Going Down
         move = Vec{coordinate.getX(), coordinate.getY() + i};
         p = pieceAt(gb, move);
@@ -31,20 +31,20 @@ void Rook::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
             break;
         }   // Elseit is a teammate piece there so we can no longer go further
     }
-    for(int i = 1; i < 7; ++i) {
+    for(int i = 1; i < 8; ++i) {
         // Going Up
         move = Vec{coordinate.getX(), coordinate.getY() - i};
         p = pieceAt(gb, move);
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
-        } else if (inBounds(move) && !p->getTeam()) {
+        } else if (inBounds(move) && !(p->getTeam() == getTeam())) {
             possibleMoves.push_back(move);
             break;
         } else {
             break;
         } 
     }
-    for(int i = 1; i < 7; ++i) {
+    for(int i = 1; i < 8; ++i) {
         // Going right
         move = Vec{coordinate.getX() + i, coordinate.getY()};
         p = pieceAt(gb, move);
@@ -57,7 +57,7 @@ void Rook::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
             break;
         } 
     }
-    for(int i = 1; i < 7; ++i) {
+    for(int i = 1; i < 8; ++i) {
       // Going Left
         move = Vec{coordinate.getX() - i, coordinate.getY()};
         p = pieceAt(gb, move);

@@ -21,7 +21,7 @@ void King::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec moveDown = Vec{coordinate.getX(), coordinate.getY() + 1};
 
     Vec castleLeft = Vec{coordinate.getX() - 2, coordinate.getY()};
-    Vec castleRight = Vec{coordinate.getX() + 2, coordinate.getY()};
+    Vec castleRight = Vec{coordinate.getX() + 3, coordinate.getY()};
 
     // Verify that left castle move is possible
     // Not moved means we are at the base position of such a king.

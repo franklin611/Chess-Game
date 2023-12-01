@@ -2,6 +2,6 @@
 
 ChessBoardObserver::~ChessBoardObserver() {}
 
-void ChessBoardObserver::notify(Vec start, Vec end) {
-    cout << "superclass" << endl;
-}
+// void ChessBoardObserver::notify(Vec start, Vec end) {
+//     cout << "superclass" << endl;
+// }

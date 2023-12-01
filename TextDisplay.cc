@@ -8,7 +8,6 @@ TextDisplay::TextDisplay() {
         vector<char> row;
         for (size_t j = 0; j <= 7; ++j) {
             if (((i % 2 == 0) && (j % 2 == 0)) || ((i % 2 == 1) && (j % 2 == 1))) {
-                // i dont think this logic works 
                 row.emplace_back('_'); // this makes the columns in the row (8 columns per row)
             } else {
                 row.emplace_back(' ');
