@@ -72,7 +72,8 @@ int main() {
         // If we are to use the default board, we simply default construct that gameboard and get players
         // If we we are to use the custom board, we just get players cuz we already created this custom board in setup.
         // On top of this, we have a isEnd that resets the gameBoard and players.
-        shared_ptr<Human> playerWhite;
+        shared_ptr<Player> playerWhite;
+        shared_ptr<Player> playerBlack;
 
         if(cmd == "game") {
             //To setup a new game, we take two input playerWhite playerBlack.
@@ -84,16 +85,17 @@ int main() {
             int level, level2;
             
             if(player1 == "human" && player2 == "human") {
-                playerWhite = move(make_unique<Human>(1, cb));
-                cout << "MEMORY ADDRESS: " << playerWhite << endl;
-                shared_ptr<Human> playerBlack = move(make_unique<Human>(0, cb));
+                playerWhite = make_shared<Human>(1, cb);
+                // cout << "memory address of cb is : " << cb << endl;
+                // cout << "MEMORY ADDRESS: " << playerWhite << endl;
+                playerBlack = make_shared<Human>(0, cb);
                 cb->setupPlayers(playerWhite, playerBlack); // Then players
 
             } else if (player1 == "human" && player2 == "computer" ) {
-                // shared_ptr<Human> playerWhite = move(make_unique<Human>(1, cb));
-                // level = stoi(player2.substr(9)); // Not sure if we can use stoi But this should level = the number in the brackets
-                // shared_ptr<Computer> playerBlack = move(make_unique<Computer>(0, cb, level));
-                // cb->setupPlayers(playerWhite, playerBlack); // Then players
+                playerWhite = move(make_unique<Human>(1, cb));
+                level = stoi(player2.substr(9)); // Not sure if we can use stoi But this should level = the number in the brackets
+                playerBlack = move(make_unique<Computer>(0, cb, level));
+                cb->setupPlayers(playerWhite, playerBlack); // Then players
 
             } else if (player1 == "computer" && player2 == "human" ) {
                 // level = stoi(player1.substr(9)); 
@@ -109,13 +111,14 @@ int main() {
                 // cb->setupPlayers(playerWhite, playerBlack); // Then players
             }
 
-            
             if(!usedSetup) cb->defaultBoard(); // In both cases setup board first
+            // cout << "reached out of notifyLM" << endl; // fucks up in default board
             cout << *(cb);
             string cmd2;
             while(cin >> cmd2) {
 
-                if(cb->getTurn()) { //If passes means playerWhite turn
+                // Cuz we started with turn as false, we take the opposite
+                if(!cb->getTurn()) { //If passes means playerWhite turn
                     if (cmd2 == "move" && player1 == "human") {
 
                         string start, end;
@@ -129,15 +132,15 @@ int main() {
                         int y2 = stoi(end.substr(1));
                         Vec coordinate2 = Vec{x2, y2 - 1};
 
-                        // shared_ptr<Human> humanWhite = dynamic_pointer_cast<Human>(cb->getPlayerWhite());
-                        cout << "before" << endl;
-                        cout << "TURN: " << cb->getTurn() << endl;
+                        shared_ptr<Human> humanWhite = dynamic_pointer_cast<Human>(cb->getPlayerWhite());
+                        // cout << "before" << endl;
+                        // cout << "TURN: " << cb->getTurn() << endl;
                         // cout << "MEMORY ADDRESS: " << humanWhite << endl;
- 
-                        if(playerWhite->makeHumanMove(coordinate1, coordinate2)) {
+
+                        if(humanWhite->makeHumanMove(coordinate1, coordinate2)) {
                             cout << "MOVE MADE" << endl;
                             // Valid Move
-                            if(cb->upgradePawn(coordinate2)) {
+                            if(cb->upgradePawn(coordinate2)) { // CURRENT ISSUE 5:47 PM
                                 char newPiece;
                                 cin >> newPiece;
                                 cb->setupWithChar(newPiece, coordinate2);
@@ -180,7 +183,9 @@ int main() {
                         
                         auto humanBlack = dynamic_pointer_cast<Human>(cb->getPlayerBlack());
 
+                        cout << "playerBlack" << endl;
                         if(humanBlack->makeHumanMove(coordinate1, coordinate2)) {
+                            cout << "MOVE MADE" << endl;
                             if(cb->upgradePawn(coordinate2)) {
                                 char newPiece;
                                 cin >> newPiece;

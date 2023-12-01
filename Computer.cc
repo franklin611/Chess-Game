@@ -13,7 +13,8 @@ vector<Vec> Computer::selectRandomMove(vector<vector<Vec>> &vectors) {
     std::uniform_int_distribution<size_t> outerDist(0, vectors.size() - 1);
     size_t outerIndex = outerDist(gen);
 
-    return vectors[outerIndex];
+    return {{0,1},{0,1}};
+    // vectors[outerIndex];
 }
 
 Computer::Computer(bool colour, shared_ptr<ChessBoardObserver> cb, int userLevel) : Player{colour, cb}, userLevel{userLevel} {

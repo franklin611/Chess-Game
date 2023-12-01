@@ -17,7 +17,7 @@ class Player : public Observer {
     vector<vector<Vec>> checkMoves;
     vector<vector<Vec>> checkMateMoves;
     vector<vector<Vec>> avoidCaptureMoves;
-    unique_ptr<ChessBoardObserver> cb; // player has a singular observer (chessboard)
+    shared_ptr<ChessBoardObserver> cb; // player has a singular observer (chessboard)
     // vector of vectors that contain vec (start and end)
     // friend class Computer;
     public:

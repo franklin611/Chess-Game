@@ -154,7 +154,7 @@ void ChessBoard::setupPlayers(shared_ptr<Observer> pWhite, shared_ptr<Observer> 
 
 // TODO: temporarily taking out graphics display stuff
 // gd{make_shared<GraphicsDisplay>()}
-ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_shared<TextDisplay>()}, game{}, bCheck{false}, wCheck{false}, turn{true}, bKing{}, wKing{}, displayScore{false} {
+ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_shared<TextDisplay>()}, game{}, bCheck{false}, wCheck{false}, turn{false}, bKing{}, wKing{}, displayScore{false} {
     // Setup the empty board and gameboard
     // unique_ptr<TextDisplay> td, unique_ptr<GraphicDisplay> gd, I have to make this here
 
@@ -257,8 +257,9 @@ void ChessBoard::updateKingCoord(Vec end, bool white){
 
 // DONE
 void ChessBoard::notify(Vec start, Vec end){
-
+    
     makeMove(start, end);
+    
 
     char startType = getType(end);
 
@@ -282,6 +283,7 @@ void ChessBoard::notify(Vec start, Vec end){
 
      // reset the legal moves of every piece // only go through the opponents
     bool isEnd = true;
+    turn = !turn;
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
             p->resetMoves(); // clear all the legal moves
@@ -303,8 +305,7 @@ void ChessBoard::notify(Vec start, Vec end){
     // graphicsDisplay->notifyMoves(start, startChar, end, endChar, checkString());
 
     // change the turn
-    turn = !turn;
-
+    
     if (isEnd) { endGame(); displayScore = true;  }
 }
 
@@ -584,10 +585,16 @@ void ChessBoard::restartGame() {
 }
 
 // DONE
+// needs to be fixed to check at the ned
+// fixed
 bool ChessBoard::upgradePawn(Vec end){
     char type = getType(end);
-    if (type == 'P' || type == 'p'){ return true; }
-    else { return false; }
+    if (type == 'P' && getPiece(end)->getCoordinate().getY() == 7) {
+        return true;
+    } else if (type == 'p' && getPiece(end)->getCoordinate().getY() == 0) {
+        return true;
+    }
+    return false;
 }
 
 
@@ -671,7 +678,7 @@ void ChessBoard::defaultBoard() {
 
     for (vector<shared_ptr<Piece>> vec : gb) {
 		for (shared_ptr<Piece> p : vec) {
-            if(p->getTeam() == turn) {
+            if(p->getTeam() != turn) {
                 p->getPossibleMoves(gb);
                 for (Vec end : p->returnPossibleMoves()) {
                     testMove(p->getCoordinate(), end);
@@ -679,6 +686,7 @@ void ChessBoard::defaultBoard() {
             } // Sets up that piece'possible moves
         }
     }
+    //turn = !turn;
 }
 
 void ChessBoard::setTurn(bool turn) {
