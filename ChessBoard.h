@@ -130,6 +130,8 @@ class ChessBoard: public ChessBoardObserver {
 
         void setTurn(bool turn);
 
+        void setDisplayScore(bool b);
+
         shared_ptr<Observer> getPlayerWhite();
         shared_ptr<Observer> getPlayerBlack();
 

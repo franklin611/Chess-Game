@@ -804,6 +804,9 @@ shared_ptr<Observer> ChessBoard::getPlayerBlack() {
 }
 
 
+void ChessBoard::setDisplayScore(bool b) {
+    displayScore = b;
+}
 
 ostream& operator<<(ostream& out, const ChessBoard& cb) {
     out << *(cb.td) << endl;

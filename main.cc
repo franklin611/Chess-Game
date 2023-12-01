@@ -168,6 +168,7 @@ int main() {
                         //Player1 now has to lose
 
                         cb->forfeit(); // This function will update the white and black score
+                        cout << *(cb);
                         cb->restartGame(); // Restart match
 
                     } else if (cmd2 == "skip") {
@@ -221,6 +222,7 @@ int main() {
                     } else if(cmd2 == "resign") {
                         // Player2 has to lose
                         cb->forfeit();
+                        cout << *(cb);
                         cb->restartGame();
 
                     } else if (cmd2 == "skip") {
@@ -303,6 +305,7 @@ int main() {
     }
     // END OF GAME
     // cout << *(cb);
+    cb->setDisplayScore(true);
     cout << "Thank you for playing. We hope you enjoyed!" << endl;
     cout << "Make sure to play again!" << endl;
     return 0;
