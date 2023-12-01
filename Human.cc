@@ -5,15 +5,15 @@
 Human::Human(bool colour, shared_ptr<ChessBoardObserver> cb) : Player{colour, cb} {}
 
 bool Human::makeHumanMove(Vec start, Vec end){
-    cout << endl;
-    cout << "Number of Legal Moves for Player " << colour << ' ' << legalMoves.size() << endl;
-    cout << endl; 
+    // cout << endl;
+    // cout << "Number of Legal Moves for Player " << colour << ' ' << legalMoves.size() << endl;
+    // cout << endl; 
 
     for (int i = 0; i < legalMoves.size(); ++i) {
         // cout << "start: " << start << endl;
         // cout << "end: " << end << endl;
-        cout << "start legal move: " << legalMoves[i][0] << endl;
-        cout << "end legal move: " << legalMoves[i][1] << endl;
+        // cout << "start legal move: " << legalMoves[i][0] << endl;
+        // cout << "end legal move: " << legalMoves[i][1] << endl;
         // cout << i << endl;
 
         // lot of duplicates

@@ -39,6 +39,7 @@ Vec Computer::makeComputerMove(int userLevel) {
     } else {
         vector<Vec> onlyLegalMove = selectRandomMove(legalMoves);
         cb->notify(onlyLegalMove[0], onlyLegalMove[1]);
+        legalMoves.clear();
         return onlyLegalMove[1];
     }
 }

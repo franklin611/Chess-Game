@@ -50,7 +50,7 @@ void outputRules() {
     cout << "  - No pawns are on the first or last rows of the board.\n";
     cout << "  - Neither king is in check.\n\n";
 
-    cout << "Please input your commands:\n";
+    cout << "To get started with a match, enter game for a default board or setup for a custom one." << endl;
 }
 
 
@@ -63,6 +63,7 @@ int main() {
 
     outputRules();
 
+    \
     while (cin >> cmd) {
         // Make a prompt output to get enter game or setup
         // We prompt the user to enter game or setup
@@ -74,6 +75,8 @@ int main() {
         // On top of this, we have a isEnd that resets the gameBoard and players.
         shared_ptr<Player> playerWhite;
         shared_ptr<Player> playerBlack;
+
+        
 
         if(cmd == "game") {
             //To setup a new game, we take two input playerWhite playerBlack.
@@ -111,9 +114,10 @@ int main() {
                 cb->setupPlayers(playerWhite, playerBlack); // Then players
             }
             if(!usedSetup) cb->defaultBoard(); // In both cases setup board first
-            cout << *(cb);
+            
 
             string cmd2;
+            cout << *(cb);
             while(cin >> cmd2) {
                 if(!cb->getTurn()) { //If passes means playerWhite turn
                     if (cmd2 == "move" && player1 == "human") {
@@ -144,7 +148,7 @@ int main() {
                             } else cin.ignore();
                             // cin.ignore(std::numeric_limits<std::streamsize>::max()); // ChatGPT suggested
                             // Ignore the single next character input by the user. (Cuz we can't assume just one character)
-                            cout << *(cb);
+                            // cout << *(cb);
 
                         } else {
 
@@ -162,20 +166,24 @@ int main() {
                         if(cb->upgradePawn(end)){
                             cb->setupWithChar('Q', end);
                         }
-                        cout << *(cb);
+                        // cout << *(cb);
 
                     } else if(cmd2 == "resign") {
                         //Player1 now has to lose
 
                         cb->forfeit(); // This function will update the white and black score
                         cout << *(cb);
-                        cout <<"do we get1" << endl;
                         cb->restartGame(); // Restart match
+                        break;
 
                     } else if (cmd2 == "skip") {
 
                         cb->setTurn(!cb->getTurn()); // CHIARA SKIP TURN
-                        cout << *(cb);
+                        // cout << *(cb);
+
+                    } else {
+
+                        cout << "Invalid Command. Try again" << endl;
 
                     }
                 } else {
@@ -201,7 +209,7 @@ int main() {
                                 cin >> newPiece;
                                 cb->setupWithChar(newPiece, coordinate2);
                             } else cin.ignore();
-                            cout << *(cb);
+                            // cout << *(cb);
 
                         } else {
 
@@ -218,29 +226,29 @@ int main() {
                         if(cb->upgradePawn(end)){
                             cb->setupWithChar('q', end);
                         }
-                        cout << *(cb);
+                        // cout << *(cb);
 
                     } else if(cmd2 == "resign") {
                         // Player2 has to lose
                         cb->forfeit();
                         cout << *(cb);
-                        cout <<"do we get" << endl;
                         cb->restartGame();
+                        break;
 
                     } else if (cmd2 == "skip") {
 
                         cb->setTurn(!cb->getTurn()); // CHIARA SKIPO TURN
-                        cout << *(cb);
+                        // cout << *(cb);
+
+                    } else {
+                        
+                        cout << "Invalid Command. Try again" << endl;
 
                     }
                 }
-                // // 1. Check if game is over
-                // if(cb.isEnd()) { // will check players legalMoves to see if they are empoty or not
-                //     cb.restartGame(); // Restarts ChessBoard
-                //     // We don't need to reset player pointers because they will go out of scope or when we make it equal to something new, the old ones die
-                //     usedSetup = false;
-                //     break;
-                // } // No longer needed
+
+                cout << *(cb);
+
             }
         } else if (cmd == "setup") {
             string cmd2, coord, colour;
@@ -289,8 +297,10 @@ int main() {
                     cout << *(cb);
 
                 
-                } else if (cmd == "done") {
+                } else if (cmd2 == "done") {
+                    cout << "do we get here in done" << endl;
                     if(cb->boardIsValid()) {
+                        cout << "do we get here in main" << endl;
                         usedSetup = true;
                         break; // Only case where we break
                         // Now a flag has been raised telling the main that the game has been setup with a gameboard.
@@ -304,6 +314,8 @@ int main() {
         } else { // Invalid Input
             cout << "Invalid Input, try Again" << endl;
         }
+
+        cout << "To get started with a match, enter game or setup." << endl;
     }
     // END OF GAME
     // cout << *(cb);

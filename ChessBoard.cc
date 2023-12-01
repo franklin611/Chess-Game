@@ -57,7 +57,7 @@ bool ChessBoard::boardIsValid() {
         if(p->getType() == 'p' || p->getType() == 'P') return false;
     }
     // After board is determined to be valid
-
+    cout << "do we get here before for loop" << endl;
 	for (vector<shared_ptr<Piece>> vec : gb) {
 		for (shared_ptr<Piece> p : vec) {
             if(p->getTeam() == turn) {
@@ -72,6 +72,8 @@ bool ChessBoard::boardIsValid() {
     }
     // turn = !turn;
     td->notify(turn);
+    cout << "do we get here final" << endl;
+
     // confirm with franklin this logic works
     return true;
 }
@@ -642,7 +644,7 @@ shared_ptr<Empty> ChessBoard::getEmptyPiece(Vec coord){
 void ChessBoard::forfeit(){
      // We have to change this?
     displayScore = true;
-    if (turn){
+    if (!turn){
         // update score +1 for black
         game.updateBlack(false);
     } else {
@@ -653,14 +655,19 @@ void ChessBoard::forfeit(){
 
 // CHIARA
 void ChessBoard::restartGame() {
-    for(size_t i = 0; i < eb.size(); ++i) { //The row
-        for (size_t j = 0; j < eb[i].size(); ++j) { // The column
+    for(int i = 0; i < eb.size(); ++i) { //The row
+        for (int j = 0; j < eb[i].size(); ++j) { // The column
         // Remmber, we have a vector<vector<>>>>
             // COPY CTOR DIDNT WORK 
             // gb[j][i] = make_shared<Piece>(*(eb[i][j]));
-            gb[j][i] = eb[i][j]->clone();
+            // cout << "Type Before : " <<  gb[i][j]->getType() << endl;
+            gb[i][j] = eb[i][j]->clone();
+            // cout << "Type After : " <<  gb[i][j]->getType() << endl;
+            cout <<  gb[i][j]->getType();
+            // cout << endl;
             // Assume the copy assignment operator works
         }
+        cout << endl;
     }
     turn = false; // Default turn is always white
     bCheck = false;
@@ -730,6 +737,8 @@ void ChessBoard::defaultBoard() {
         setupWithChar('P', Vec{i, 1}); // White pawns
         setupWithChar('p', Vec{i, 6}); // Black
         // x, y. This corresponds to second row
+        cout << char(getPiece(Vec{i,1})->getCoordinate().getX() + 97) << " ";
+        cout << getPiece(Vec{i, 1})->getCoordinate().getY() + 1 << getPiece(Vec{i,1})->getType() << endl;
     }
 
     // Whites are the top side of the board. 0,0
