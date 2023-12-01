@@ -306,6 +306,7 @@ int main() {
     // END OF GAME
     // cout << *(cb);
     cb->setDisplayScore(true);
+    cout << *(cb);
     cout << "Thank you for playing. We hope you enjoyed!" << endl;
     cout << "Make sure to play again!" << endl;
     return 0;
