@@ -147,11 +147,14 @@ int main() {
                             cout << *(cb);
 
                         } else {
+
                             cout << "Invalid move. Please retry" << endl;
+
                         }
                     } else if(cmd2 == "move" && player1.substr(0,8) == "computer") {
                         // Make Computer Move
-                        cout << "computer white" << endl;
+
+                        cout << "Human Computer White" << endl;
                         shared_ptr<Computer>  computerWhite = dynamic_pointer_cast<Computer>(cb->getPlayerWhite());
                         int level = computerWhite->getLevel();
 
@@ -160,12 +163,17 @@ int main() {
                             cb->setupWithChar('Q', end);
                         }
                         cout << *(cb);
+
                     } else if(cmd2 == "resign") {
                         //Player1 now has to lose
+
                         cb->forfeit(); // This function will update the white and black score
                         cb->restartGame(); // Restart match
+
                     } else if (cmd2 == "skip") {
+
                         cb->setTurn(!cb->getTurn()); // CHIARA SKIP TURN
+
                     }
                 } else {
                     if (cmd2 == "move" && player2 == "human") {
@@ -184,30 +192,40 @@ int main() {
                         
                         if(humanBlack->makeHumanMove(coordinate1, coordinate2)) {
                             // cout << "MOVE MADE" << endl;
+
                             if(cb->upgradePawn(coordinate2)) {
                                 char newPiece;
                                 cin >> newPiece;
                                 cb->setupWithChar(newPiece, coordinate2);
                             } else cin.ignore();
                             cout << *(cb);
+
                         } else {
+
                             cout << "Invalid move. Please retry" << endl;
+
                         }
+
                     } else if (cmd2 == "move" && player2.substr(0,8) == "computer") {
 
-                        shared_ptr<Computer> computerBlack = dynamic_pointer_cast<Computer>(cb->getPlayerWhite());
+                        cout << "Human Computer Black" << endl;
+                        shared_ptr<Computer> computerBlack = dynamic_pointer_cast<Computer>(cb->getPlayerBlack());
                         int level = computerBlack->getLevel();
                         Vec end = computerBlack->makeComputerMove(level);
                         if(cb->upgradePawn(end)){
                             cb->setupWithChar('q', end);
                         }
                         cout << *(cb);
+
                     } else if(cmd2 == "resign") {
                         // Player2 has to lose
                         cb->forfeit();
                         cb->restartGame();
+
                     } else if (cmd2 == "skip") {
+
                         cb->setTurn(!cb->getTurn()); // CHIARA SKIPO TURN
+
                     }
                 }
                 // // 1. Check if game is over
@@ -243,6 +261,7 @@ int main() {
                     cb->setupWithChar(piece, coordinate);
                     cout << *(cb);
                 } else if (cmd2 == "-") {
+
                     cin >> coord;
                     int x = convertToInt(coord.substr(0,1)[0]);
                     int y = stoi(coord.substr(1));
@@ -250,7 +269,6 @@ int main() {
                     Vec coordinate = Vec{x, y - 1}; // We have to minus one because we are 0-7
                     cb->setupWithPiece(cb->getEmptyPiece(coordinate), coordinate);
 
-                
                 } else if (cmd2 == "=") {
                     // From my understanding, "makes it colors turn to go next" means when the game start, it is their turn
                     while (cin >> colour) {

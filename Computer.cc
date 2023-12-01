@@ -13,9 +13,6 @@ vector<Vec> Computer::selectRandomMove(vector<vector<Vec>> &vectors) {
     std::uniform_int_distribution<size_t> outerDist(0, vectors.size() - 1);
     size_t outerIndex = outerDist(gen);
 
-    // std::uniform_int_distribution<size_t> innerDist(0, vectors[outerIndex].size() - 1);
-    // size_t innerIndex = innerDist(gen);
-
     return {vectors[outerIndex]};
     // vectors[outerIndex];
 }

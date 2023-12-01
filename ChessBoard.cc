@@ -640,6 +640,7 @@ shared_ptr<Empty> ChessBoard::getEmptyPiece(Vec coord){
 
 // DONE
 void ChessBoard::forfeit(){
+     // We have to change this?
     if (turn){
         // update score +1 for black
         game.updateBlack(false);

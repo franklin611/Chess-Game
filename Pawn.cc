@@ -47,9 +47,9 @@ void Pawn::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
 	}
 	p = pieceAt(gb,CaptureLeft);
 	if ((inBounds(CaptureLeft) && (!isEmptyPiece(p) && (p->getTeam() != this->getTeam()))) || inBounds(CaptureLeft) && (isEmptyPiece(p) && canPassantLeft(gb))){
-		cout << char(p->getCoordinate().getX() + 97) << p->getCoordinate().getY() + 1 << endl;
-		cout << CaptureLeft << endl;
-		cout << "enter this if statement" << endl;
+		// cout << char(p->getCoordinate().getX() + 97) << p->getCoordinate().getY() + 1 << endl;
+		// cout << CaptureLeft << endl;
+		// cout << "enter this if statement" << endl;
 		possibleMoves.push_back(CaptureLeft);
 	}	
 	p = pieceAt(gb,moveUp);
