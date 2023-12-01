@@ -31,7 +31,8 @@ void TextDisplay::notify(Vec start, char typeStart) {
 }
 
 void TextDisplay::notify(bool white) { // call this inside of setup as well as when making any move
-    if (!white) {colour = "Black";}
+// Everything is inverted!
+    if (white) {colour = "Black";}
     else {colour = "White";}
 }
 
