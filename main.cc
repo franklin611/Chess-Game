@@ -316,7 +316,7 @@ int main() {
                         break; // Only case where we break
                         // Now a flag has been raised telling the main that the game has been setup with a gameboard.
                     }
-                    cout << "Invalid Board Setup" << endl;
+                    //  cout << "Invalid Board Setup" << endl;
                     // Now we have to reset the board (as well as Players) and bring the user all the way back up again.
                     cb->restartGame();
                     break;
