@@ -8,6 +8,7 @@
 #include "Empty.h"
 #include "Game.h"
 #include <utility>
+#include "Vec.h"
 
 #include "TextDisplay.h"
 #include "GraphicsDisplay.h" // We call their notify
@@ -67,6 +68,8 @@ bool ChessBoard::boardIsValid() {
             } // Sets up that piece'possible moves
         }
     }
+    // turn = !turn;
+    td->notify(turn);
     // confirm with franklin this logic works
     return true;
 }
@@ -187,6 +190,12 @@ void ChessBoard::regMove(Vec start, Vec end){
     shared_ptr<Piece> startPiece = getPiece(start);
     shared_ptr<Piece> endPiece = getPiece(end);
 
+    Vec v = startPiece->getCoordinate();
+    // cout << "here" << endl;
+    // cout << startPiece->getType() << endl;
+    // cout << v << endl;
+    // cout << "here" << endl;
+
     // find the piece at start and change the coordinates of the piece to end
     startPiece->setCoordinate(end);
 
@@ -223,13 +232,16 @@ void ChessBoard::castleMove(Vec start, Vec end){
 }
 
 // DONE
-void ChessBoard::makeMove(Vec start, Vec end){
+bool ChessBoard::makeMove(Vec start, Vec end){
+    bool castle = false;
      // make the move
     regMove(start, end);
     char startType = getType(end);
     // check if it was a castle move and if it was make the appropriate rook move
-    if (startType == 'K' || startType == 'k'){ castleMove(start, end); }
+    if (startType == 'K' || startType == 'k'){ castleMove(start, end); castle = true; }
+    return castle;
 }
+
 
 // DONE
 void ChessBoard::updatePawnMoved(Vec start, Vec end){
@@ -258,7 +270,7 @@ void ChessBoard::updateKingCoord(Vec end, bool white){
 // DONE
 void ChessBoard::notify(Vec start, Vec end){
     
-    makeMove(start, end);
+    bool castle = makeMove(start, end);
     
 
     char startType = getType(end);
@@ -302,9 +314,9 @@ void ChessBoard::notify(Vec start, Vec end){
     char startChar = emptyPiece->getType();
     char endChar = endPiece->getType();
     td->notifyMoves(start, startChar, end, endChar, checkString());
+    // NEED TO NOTIFY TD OF THE CASTLE MOVE !!!!!
+    td->notify(turn);
     // graphicsDisplay->notifyMoves(start, startChar, end, endChar, checkString());
-
-    // change the turn
     
     if (isEnd) { endGame(); displayScore = true;  }
 }
@@ -333,13 +345,15 @@ bool ChessBoard::testMove(Vec start, Vec end){
     // make a deep copy of the gb
     // consult about making a deep copy of the board
     // creating a 2D vector of unique pointers by copying from the shared vector
+
+    // the knight should be at (b, 1)
+
     vector<vector<shared_ptr<Piece>>> boardCopy;
 
     for (std::vector<std::shared_ptr<Piece>> vec : gb) {
         std::vector<std::shared_ptr<Piece>> uniqueRow;
         for (std::shared_ptr<Piece> p : vec) {
             // Copying data from shared_ptr to unique_ptr
-            // COPY CTOR DID NOT WORK
             shared_ptr<Piece> newPiece = p->clone();
             uniqueRow.push_back(newPiece);
         }
@@ -364,6 +378,12 @@ bool ChessBoard::testMove(Vec start, Vec end){
     // now we can make edits on the game board which we will later revert
     makeMove(start, end);
     // we can safely update the booleans of pieces and update
+
+    // the knight will be at (c, 3)
+
+
+    // cout << "AFTER MOVE: " << endl;
+    // cout << *this << endl;
 
     // we will also change the king's booleans
     if (startType == 'K' || startType == 'k'){
@@ -410,12 +430,29 @@ bool ChessBoard::testMove(Vec start, Vec end){
     // revert the board -> switch the board copy to the gb
     // this swap might not work
     // Yup chatgpt said nada
+    // knight should be at (c, 3) end 
+
+    // after the move was made 
+    int row = start.getY();
+    int col = start.getX();
+    // should be knight
+    // cout << "OLD BOARD : " << start << ' ' << boardCopy[row][col]->getType() << endl;
+    // should be empty
+    // cout << "MOVED BOARD : " << start << ' ' << gb[row][col]->getType() << endl;
+    // should be the start coordinate 
+    // Vec c = gb[row][col]->getCoordinate();
+    // cout << c << endl;
     for (size_t row = 0; row < gb.size(); ++row) {
         for (size_t col = 0; col < gb[row].size(); ++col) {
             gb[row][col] = move(boardCopy[row][col]);
         }
     }
+    // should be knight
+    Vec current = gb[row][col]->getCoordinate();
+    // cout << "CURRENT BOARD : " << current << ' ' << gb[row][col]->getType() << endl;
+    // knight should be at (b, 1) start
 
+    // --------------------- UP TO THIS POINT THE KNIGHT COORDINATES ARE CORRECT -------------------------
 
     // revert the king's coordinates
     if (!turn){ // TODO: change to !turn because we set white turn as false in default
@@ -578,7 +615,7 @@ void ChessBoard::restartGame() {
             // Assume the copy assignment operator works
         }
     }
-    turn = true; // Default turn is always white
+    turn = false; // Default turn is always white
     bCheck = false;
     wCheck = false;
     // We don't need to reset bKing and wKing because it will be reset in next
@@ -657,9 +694,9 @@ void ChessBoard::defaultBoard() {
 
     // Setup Knights
     setupWithChar('N', Vec{1,0}); 
-    cout << getPiece(Vec{1,0})->getType() << endl;
-    cout << char(getPiece(Vec{1,0})->getCoordinate().getX() + 97) << endl;
-    cout << getPiece(Vec{1,0})->getCoordinate().getY() + 1 << endl;
+    // cout << getPiece(Vec{1,0})->getType() << endl;
+    // cout << char(getPiece(Vec{1,0})->getCoordinate().getX() + 97) << endl;
+    // cout << getPiece(Vec{1,0})->getCoordinate().getY() + 1 << endl;
     setupWithChar('N', Vec{6, 0}); // Whites
     setupWithChar('n', Vec{1,7});
     setupWithChar('n', Vec{6, 7}); // Black
@@ -684,18 +721,28 @@ void ChessBoard::defaultBoard() {
 		for (shared_ptr<Piece> p : vec) {
             if(p->getTeam() != turn) {
                 p->getPossibleMoves(gb); 
-                for (Vec end : p->returnPossibleMoves()) {
-                    // First run through of Knight itis b1,second it is c3 to a3??
-                    // a3 is a correct end move but c3 isnt
-                     if (p->getType() == 'N')  cout  << p->getType() << " = " << char(p->getCoordinate().getX() + 97) << ' ' << p->getCoordinate().getY() + 1 << " to " << end << endl;
-                    testMove(p->getCoordinate(), end);
+                Vec v = p->getCoordinate();
+                // char c = p->getType();
+                // cout << c << endl;
+                // cout << "COORDINATE FIRST: " << v << endl;
+                vector<Vec> moves = p->returnPossibleMoves();
+                for (Vec end : moves) {
+                    // cout << p->getType() << endl;
+                    // cout << v.getX() << ' ' << v.getY() << endl;
+                    // v = p->getCoordinate();
+                    // cout << "COORDINATE SECOND: " << v << endl;
+                    testMove(v, end);
+
+                    // v = p->getCoordinate();
+                    // cout << "COORDINATE THIRD: " << v << endl;
                 }
 
                 // cout << p->getType() << ':'<< p->getCoordinate().getX() << ' ' << p->getCoordinate().getY() << endl;
             } // Sets up that piece'possible moves
         }
     }
-    //turn = !turn;
+    // turn = !turn;
+    td->notify(turn);
 }
 
 void ChessBoard::setTurn(bool turn) {

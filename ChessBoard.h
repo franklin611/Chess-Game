@@ -71,7 +71,7 @@ class ChessBoard: public ChessBoardObserver {
 
         void castleMove(Vec start, Vec end);
 
-        void makeMove(Vec start, Vec end);
+        bool makeMove(Vec start, Vec end);
 
         void updatePawnMoved(Vec start, Vec end);
 

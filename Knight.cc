@@ -17,8 +17,12 @@ void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     int coordx = coordinate.getX();
     int coordy = coordinate.getY();
 
+    //cout << "knight" << endl;
+
     
 // Actually, it shouldn't matter if it is black or white. 
+// x is col 
+// y is row 
     topRight1 = Vec{coordx + 1, coordy - 2};
     topRight2 = Vec{coordx + 2, coordy - 1};
         
@@ -30,6 +34,7 @@ void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
 
     bottomLeft1 = Vec{coordx - 2, coordy + 1};
     bottomLeft2 = Vec{coordx - 1, coordy + 2};
+
     
     // Need to check if teammate or enemy team
 
@@ -40,7 +45,6 @@ void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     } else if (inBounds(move) && (p->getTeam() != getTeam())) {
         possibleMoves.push_back(move);
     } 
-
     move = topRight2;
     p = pieceAt(gb,move);
     if(inBounds(move) && isEmptyPiece(p)) {

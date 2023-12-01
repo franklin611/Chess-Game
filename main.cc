@@ -138,7 +138,7 @@ int main() {
                         // cout << "MEMORY ADDRESS: " << humanWhite << endl;
 
                         if(humanWhite->makeHumanMove(coordinate1, coordinate2)) {
-                            cout << "MOVE MADE" << endl;
+                            // cout << "MOVE MADE" << endl;
                             // Valid Move
                             if(cb->upgradePawn(coordinate2)) { // CURRENT ISSUE 5:47 PM
                                 char newPiece;
@@ -183,9 +183,9 @@ int main() {
                         
                         auto humanBlack = dynamic_pointer_cast<Human>(cb->getPlayerBlack());
 
-                        cout << "playerBlack" << endl;
+                        // cout << "playerBlack" << endl;
                         if(humanBlack->makeHumanMove(coordinate1, coordinate2)) {
-                            cout << "MOVE MADE" << endl;
+                            // cout << "MOVE MADE" << endl;
                             if(cb->upgradePawn(coordinate2)) {
                                 char newPiece;
                                 cin >> newPiece;
@@ -285,7 +285,7 @@ int main() {
         }
     }
     // END OF GAME
-    cout << *(cb);
+    // cout << *(cb);
     cout << "Thank you for playing. We hope you enjoyed!" << endl;
     cout << "Make sure to play again!" << endl;
     return 0;

@@ -46,8 +46,9 @@ ostream &operator<<(ostream &out, const TextDisplay &td) {
         --num;
     }
     out << endl;
-    out << " abcdefgh" << endl;
+    out << "  abcdefgh" << endl;
     if (td.str_check.size() > 1) {out << td.str_check << "is in check." << endl;} // empty string is true, so if not empty string output
-    if (td.colour.size() > 1) out << "It's " << td.colour << "'s turn" << endl;
+    out << "It's " << td.colour << "'s turn" << endl;
+    out << "---------------------" << endl;
     return out;
 }
