@@ -116,9 +116,6 @@ int main() {
             if(!usedSetup) cb->defaultBoard(); // In both cases setup board first
             else cb->setUpStartMoves(); 
 
-            cout << "afterstart  " << endl;
-            
-
             string cmd2;
             cout << *(cb);
             while(cin >> cmd2) {
@@ -209,6 +206,10 @@ int main() {
 
                             if(cb->upgradePawn(coordinate2)) {
                                 char newPiece;
+                                cout << "Please input the character you wnat the Pawn to be upgraded to : " << endl;
+                                while (cin >> newPiece) {
+                                    if (newPiece != ('p' || 'q' || 'n' || 'b' || 'r')) { cout << "Invalid Input. Try Again!"  << endl; continue;}
+                                }
                                 cin >> newPiece;
                                 // Make sure to check what they input
                                 // Prompt them to input them again if they input the wrong oclour

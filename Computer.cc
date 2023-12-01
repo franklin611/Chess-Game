@@ -42,6 +42,7 @@ Vec Computer::makeComputerMove(int userLevel) {
         vector<Vec> onlyLegalMove = selectRandomMove(legalMoves);
         cb->notify(onlyLegalMove[0], onlyLegalMove[1]);
         cout << "legal Moves size: " << legalMoves.size() << endl;
+        cout << "selected move: " << onlyLegalMove[0] << onlyLegalMove[1] << endl;
         legalMoves.clear();
         return onlyLegalMove[1];
     }
