@@ -13,12 +13,15 @@ vector<Vec> Computer::selectRandomMove(vector<vector<Vec>> &vectors) {
     std::uniform_int_distribution<size_t> outerDist(0, vectors.size() - 1);
     size_t outerIndex = outerDist(gen);
 
-    return {{0,1},{0,1}};
+    // std::uniform_int_distribution<size_t> innerDist(0, vectors[outerIndex].size() - 1);
+    // size_t innerIndex = innerDist(gen);
+
+    return {vectors[outerIndex]};
     // vectors[outerIndex];
 }
 
 Computer::Computer(bool colour, shared_ptr<ChessBoardObserver> cb, int userLevel) : Player{colour, cb}, userLevel{userLevel} {
-    if (userLevel == 1) {level = make_unique<LevelOne>();}
+    if (userLevel == 1) {level = make_unique<LevelOne>();} // We are correctly making the levels
     else if (userLevel == 2) {level = make_unique<LevelTwo>();}
     else if (userLevel == 3) {level = make_unique<LevelThree>();}
     else if (userLevel == 4) {level = make_unique<LevelFour>();}
@@ -28,8 +31,12 @@ Computer::Computer(bool colour, shared_ptr<ChessBoardObserver> cb, int userLevel
 Vec Computer::makeComputerMove(int userLevel) {
 
     vector<vector<Vec>> levelsMoves = level->createMoves(legalMoves, captureMoves, checkMoves, checkMateMoves, avoidCaptureMoves);
+    cout << "level Moves size: " << levelsMoves.size() << endl;
+    // for (int i = 0; i < levelsMove.size)
     vector<Vec> selectedMove = selectRandomMove(levelsMoves);
+    cout << "selected Moves size: " << selectedMove.size() << endl;
     if (!selectedMove.empty()) {
+        cout << "selected move: " << selectedMove[0] << selectedMove[1] << endl;
         cb->notify(selectedMove[0], selectedMove[1]);
         return selectedMove[1];
     } else {
