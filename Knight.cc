@@ -35,44 +35,68 @@ void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
 
     Vec move = topRight1;
     shared_ptr<Piece> p = pieceAt(gb,move);
-    if(inBounds(move) && !(p->getTeam() == getTeam())) {
+    if(inBounds(move) && isEmptyPiece(p)) {
+        possibleMoves.push_back(move);
+    } else if (inBounds(move) && (p->getTeam() != getTeam())) {
         possibleMoves.push_back(move);
     } 
-    move = topRight1;
+
+    move = topRight2;
     p = pieceAt(gb,move);
-    if(inBounds(move) && !(p->getTeam() == getTeam())) {
+    if(inBounds(move) && isEmptyPiece(p)) {
         possibleMoves.push_back(move);
-    }
+    } else if (inBounds(move) && (p->getTeam() != getTeam())) {
+        possibleMoves.push_back(move);
+    } 
+
     move = topLeft1;
     p = pieceAt(gb,move);
-    if(inBounds(move) && !(p->getTeam() == getTeam())) {
+    if(inBounds(move) && isEmptyPiece(p)) {
         possibleMoves.push_back(move);
-    }
-    move = topLeft2;
-    p = pieceAt(gb,move);
-    if(inBounds(move) && !(p->getTeam() == getTeam())) {
-        possibleMoves.push_back(move);
-    }
-    move = bottomRight1;
-    p = pieceAt(gb,move);
-    if(inBounds(move) && !(p->getTeam() == getTeam())) {
-        possibleMoves.push_back(move);
-    }
-    move = bottomRight2;
-    p = pieceAt(gb,move);
-    if(inBounds(move) && !(p->getTeam() == getTeam())) {
-        possibleMoves.push_back(move);
-    }
-    move = bottomLeft1;
-    p = pieceAt(gb,move);
-    if(inBounds(move) && !(p->getTeam() == getTeam())) {
-        possibleMoves.push_back(move);
-    }
-    move = bottomLeft2;
-    p = pieceAt(gb,move);
-    if(inBounds(move) && !(p->getTeam() == getTeam())) {
+    } else if (inBounds(move) && (p->getTeam() != getTeam())) {
         possibleMoves.push_back(move);
     } 
+
+    move = topLeft2;
+    p = pieceAt(gb,move);
+    if(inBounds(move) && isEmptyPiece(p)) {
+        possibleMoves.push_back(move);
+    } else if (inBounds(move) && (p->getTeam() != getTeam())) {
+        possibleMoves.push_back(move);
+    } 
+
+    move = bottomRight1;
+    p = pieceAt(gb,move);
+    if(inBounds(move) && isEmptyPiece(p)) {
+        possibleMoves.push_back(move);
+    } else if (inBounds(move) && (p->getTeam() != getTeam())) {
+        possibleMoves.push_back(move);
+    } 
+
+    move = bottomRight2;
+    p = pieceAt(gb,move);
+    if(inBounds(move) && isEmptyPiece(p)) {
+        possibleMoves.push_back(move);
+    } else if (inBounds(move) && (p->getTeam() != getTeam())) {
+        possibleMoves.push_back(move);
+    } 
+
+    move = bottomLeft1;
+    p = pieceAt(gb,move);
+    if(inBounds(move) && isEmptyPiece(p)) {
+        possibleMoves.push_back(move);
+    } else if (inBounds(move) && (p->getTeam() != getTeam())) {
+        possibleMoves.push_back(move);
+    } 
+
+    move = bottomLeft2;
+    p = pieceAt(gb,move);
+    if(inBounds(move) && isEmptyPiece(p)) {
+        possibleMoves.push_back(move);
+    } else if (inBounds(move) && (p->getTeam() != getTeam())) {
+        possibleMoves.push_back(move);
+    } 
+    
 }
 
 shared_ptr<Piece> Knight::clone() const {

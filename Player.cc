@@ -7,7 +7,7 @@ Player::Player(bool colour, shared_ptr<ChessBoardObserver> cb) : colour{colour},
 void Player::notifyLM(Vec start, Vec end) {
     vector<Vec> newMove = {start, end};
     legalMoves.emplace_back(newMove);
-    cout << "MEMORY ADDRESS OF PLAYER " << colour << " IN NOTIFY: " << this << endl;
+    // cout << "MEMORY ADDRESS OF PLAYER " << colour << " IN NOTIFY: " << this << endl;
     // cout << "move: " << newMove[0] << ", " << newMove[1] << endl;
     // cout << "MOVES: " << legalMoves.size() << endl;
 }

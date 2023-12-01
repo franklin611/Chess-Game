@@ -350,6 +350,7 @@ bool ChessBoard::testMove(Vec start, Vec end){
     Vec wKingCoord;
     Vec bKingCoord;
 
+// REWORKED WITH TURN NOW STARTING AT FALSE
     if (turn && startType != 'K'){
         wKingCoord = wKing;
     } else if (!turn && startType != 'k'){
@@ -417,7 +418,7 @@ bool ChessBoard::testMove(Vec start, Vec end){
 
 
     // revert the king's coordinates
-    if (turn){
+    if (!turn){ // TODO: change to !turn because we set white turn as false in default
         swap(wKingCoord, wKing);
     } else {
         swap(bKingCoord, bKing);
@@ -655,7 +656,10 @@ void ChessBoard::defaultBoard() {
     setupWithChar('r', Vec{7, 7}); // Black
 
     // Setup Knights
-    setupWithChar('N', Vec{1,0});
+    setupWithChar('N', Vec{1,0}); 
+    cout << getPiece(Vec{1,0})->getType() << endl;
+    cout << char(getPiece(Vec{1,0})->getCoordinate().getX() + 97) << endl;
+    cout << getPiece(Vec{1,0})->getCoordinate().getY() + 1 << endl;
     setupWithChar('N', Vec{6, 0}); // Whites
     setupWithChar('n', Vec{1,7});
     setupWithChar('n', Vec{6, 7}); // Black
@@ -679,10 +683,13 @@ void ChessBoard::defaultBoard() {
     for (vector<shared_ptr<Piece>> vec : gb) {
 		for (shared_ptr<Piece> p : vec) {
             if(p->getTeam() != turn) {
-                p->getPossibleMoves(gb);
+                p->getPossibleMoves(gb); 
                 for (Vec end : p->returnPossibleMoves()) {
+                     if (p->getType() == 'N')  cout  << p->getType() << " = " << char(p->getCoordinate().getX() + 97) << ' ' << p->getCoordinate().getY() + 1 << " to " << end << endl;
                     testMove(p->getCoordinate(), end);
                 }
+
+                // cout << p->getType() << ':'<< p->getCoordinate().getX() << ' ' << p->getCoordinate().getY() << endl;
             } // Sets up that piece'possible moves
         }
     }
