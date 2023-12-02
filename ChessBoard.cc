@@ -45,6 +45,8 @@ bool ChessBoard::boardIsValid() {
             }
         }
     }
+    
+    if (!oneBlack || !oneWhite) return false;
     // If either white (true) or black (false) are in check, not a valid board
     if (isCheck(true) || isCheck(false)) return false;
 
@@ -728,9 +730,12 @@ void ChessBoard::restartGame() {
             // COPY CTOR DIDNT WORK 
             // gb[j][i] = make_shared<Piece>(*(eb[i][j]));
             // cout << "Type Before : " <<  gb[i][j]->getType() << endl;
+
+            td->notify(gb[i][j]->getCoordinate(), eb[i][j]->getType()); // Fixed to now notify text display of the change
+            
             gb[i][j] = eb[i][j]->clone();
             // cout << "Type After : " <<  gb[i][j]->getType() << endl;
-            cout <<  gb[i][j]->getType();
+            // cout <<  gb[i][j]->getType();
             // cout << endl;
             // Assume the copy assignment operator works
         }
@@ -866,6 +871,12 @@ void ChessBoard::defaultBoard() {
         }
     }
     // turn = !turn;
+    td->notify(turn);
+}
+
+void ChessBoard::setupTurn(bool turn) {
+    this->turn = turn;
+
     td->notify(turn);
 }
 

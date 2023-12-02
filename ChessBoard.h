@@ -139,6 +139,8 @@ class ChessBoard: public ChessBoardObserver {
 
         void passantMove(Vec start, Vec end);
 
+        void setupTurn(bool turn);
+
 
 
         friend ostream& operator<<(ostream& out, const ChessBoard& cb);

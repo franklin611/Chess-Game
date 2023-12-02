@@ -134,12 +134,9 @@ int main() {
                         Vec coordinate2 = Vec{x2, y2 - 1};
 
                         shared_ptr<Human> humanWhite = dynamic_pointer_cast<Human>(cb->getPlayerWhite());
-                        // cout << "before" << endl;
-                        // cout << "TURN: " << cb->getTurn() << endl;
-                        // cout << "MEMORY ADDRESS: " << humanWhite << endl;
 
                         if(humanWhite->makeHumanMove(coordinate1, coordinate2)) {
-                            //cout << "MOVE MADE" << endl;
+
                             // Valid Move
                             if(cb->upgradePawn(coordinate2)) { // CURRENT ISSUE 5:47 PM
                                 char newPiece;
@@ -170,20 +167,21 @@ int main() {
                         if(cb->upgradePawn(end)){
                             cb->setupWithChar('Q', end);
                         }
-                        // cout << *(cb);
+
 
                     } else if(cmd2 == "resign") {
                         //Player1 now has to lose
 
                         cb->forfeit(); // This function will update the white and black score
+                        cout << "Current Score: " << endl;
                         cout << *(cb);
                         cb->restartGame(); // Restart match
                         break;
 
                     } else if (cmd2 == "skip") {
 
-                        cb->setTurn(!cb->getTurn()); // CHIARA SKIP TURN
-                        // cout << *(cb);
+                        cb->setTurn(!cb->getTurn()); 
+                        
 
                     } else {
 
@@ -206,7 +204,6 @@ int main() {
                         shared_ptr<Human> humanBlack = dynamic_pointer_cast<Human>(cb->getPlayerBlack());
                         
                         if(humanBlack->makeHumanMove(coordinate1, coordinate2)) {
-                            // cout << "MOVE MADE" << endl;
 
                             if(cb->upgradePawn(coordinate2)) {
                                 char newPiece;
@@ -214,13 +211,9 @@ int main() {
                                 while (cin >> newPiece) {
                                     if (!((newPiece == 'q') || (newPiece == 'r')  || (newPiece == 'n')  || (newPiece == 'n'))) { cout << "Invalid Input. Try Again!"  << endl; continue;}
                                     cb->setupWithChar(newPiece, coordinate2);
-                                }
-                                // cin >> newPiece;
-                                // Make sure to check what they input
-                                // Prompt them to input them again if they input the wrong oclour
-                                
+                                }  
                             } else cin.ignore();
-                            // cout << *(cb);
+   
 
                         } else {
 
@@ -237,54 +230,59 @@ int main() {
                         if(cb->upgradePawn(end)){
                             cb->setupWithChar('q', end);
                         }
-                        // cout << *(cb);
 
                     } else if(cmd2 == "resign") {
+
                         // Player2 has to lose
                         cb->forfeit();
-                        cout << *(cb);
+                        cout << "Current Score: " << endl;
+                        cout << *(cb); // 
                         cb->restartGame();
                         break;
 
                     } else if (cmd2 == "skip") {
 
-                        cb->setTurn(!cb->getTurn()); // CHIARA SKIPO TURN
-                        // cout << *(cb);
-
+                        cb->setTurn(!cb->getTurn()); 
+                        
                     } else {
                         
                         cout << "Invalid Command. Try again" << endl;
 
                     }
                 }
-
                 cout << *(cb);
-
             }
         } else if (cmd == "setup") {
             string cmd2, coord, colour;
             char piece;
+            // cb->setTurn(true); // Start off with setting up the board to be White
+            // I think we should only display whose turn it actually is in game not seutp
 
-            while(cin >> cmd2) {
+            cb->setupTurn(false); // We just want to change the output to White
 
+            while(cin >> cmd2) { // NEED TO BE ABLE TO HANDLE INVALID INPUT
+                
                 if(cmd2 == "+") {
+
                     cin >> piece >> coord;
-                    // e1, is Column 3 (starting from  0 to 7), Row 0
-                    //  sop shoudl Vec{0,7)}
                     int x = convertToInt(coord.substr(0,1)[0]);
                     int y = stoi(coord.substr(1));
                     Vec coordinate = Vec{x, y- 1};
-                    // Need to also check that the char was a proper input
-                    if ((x == -1 || (y > 7 && y < 0)) && !(piece == 'k' || piece == 'K' || piece == 'q' || piece == 'Q' ||
+                    // Need to also check that the char was a proper input TODO
+                    if ((!(x >=0 && x <=7) || !(y <= 8 && y >= 1)) || !(piece == 'k' || piece == 'K' || piece == 'q' || piece == 'Q' ||
                         piece == 'b' || piece == 'B' || piece == 'n' || piece == 'N' ||
                         piece == 'r' || piece == 'R' || piece == 'p' || piece == 'P')) {
-                        cout << "Invalid Input" << endl;
+                        cout << "Invalid Input. Input a Command Again." << endl;
                         // I should not be breaking. I should be in the while loop waiting for commands
+                    } else {
+                        if(piece == 'k') cb->setBlackKing(coordinate);
+                        if(piece == 'K') cb->setWhiteKing(coordinate);
+                        cb->setupWithChar(piece, coordinate);
+                        cout << *(cb);
                     }
-                    if(piece == 'k') cb->setBlackKing(coordinate);
-                    if(piece == 'K') cb->setWhiteKing(coordinate);
-                    cb->setupWithChar(piece, coordinate);
-                    cout << *(cb);
+
+                    
+        
                 } else if (cmd2 == "-") {
 
                     cin >> coord;
@@ -292,45 +290,52 @@ int main() {
                     int y = stoi(coord.substr(1));
                     // Remove a piece on a board by placing an empty piece on that coordinate
                     Vec coordinate = Vec{x, y - 1}; // We have to minus one because we are 0-7
-                    cb->setupWithPiece(cb->getEmptyPiece(coordinate), coordinate);
+                    if ((!(x >=0 && x <=7) || !(y <= 8 && y >= 1))) { cout << "Invalid Input. Input a Command Again." << endl; }
+                    else { cb->setupWithPiece(cb->getEmptyPiece(coordinate), coordinate); cout << *(cb);}
 
                 } else if (cmd2 == "=") {
                     // From my understanding, "makes it colors turn to go next" means when the game start, it is their turn
-                    while (cin >> colour) {
+                    if (cin >> colour) {
+
                         if(colour == "black") {
-                            cb->setTurn(0);
+                            cb->setupTurn(1); // Everything is negated
+                            cout << *(cb);
                         } else if (colour == "white") {
-                            cb->setTurn(1);
+                            cb->setupTurn(0);
+                            cout << *(cb);
                         } else {
                             cout << "Invalid input, please try again." << endl;
                         }
-                    }
-                    cout << *(cb);
-
-                
+                    } else { cout << "Invalid input, please try again." << endl;}
+    
                 } else if (cmd2 == "done") {
-                    // cout << "do we get here in done" << endl;
+                    
                     if(cb->boardIsValid()) {
-                        // cout << "do we get here in main" << endl;
                         usedSetup = true;
+                        cout << *(cb);
+                        cout << " do we enter here??? " << endl;
                         break; // Only case where we break
                         // Now a flag has been raised telling the main that the game has been setup with a gameboard.
                     }
-                    //  cout << "Invalid Board Setup" << endl;
+                    cout << "Invalid Board Setup" << endl;
                     // Now we have to reset the board (as well as Players) and bring the user all the way back up again.
                     cb->restartGame();
                     break;
                 }
+                
+
             }
         } else { // Invalid Input
+
             cout << "Invalid Input, try Again" << endl;
+
         }
 
         cout << "To get started with a match, enter game or setup." << endl;
     }
     // END OF GAME
-    // cout << *(cb);
     cb->setDisplayScore(true);
+    cout << "Final Score:" << endl;
     cout << *(cb);
     cout << "Thank you for playing. We hope you enjoyed!" << endl;
     cout << "Make sure to play again!" << endl;
