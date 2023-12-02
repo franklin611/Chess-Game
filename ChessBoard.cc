@@ -919,7 +919,7 @@ void ChessBoard::setDisplayScore(bool b) {
 ostream& operator<<(ostream& out, const ChessBoard& cb) {
     if (cb.displayScore) out << cb.game << "\n" << endl;
     // I SWTICHED IT AROUND HELEN 7;33 DEC 1
-    else { out << cb.game << "\n" << endl; out << *(cb.td) << endl;}
+    else { out << *(cb.td) << endl;}
     return out;
 }
 

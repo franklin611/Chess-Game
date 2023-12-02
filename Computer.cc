@@ -26,6 +26,22 @@ Computer::Computer(bool colour, shared_ptr<ChessBoardObserver> cb, int userLevel
 
 // DONE
 Vec Computer::makeComputerMove(int userLevel) {
+    
+    for (vector<Vec> move : legalMoves) {
+        cout << "legalMoves Move: " <<  move[0] << ' to ' << move[1]  << endl;
+    }
+    for (vector<Vec> move : captureMoves) {
+        cout << "Capture Move: " <<  move[0] << ' to ' << move[1]  << endl;
+    }
+    for (vector<Vec> move : checkMoves) {
+        cout << "checkMoves Move: " <<  move[0] << ' to ' << move[1]  << endl;
+    }
+    for (vector<Vec> move : checkMateMoves) {
+        cout << "checkMateMoves Move: " <<  move[0] << ' to ' << move[1]  << endl;
+    }
+    for (vector<Vec> move : avoidCaptureMoves) {
+        cout << "avoidCaptureMoves Move: " <<  move[0] << ' ' << move[1]  << endl;
+    }
 
     vector<vector<Vec>> levelsMoves = level->createMoves(legalMoves, captureMoves, checkMoves, checkMateMoves, avoidCaptureMoves);
     // cout << "level Moves size: " << levelsMoves.size() << endl;
@@ -33,16 +49,16 @@ Vec Computer::makeComputerMove(int userLevel) {
     // vector<Vec> selectedMove = selectRandomMove(levelsMoves);
     if (!levelsMoves.empty()) {
         vector<Vec> selectedMove = selectRandomMove(levelsMoves);
-        cout << "level Moves size: " << levelsMoves.size() << endl;
-        cout << "selected move: " << selectedMove[0] << selectedMove[1] << endl;
+        // cout << "level Moves size: " << levelsMoves.size() << endl;
+        // cout << "selected move: " << selectedMove[0] << selectedMove[1] << endl;
         cb->notify(selectedMove[0], selectedMove[1]);
         legalMoves.clear();
         return selectedMove[1];
     } else {
         vector<Vec> onlyLegalMove = selectRandomMove(legalMoves);
         cb->notify(onlyLegalMove[0], onlyLegalMove[1]);
-        cout << "legal Moves size: " << legalMoves.size() << endl;
-        cout << "selected move: " << onlyLegalMove[0] << onlyLegalMove[1] << endl;
+        // cout << "legal Moves size: " << legalMoves.size() << endl;
+        // cout << "selected move: " << onlyLegalMove[0] << onlyLegalMove[1] << endl;
         legalMoves.clear();
         return onlyLegalMove[1];
     }
