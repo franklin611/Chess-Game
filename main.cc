@@ -20,6 +20,12 @@ int convertToInt(char c) {
     }
 }
 
+// bool checkInBounds(string coord) {
+
+//     return (coord.substr(0,1)[0] >= 'a' && coord.substr(0,1)[0] <= 'h' && coord.substr(1))
+
+// }
+
 void outputRules() {
     string art =
     "+----------------------------------------------------+\n"
@@ -82,8 +88,15 @@ int main() {
             string player1, player2;
             int level, level2;
 
+
+
             while (cin >> player1 >> player2) {
-                if(player1 == "human" && player2 == "human") {
+                int length1 = player1.length();
+                int length2 = player2.length();
+
+                if (!((length1 == 5 || length1 == 11) && (length2 == 5 || length2 == 11))) {cout << "bad " << endl; continue;}
+
+                else if(player1 == "human" && player2 == "human") {
 
                 playerWhite = make_shared<Human>(1, cb);
                 playerBlack = make_shared<Human>(0, cb);
@@ -91,15 +104,29 @@ int main() {
                 break;
 
                 } else if (player1 == "human" && player2.substr(0,8) == "computer" ) {
-                    
+
+                    try {
+                        level2 = stoi(player2.substr(9, 1));
+                    } catch (...) {
+                        cout << "Invalid input. Please enter a valid level." << endl;
+                        continue;
+                    }
+
                     level2 = stoi(player2.substr(9, 1));
                     if (!(level2 >= 1 && level2 <= 4)) continue; 
                     playerWhite = make_shared<Human>(1, cb);
-                    playerBlack = make_shared<Computer>(0, cb, level);
+                    playerBlack = make_shared<Computer>(0, cb, level2);
                     cb->setupPlayers(playerWhite, playerBlack); // Then players
                     break;
 
                 } else if (player1.substr(0,8) == "computer" && player2 == "human" ) {
+
+                    try {
+                        level = stoi(player1.substr(9, 1)); // Not sure if we can use stoi But this should level = the number in the brackets
+                    } catch (...) {
+                        cout << "Invalid input. Please enter a valid level." << endl;
+                        continue;
+                    }
 
                     level = stoi(player1.substr(9, 1));
                     if (!(level >= 1 && level <= 4)) continue; 
@@ -109,6 +136,15 @@ int main() {
                     break;
 
                 } else if (player1.substr(0,8) == "computer" && player2.substr(0,8) == "computer" ) {
+
+
+                    try {
+                        level = stoi(player1.substr(9, 1)); // Not sure if we can use stoi But this should level = the number in the brackets
+                        level2 = stoi(player2.substr(9, 1));
+                    } catch (...) {
+                        cout << "Invalid input. Please enter a valid level." << endl;
+                        continue;
+                    }
 
                     level = stoi(player1.substr(9, 1)); // Not sure if we can use stoi But this should level = the number in the brackets
                     level2 = stoi(player2.substr(9, 1));
@@ -133,20 +169,33 @@ int main() {
             string cmd2;
             cout << *(cb);
             while(cin >> cmd2) {
-                if(!cb->getTurn()) { //If passes means playerWhite turn
+                if(!cb->getTurn()) { //If passes means playerWhite turn. Remember, everything is negated. 
                     if (cmd2 == "move" && player1 == "human") {
 
                         string start, end;
                         cin >> start >> end;
 
+                        try {
+                            int y = stoi(start.substr(1));
+                            int x = convertToInt(start.substr(0,1)[0]);
+                        } catch (...) {
+                            cout << "Invalid input. Please enter valid coordinates." << endl;
+                            continue;
+                        }
+                                            
                         int x = convertToInt(start.substr(0,1)[0]);
-                        int y = stoi(start.substr(1));;
+                        int y = stoi(start.substr(1));
                         Vec coordinate1 = Vec{x, y - 1};
 
                         int x2 = convertToInt(end.substr(0,1)[0]);
                         int y2 = stoi(end.substr(1));
-                        Vec coordinate2 = Vec{x2, y2 - 1};
 
+                        if(!(x >= 0 && x <= 7 && y>= 1 && y <= 8 && x2 >= 0 && x2 <= 7 && y2 >= 1 && y2 <= 8)) 
+                        {cout << "Invalid coordinates. Please input a location on the board." << endl; continue;}
+                        cout << "get here" << endl;
+
+                        Vec coordinate2 = Vec{x2, y2 - 1};
+                        
                         shared_ptr<Human> humanWhite = dynamic_pointer_cast<Human>(cb->getPlayerWhite());
 
                         if(humanWhite->makeHumanMove(coordinate1, coordinate2)) {
@@ -207,12 +256,25 @@ int main() {
                         string start, end;
                         cin >> start >> end;
 
+                         try {
+                            int y = stoi(start.substr(1));
+                            int x = convertToInt(start.substr(0,1)[0]);
+                        } catch (...) {
+                            cout << "Invalid input. Please enter valid coordinates." << endl;
+                            continue;
+                        }
+                          
+
                         int x = convertToInt(start.substr(0,1)[0]);
                         int y = stoi(start.substr(1));
                         Vec coordinate1 = Vec{x, y - 1};
 
                         int x2 = convertToInt(end.substr(0,1)[0]);
                         int y2 = stoi(end.substr(1));
+
+                        if(!(x >= 0 && x <= 7 && y>= 1 && y <= 8 && x2 >= 0 && x2 <= 7 && y2 >= 1 && y2 <= 8)) 
+                        {cout << "Invalid coordinates. Please input a location on the board." << endl; continue;}
+
                         Vec coordinate2 = Vec{x2, y2 - 1}; // Start at row 0
                         
                         shared_ptr<Human> humanBlack = dynamic_pointer_cast<Human>(cb->getPlayerBlack());
@@ -221,7 +283,7 @@ int main() {
 
                             if(cb->upgradePawn(coordinate2)) {
                                 char newPiece;
-                                cout << "Please input the character you wnat the Pawn to be upgraded to : " << endl;
+                                cout << "Please input the character you want the Pawn to be upgraded to : " << endl;
                                 while (cin >> newPiece) {
                                     if (!((newPiece == 'q') || (newPiece == 'r')  || (newPiece == 'n')  || (newPiece == 'n'))) { cout << "Invalid Input. Try Again!"  << endl; continue;}
                                     cb->setupWithChar(newPiece, coordinate2);
@@ -346,7 +408,7 @@ int main() {
     // END OF GAME
     cb->setDisplayScore(true);
     // cout << "Final Score:" << endl;
-    // cout << *(cb);
+    // cout << *(cb); // We not outputting again? 
     cout << endl;
     cout << "Thank you for playing. We hope you enjoyed!" << endl;
     cout << "Make sure to play again!" << endl;
