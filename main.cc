@@ -63,7 +63,6 @@ int main() {
 
     outputRules();
 
-    \
     while (cin >> cmd) {
         // Make a prompt output to get enter game or setup
         // We prompt the user to enter game or setup
@@ -79,40 +78,55 @@ int main() {
         
 
         if(cmd == "game") {
-            //To setup a new game, we take two input playerWhite playerBlack.
-            // They are not players, they are Observers
             // Observer -> Player -> Computer or Human. They are subclasses of Observer
             string player1, player2;
-            cin >> player1 >> player2;
             int level, level2;
-            
-            if(player1 == "human" && player2 == "human") {
+
+            while (cin >> player1 >> player2) {
+                if(player1 == "human" && player2 == "human") {
+
                 playerWhite = make_shared<Human>(1, cb);
-                // cout << "memory address of cb is : " << cb << endl;
-                // cout << "MEMORY ADDRESS: " << playerWhite << endl;
                 playerBlack = make_shared<Human>(0, cb);
                 cb->setupPlayers(playerWhite, playerBlack); // Then players
-            } else if (player1 == "human" && player2.substr(0,8) == "computer" ) {
-                // cout << "here" << endl;
-                level2 = stoi(player2.substr(9, 1));
-                playerWhite = make_shared<Human>(1, cb);
-                playerBlack = make_shared<Computer>(0, cb, level);
-                cb->setupPlayers(playerWhite, playerBlack); // Then players
+                break;
 
-            } else if (player1.substr(0,8) == "computer" && player2 == "human" ) {
-                // cout << "here" << endl;
-                level = stoi(player1.substr(9, 1));
-                playerWhite = make_shared<Computer>(1, cb, level);
-                playerBlack = make_shared<Human>(0, cb);
-                cb->setupPlayers(playerWhite, playerBlack); // Then players
+                } else if (player1 == "human" && player2.substr(0,8) == "computer" ) {
+                    
+                    level2 = stoi(player2.substr(9, 1));
+                    if (!(level2 >= 1 && level2 <= 4)) continue; 
+                    playerWhite = make_shared<Human>(1, cb);
+                    playerBlack = make_shared<Computer>(0, cb, level);
+                    cb->setupPlayers(playerWhite, playerBlack); // Then players
+                    break;
 
-            } else if (player1.substr(0,8) == "computer" && player2.substr(0,8) == "computer" ) {
-                level = stoi(player1.substr(9, 1)); // Not sure if we can use stoi But this should level = the number in the brackets
-                level2 = stoi(player2.substr(9, 1));
-                playerWhite = make_shared<Computer>(1, cb, level);
-                playerBlack = make_shared<Computer>(0, cb, level2);
-                cb->setupPlayers(playerWhite, playerBlack); // Then players
+                } else if (player1.substr(0,8) == "computer" && player2 == "human" ) {
+
+                    level = stoi(player1.substr(9, 1));
+                    if (!(level >= 1 && level <= 4)) continue; 
+                    playerWhite = make_shared<Computer>(1, cb, level);
+                    playerBlack = make_shared<Human>(0, cb);
+                    cb->setupPlayers(playerWhite, playerBlack); // Then players
+                    break;
+
+                } else if (player1.substr(0,8) == "computer" && player2.substr(0,8) == "computer" ) {
+
+                    level = stoi(player1.substr(9, 1)); // Not sure if we can use stoi But this should level = the number in the brackets
+                    level2 = stoi(player2.substr(9, 1));
+                    if (!(level2 >= 1 && level2 <= 4)) continue; 
+                    if (!(level >= 1 && level <= 4)) continue; 
+
+                    playerWhite = make_shared<Computer>(1, cb, level);
+                    playerBlack = make_shared<Computer>(0, cb, level2);
+                    cb->setupPlayers(playerWhite, playerBlack); // Then players
+                    break;
+
+                } 
+                cout << "Invalid Input. Please read the rules again. " << endl;
+                cout << "  - game white-player black-player: Starts a new game. 'white-player' and 'black-player' can be 'human' or 'computer[1-4]'.\n";
+                cin >> cmd;
             }
+            
+            
             if(!usedSetup) cb->defaultBoard(); // In both cases setup board first
             else cb->setUpStartMoves(); 
 
@@ -236,7 +250,7 @@ int main() {
                         // Player2 has to lose
                         cb->forfeit();
                         cout << "Current Score: " << endl;
-                        cout << *(cb); // 
+                        cout << *(cb); 
                         cb->restartGame();
                         break;
 
@@ -255,9 +269,6 @@ int main() {
         } else if (cmd == "setup") {
             string cmd2, coord, colour;
             char piece;
-            // cb->setTurn(true); // Start off with setting up the board to be White
-            // I think we should only display whose turn it actually is in game not seutp
-
             cb->setupTurn(false); // We just want to change the output to White
 
             while(cin >> cmd2) { // NEED TO BE ABLE TO HANDLE INVALID INPUT

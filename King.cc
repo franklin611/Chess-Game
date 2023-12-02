@@ -15,13 +15,19 @@ bool King::getMoved() {
 }
 
 void King::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
+    // My understanding of the board is kinda wonky cuz we made top left 0 0 and white on that row
     Vec moveUp = Vec{coordinate.getX(), coordinate.getY() - 1};
     Vec moveLeft = Vec{coordinate.getX() - 1, coordinate.getY()};
     Vec moveRight = Vec{coordinate.getX() + 1, coordinate.getY()};
     Vec moveDown = Vec{coordinate.getX(), coordinate.getY() + 1};
+    Vec topDiagonalLeft = Vec{coordinate.getX() - 1, coordinate.getY() - 1};
+    Vec topDiagonalRight = Vec{coordinate.getX() + 1, coordinate.getY() - 1};
+    Vec bottomDiagonalLeft = Vec{coordinate.getX() - 1 , coordinate.getY() + 1};
+    Vec bottomDiagonalRight = Vec{coordinate.getX() + 1, coordinate.getY() + 1};
 
     Vec castleLeft = Vec{coordinate.getX() - 2, coordinate.getY()};
     Vec castleRight = Vec{coordinate.getX() + 3, coordinate.getY()};
+
 
     // Consider two cases of "Left" for White and Black
     // Check image in Discord
@@ -73,6 +79,22 @@ void King::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     p = pieceAt(gb, moveDown);
     if (inBounds(moveDown) && (isEmptyPiece(p) || (p->getTeam() != getTeam()))) {
         possibleMoves.push_back(moveDown);
+    }
+    p = pieceAt(gb, topDiagonalLeft);
+    if (inBounds(topDiagonalLeft) && (isEmptyPiece(p) || (p->getTeam() != getTeam()))) {
+        possibleMoves.push_back(topDiagonalLeft);
+    }
+    p = pieceAt(gb, topDiagonalRight);
+    if (inBounds(topDiagonalRight) && (isEmptyPiece(p) || (p->getTeam() != getTeam()))) {
+        possibleMoves.push_back(topDiagonalRight);
+    }
+    p = pieceAt(gb, bottomDiagonalLeft);
+    if (inBounds(bottomDiagonalLeft) && (isEmptyPiece(p) || (p->getTeam() != getTeam()))) {
+        possibleMoves.push_back(bottomDiagonalLeft);
+    }
+    p = pieceAt(gb, bottomDiagonalRight);
+    if (inBounds(bottomDiagonalRight) && (isEmptyPiece(p) || (p->getTeam() != getTeam()))) {
+        possibleMoves.push_back(bottomDiagonalRight);
     }
     // Left Castle
     // THis is how a castle movehappens
