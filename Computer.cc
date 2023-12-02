@@ -28,7 +28,7 @@ Computer::Computer(bool colour, shared_ptr<ChessBoardObserver> cb, int userLevel
 Vec Computer::makeComputerMove(int userLevel) {
     
     for (vector<Vec> move : legalMoves) {
-        cout << "legalMoves Move: " <<  move[0] << " to " << move[1]  << endl;
+        // cout << "legalMoves Move: " <<  move[0] << " to " << move[1]  << endl;
     }
     for (vector<Vec> move : captureMoves) {
         cout << "Capture Move: " <<  move[0] << " to " << move[1]  << endl;

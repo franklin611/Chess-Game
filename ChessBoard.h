@@ -92,7 +92,7 @@ class ChessBoard: public ChessBoardObserver {
         // change the gameboard based on validated move
         void notify(Vec start, Vec end) override;
 
-        bool testMove(Vec start, Vec end);
+        bool testMove(Vec start, Vec end, bool notify);
 
         void isAvoidCaptureMove(Vec start, Vec end, vector<vector<shared_ptr<Piece>>> ob);
         void isCaptureMove(Vec start, Vec end, vector<vector<shared_ptr<Piece>>> ob);

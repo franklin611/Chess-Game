@@ -100,7 +100,7 @@ void ChessBoard::setUpStartMoves(){
             Vec v = p->getCoordinate();
             vector<Vec> moves = p->returnPossibleMoves();
             for (Vec end : moves) {
-                    if (testMove(v, end)){ 
+                    if (testMove(v, end, true)){ 
                         if(p->getTeam() != turn) { // sets up the next turn 
                             isEnd = false;
                         } else {
@@ -493,13 +493,11 @@ void ChessBoard::notify(Vec start, Vec end){
             for (Vec move : moves){
                 // cout << "START: " << v << endl;
                 // cout << "TEST MOVE" << move << endl;
-                if (testMove(v, move)){ 
-                    if (p->getTeam() != turn){
-                        isEnd = false;
-                    } else {
-                        legalMoves.push_back(move); 
-                    }
-                };
+                if (p->getTeam() != turn && testMove(v, move, true)){
+                    isEnd = false;
+                } else if (p->getTeam() == turn && testMove(v, move, false)){
+                    legalMoves.push_back(move); 
+                }
             }
         }
     }
@@ -543,7 +541,7 @@ void ChessBoard::endGame() {
 
 
 // DONE
-bool ChessBoard::testMove(Vec start, Vec end){
+bool ChessBoard::testMove(Vec start, Vec end, bool notify){
 
     vector<vector<shared_ptr<Piece>>> boardCopy;
 
@@ -609,13 +607,17 @@ bool ChessBoard::testMove(Vec start, Vec end){
     // cout << bKing << endl;
     bool legal = false;
 
+    bool team = false; 
+    if (getPiece(end)->getType() >= 'A' && getPiece(end)->getType() <= 'Z'){ team = true; }
+
     // we decide its legal -> notify player
-    if (!check){
-        if (!turn){ 
+    if (!check && notify){
+        if (team){ 
+            cout << "NOTIFY WHITE: "<< endl;
             playerWhite->notifyLM(start, end); 
         } // if the next turn (opponent is white)
         else { 
-            // cout << "BLACK" << endl;
+            cout << "NOTIFY BLACK" << endl;
             playerBlack->notifyLM(start, end); 
         }
         isCaptureMove(start, end, boardCopy);
@@ -920,7 +922,7 @@ void ChessBoard::defaultBoard() {
                     // cout << v.getX() << ' ' << v.getY() << endl;
                     // v = p->getCoordinate();
                     // cout << "COORDINATE SECOND: " << v << endl;
-                    testMove(v, end);
+                    testMove(v, end, true);
 
                     // v = p->getCoordinate();
                     // cout << "COORDINATE THIRD: " << v << endl;
@@ -956,7 +958,7 @@ void ChessBoard::setTurn(bool turn) {
             Vec v = p->getCoordinate();
             vector<Vec> moves = p->returnPossibleMoves();
             for (Vec move : moves){
-                if (testMove(v, move)){ isEnd = false; };
+                if (testMove(v, move, true)){ isEnd = false; };
             }
         }
     }
