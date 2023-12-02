@@ -21,6 +21,7 @@ void Game::updateBlack(bool half) {
 }
 
 ostream &operator<<(ostream &out, const Game &g) {
-    out << "Final Score:" << endl << "White: " << g.whiteScore << endl << "Black: " << g.blackScore;
+    // out << "Final Score:" << endl << "White: " << g.whiteScore << endl << "Black: " << g.blackScore;
+    out << "White: " << g.whiteScore << endl << "Black: " << g.blackScore;
     return out;
 }

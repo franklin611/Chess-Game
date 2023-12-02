@@ -45,7 +45,7 @@ bool ChessBoard::boardIsValid() {
             }
         }
     }
-    
+
     if (!oneBlack || !oneWhite) return false;
     // If either white (true) or black (false) are in check, not a valid board
     if (isCheck(true) || isCheck(false)) return false;
@@ -917,8 +917,9 @@ void ChessBoard::setDisplayScore(bool b) {
 }
 
 ostream& operator<<(ostream& out, const ChessBoard& cb) {
+    if (cb.displayScore) out << cb.game << "\n" << endl;
+    // I SWTICHED IT AROUND HELEN 7;33 DEC 1
     out << *(cb.td) << endl;
-    if (cb.displayScore) out << cb.game << endl;
     return out;
 }
 
