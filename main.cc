@@ -312,8 +312,6 @@ int main() {
                     
                     if(cb->boardIsValid()) {
                         usedSetup = true;
-                        cout << *(cb);
-                        cout << " do we enter here??? " << endl;
                         break; // Only case where we break
                         // Now a flag has been raised telling the main that the game has been setup with a gameboard.
                     }
