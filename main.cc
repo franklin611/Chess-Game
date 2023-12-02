@@ -122,7 +122,7 @@ int main() {
 
                 } 
                 cout << "Invalid Input. Please read the rules again. " << endl;
-                cout << "  - game white-player black-player: Starts a new game. 'white-player' and 'black-player' can be 'human' or 'computer[1-4]'.\n";
+                cout << "  - game white-player black-player: Starts a new game. 'white-player' and 'black-player' can be 'human' or 'computer[1-4]'" << endl;
                 cin >> cmd;
             }
             
