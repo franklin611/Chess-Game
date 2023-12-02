@@ -341,13 +341,13 @@ int main() {
             cout << "Invalid Input, try Again" << endl;
 
         }
-
         cout << "To get started with a match, enter game or setup." << endl;
     }
     // END OF GAME
     cb->setDisplayScore(true);
-    cout << "Final Score:" << endl;
-    cout << *(cb);
+    // cout << "Final Score:" << endl;
+    // cout << *(cb);
+    cout << endl;
     cout << "Thank you for playing. We hope you enjoyed!" << endl;
     cout << "Make sure to play again!" << endl;
     return 0;

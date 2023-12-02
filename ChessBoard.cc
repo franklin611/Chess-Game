@@ -615,7 +615,7 @@ bool ChessBoard::testMove(Vec start, Vec end){
             playerWhite->notifyLM(start, end); 
         } // if the next turn (opponent is white)
         else { 
-            cout << "BLACK" << endl;
+            // cout << "BLACK" << endl;
             playerBlack->notifyLM(start, end); 
         }
         isCaptureMove(start, end, boardCopy);
@@ -977,9 +977,11 @@ void ChessBoard::setDisplayScore(bool b) {
 }
 
 ostream& operator<<(ostream& out, const ChessBoard& cb) {
-    if (cb.displayScore) out << cb.game << "\n" << endl;
-    // I SWTICHED IT AROUND HELEN 7;33 DEC 1
-    else { out << *(cb.td) << endl;}
+    out << *(cb.td) << endl;
+    if (cb.displayScore) {
+        out << "GAME ENDED! SCORE: " << endl;
+        out << cb.game << "\n" << endl;
+    }
     return out;
 }
 
