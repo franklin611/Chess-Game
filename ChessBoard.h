@@ -40,6 +40,12 @@ class ChessBoard: public ChessBoardObserver {
     // one for td pointer
     public:
 
+        void validCheck(vector<Vec> legalMoves);
+
+        Vec getBKing();
+
+        Vec getWKing();
+
         string checkString();
 
         void setUpStartMoves();

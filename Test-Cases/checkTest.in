@@ -1,0 +1,8 @@
+setup
++ K e3
++ k e5
++ P f3
+done
+game human human
+move f3 f4
+move e5 e4

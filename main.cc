@@ -287,6 +287,8 @@ int main() {
                         // I should not be breaking. I should be in the while loop waiting for commands
                     } else {
                         if(piece == 'k') cb->setBlackKing(coordinate);
+                        // Vec black = cb->getBKing();
+                        // cout << "BLACK KING: " << black << endl;
                         if(piece == 'K') cb->setWhiteKing(coordinate);
                         cb->setupWithChar(piece, coordinate);
                         cout << *(cb);

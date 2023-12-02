@@ -19,10 +19,10 @@ TextDisplay::TextDisplay() {
 
 void TextDisplay::notifyMoves(Vec start, char typeStart, Vec end, char typeEnd, string check) { // notify should be only printing the moves
     str_check = check;
+    // cout << "CHECK STRING: " << check << endl; 
     // change thedisplay's character at start, change thedisplay's character at end
     theDisplay[start.getY()][start.getX()] = typeStart;
     theDisplay[end.getY()][end.getX()] = typeEnd;
-    // TODO: if grid is fucked up then switch getX and getY
 }
 
 void TextDisplay::notify(Vec start, char typeStart) {
@@ -47,7 +47,8 @@ ostream &operator<<(ostream &out, const TextDisplay &td) {
     }
     out << endl;
     out << "  abcdefgh" << endl;
-    if (td.str_check.size() > 1) {out << td.str_check << "is in check." << endl;} // empty string is true, so if not empty string output
+    out << endl;
+    if (td.str_check.length() > 0) out << td.str_check << " is in check." << endl; // empty string is true, so if not empty string output
     out << "It's " << td.colour << "'s turn" << endl;
     out << "---------------------" << endl;
     return out;

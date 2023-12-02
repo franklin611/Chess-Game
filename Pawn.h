@@ -12,8 +12,8 @@ class Pawn : public Piece {
 		Pawn(const Pawn& other);
 		Pawn(Vec coordinate, char type, bool white);
 		void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) override;
-		bool canPassantRight(vector<vector<shared_ptr<Piece>>> gb);
-		bool canPassantLeft(vector<vector<shared_ptr<Piece>>> gb);
+		bool canPassantRight(vector<vector<shared_ptr<Piece>>> gb, Vec passantRight);
+		bool canPassantLeft(vector<vector<shared_ptr<Piece>>> gb, Vec passantLeft);
 		bool getMovedTwo();
 		bool getMoved();
 		void hasMovedTwo();

@@ -62,21 +62,25 @@ void Pawn::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
 	if (inBounds(twoStep) && isEmptyPiece(p) && !moved){
 		possibleMoves.push_back(twoStep);
 	} 
-	if (inBounds(CaptureLeft)&& inBounds(passantLeft) && canPassantLeft(gb)){
+
+
+
+	if (inBounds(CaptureLeft)&& inBounds(passantLeft) && canPassantLeft(gb, passantLeft)){
 		possibleMoves.push_back(CaptureLeft);
 	}
-	// cout << "passant 1" << endl;
-	if (inBounds(CaptureRight) && inBounds(passantRight) && canPassantRight(gb)){
+	if (inBounds(CaptureRight) && inBounds(passantRight) && canPassantRight(gb, passantRight)){
 		possibleMoves.push_back(CaptureRight);
 	}
 }
 // MAKE SURE THE PIECE DOESNT GO OUTSIDE THE BOARD LIMIT
 // make sure you check there is actually a piece to capture 
 
-bool Pawn::canPassantRight(vector<vector<shared_ptr<Piece>>> gb) {
-	Vec passantRight;
-	if (getTeam()) passantRight = Vec(coordinate.getX() - 1, coordinate.getY());
-	else passantRight = Vec(coordinate.getX() + 1, coordinate.getY());
+// bool Pawn::canPassantRight(vector<vector<shared_ptr<Piece>>> gb) {
+// 	Vec passantRight;
+	
+// }
+
+bool Pawn::canPassantRight(vector<vector<shared_ptr<Piece>>> gb, Vec passantRight) {
 	if (!inBounds(passantRight)) { return false; }
 	if (getTeam() && coordinate.getY() == 4 && pawnMovedTwo(gb, passantRight, !this->getTeam())){
 		return true;
@@ -87,28 +91,8 @@ bool Pawn::canPassantRight(vector<vector<shared_ptr<Piece>>> gb) {
 	}
 }
 
-// bool Pawn::canPassantRight(vector<vector<shared_ptr<Piece>>> gb) {
-// 	Vec passantRight;
-// 	if (getTeam()) passantRight = Vec(coordinate.getX() - 1, coordinate.getY());
-// 	else passantRight = Vec(coordinate.getX() + 1, coordinate.getY());
-// 	if (!inBounds(passantRight)) { return false; }
-// 	if (getTeam() && coordinate.getY() == 4 && pawnMovedTwo(gb, passantRight, !this->getTeam())){
-// 		return true;
-// 	} else if(!this->getTeam() && coordinate.getY() == 3 && pawnMovedTwo(gb, passantRight, this->getTeam())) {
-// 		return true;
-// 	} else {
-// 		return false; 
-// 	}
-// }
-
-bool Pawn::canPassantLeft(vector<vector<shared_ptr<Piece>>> gb) {
-	// cout << "enter enPassantLeft" << endl;
-	Vec passantLeft;
-	if (getTeam()) passantLeft = Vec(coordinate.getX() + 1, coordinate.getY());
-	else passantLeft = Vec(coordinate.getX() - 1, coordinate.getY());
-
+bool Pawn::canPassantLeft(vector<vector<shared_ptr<Piece>>> gb, Vec passantLeft) {
 	if (!inBounds(passantLeft)) { return false; }
-
 	if (getTeam() && coordinate.getY() == 4 && pawnMovedTwo(gb, passantLeft, !this->getTeam())){
 		return true;
 	} else if(!this->getTeam() && coordinate.getY() == 3 && pawnMovedTwo(gb, passantLeft, this->getTeam())) { // We pass true
@@ -125,15 +109,13 @@ bool Pawn::canPassantLeft(vector<vector<shared_ptr<Piece>>> gb) {
 // White corresponds to what team is attempting/checking if it can do an en passant
 bool Pawn::pawnMovedTwo(vector<vector<shared_ptr<Piece>>> gb, Vec coordinate, bool white) {
 	shared_ptr<Piece> p = pieceAt(gb, coordinate);
-	// cout << "PAWN MOVED TWO: " << coordinate << endl;
+	//cout << "PAWN MOVED TWO: " << coordinate << endl;
 	shared_ptr<Pawn> pawn;
 
 	if (p->getType() == 'P' || p->getType() == 'p'){ 
 		pawn = dynamic_pointer_cast<Pawn>(p); 
 	} else return false;
-
-
-	if(((white && type == 'p') || (!white && type == 'P')) && pawn->getMovedTwo()) {
+	if(((white && pawn->getType() == 'P') || (!white && pawn->getType() == 'p')) && pawn->getMovedTwo()) {
 		return true;
 	}
 	return false;
