@@ -28,19 +28,19 @@ Computer::Computer(bool colour, shared_ptr<ChessBoardObserver> cb, int userLevel
 Vec Computer::makeComputerMove(int userLevel) {
     
     for (vector<Vec> move : legalMoves) {
-        cout << "legalMoves Move: " <<  move[0] << ' to ' << move[1]  << endl;
+        cout << "legalMoves Move: " <<  move[0] << " to " << move[1]  << endl;
     }
     for (vector<Vec> move : captureMoves) {
-        cout << "Capture Move: " <<  move[0] << ' to ' << move[1]  << endl;
+        cout << "Capture Move: " <<  move[0] << " to " << move[1]  << endl;
     }
     for (vector<Vec> move : checkMoves) {
-        cout << "checkMoves Move: " <<  move[0] << ' to ' << move[1]  << endl;
+        cout << "checkMoves Move: " <<  move[0] << " to " << move[1]  << endl;
     }
     for (vector<Vec> move : checkMateMoves) {
-        cout << "checkMateMoves Move: " <<  move[0] << ' to ' << move[1]  << endl;
+        cout << "checkMateMoves Move: " <<  move[0] << " to " << move[1]  << endl;
     }
     for (vector<Vec> move : avoidCaptureMoves) {
-        cout << "avoidCaptureMoves Move: " <<  move[0] << ' ' << move[1]  << endl;
+        cout << "avoidCaptureMoves Move: " <<  move[0] << " to "  << move[1]  << endl;
     }
 
     vector<vector<Vec>> levelsMoves = level->createMoves(legalMoves, captureMoves, checkMoves, checkMateMoves, avoidCaptureMoves);
@@ -52,6 +52,11 @@ Vec Computer::makeComputerMove(int userLevel) {
         // cout << "level Moves size: " << levelsMoves.size() << endl;
         // cout << "selected move: " << selectedMove[0] << selectedMove[1] << endl;
         cb->notify(selectedMove[0], selectedMove[1]);
+
+        captureMoves.clear();
+        checkMoves.clear(); // WIP
+        checkMateMoves.clear(); // WIP
+        avoidCaptureMoves.clear();
         legalMoves.clear();
         return selectedMove[1];
     } else {
@@ -59,6 +64,10 @@ Vec Computer::makeComputerMove(int userLevel) {
         cb->notify(onlyLegalMove[0], onlyLegalMove[1]);
         // cout << "legal Moves size: " << legalMoves.size() << endl;
         // cout << "selected move: " << onlyLegalMove[0] << onlyLegalMove[1] << endl;
+        captureMoves.clear();
+        checkMoves.clear();
+        checkMateMoves.clear();
+        avoidCaptureMoves.clear();
         legalMoves.clear();
         return onlyLegalMove[1];
     }

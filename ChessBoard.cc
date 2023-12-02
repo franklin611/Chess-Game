@@ -143,7 +143,7 @@ void ChessBoard::replacePiece(Vec coordinate, shared_ptr<Piece> replacement){
 bool ChessBoard::isThere(Vec coordinate, bool white, vector<vector<shared_ptr<Piece>>> board){
 	for (vector<shared_ptr<Piece>> vec : board){
 		for (shared_ptr<Piece> p : vec){
-			if ((p->getType() != ' ' || p->getType() != '_') && p->getCoordinate() == coordinate && p->getTeam() == white){ return true; }
+			if ((p->getType() != ' ' && p->getType() != '_') && p->getCoordinate() == coordinate && p->getTeam() == white){ return true; }
 		}
 	}
 	return false;
@@ -529,6 +529,7 @@ bool ChessBoard::testMove(Vec start, Vec end){
 
     // we decide its legal -> notify player
     if (!check){
+        
         if (!turn){ 
             playerWhite->notifyLM(start, end); 
         } // if the next turn (opponent is white)
