@@ -453,11 +453,11 @@ string ChessBoard::checkString(){
 // DONE
 void ChessBoard::endGame() {
     if (turn) {
-        if (wCheck) { game.updateWhite(false); }
-        else { game.updateWhite(true); }
+        if (wCheck) { game.updateWhite(true); }
+        else { game.updateWhite(false); }
     } else {
-        if (bCheck) { game.updateBlack(false); }
-        else { game.updateBlack(true); }
+        if (bCheck) { game.updateBlack(true); }
+        else { game.updateBlack(false); }
     }
 }
 
