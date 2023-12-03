@@ -26,6 +26,16 @@ int convertToInt(char c) {
 
 // }
 
+bool validPlayer(const string& player) {
+    if (player == "human") return true;
+    if (player.length() == 1 && player.substr(0, 8) == "computer") {
+        int level = player[9] - '0';  // Convert character to integer
+        return level >= 1 && level <= 4;
+    }
+    return false;
+}
+
+
 void outputRules() {
     string art =
     "+----------------------------------------------------+\n"
@@ -88,20 +98,23 @@ int main() {
             string player1, player2;
             int level, level2;
 
-
-
+            // Can now handle invalid input from the user
             while (cin >> player1 >> player2) {
                 int length1 = player1.length();
                 int length2 = player2.length();
 
-                if (!((length1 == 5 || length1 == 11) && (length2 == 5 || length2 == 11))) {cout << "bad " << endl; continue;}
+                if (!(validPlayer(player1) || validPlayer(player2))) {
+                    cout << "Invalid Input. Please read the rules again. " << endl;
+                    cout << "  - game white-player black-player: Starts a new game. 'white-player' and 'black-player' can be 'human' or 'computer[1-4]'" << endl;
+                    cin >> cmd;
+                    continue;
+                } 
+                else if (player1 == "human" && player2 == "human") {
 
-                else if(player1 == "human" && player2 == "human") {
-
-                playerWhite = make_shared<Human>(1, cb);
-                playerBlack = make_shared<Human>(0, cb);
-                cb->setupPlayers(playerWhite, playerBlack); // Then players
-                break;
+                    playerWhite = make_shared<Human>(1, cb);
+                    playerBlack = make_shared<Human>(0, cb);
+                    cb->setupPlayers(playerWhite, playerBlack); // Then players
+                    break;
 
                 } else if (player1 == "human" && player2.substr(0,8) == "computer" ) {
 
@@ -156,10 +169,12 @@ int main() {
                     cb->setupPlayers(playerWhite, playerBlack); // Then players
                     break;
 
-                } 
-                cout << "Invalid Input. Please read the rules again. " << endl;
-                cout << "  - game white-player black-player: Starts a new game. 'white-player' and 'black-player' can be 'human' or 'computer[1-4]'" << endl;
-                cin >> cmd;
+                } else {
+                    cout << "Invalid Input. Please read the rules again. " << endl;
+                    cout << "  - game white-player black-player: Starts a new game. 'white-player' and 'black-player' can be 'human' or 'computer[1-4]'" << endl;
+                    cin >> cmd;
+                }
+                
             }
             
             
@@ -168,6 +183,7 @@ int main() {
 
             string cmd2;
             cout << *(cb);
+
             while(cin >> cmd2) {
                 if(!cb->getTurn()) { //If passes means playerWhite turn. Remember, everything is negated. 
                     if (cmd2 == "move" && player1 == "human") {
@@ -178,6 +194,11 @@ int main() {
                         try {
                             int y = stoi(start.substr(1));
                             int x = convertToInt(start.substr(0,1)[0]);
+                            int x2 = convertToInt(end.substr(0,1)[0]);
+                            int y2 = stoi(end.substr(1));
+                            if (!(x >= 0 && x <= 7 && y >= 1 && y <= 8 && x2 >= 0 && x2 <= 7 && y2 >= 1 && y2 <= 8)) {
+                                throw invalid_argument("Invalid coordinates");
+                            }
                         } catch (...) {
                             cout << "Invalid input. Please enter valid coordinates." << endl;
                             continue;
@@ -201,7 +222,7 @@ int main() {
                         if(humanWhite->makeHumanMove(coordinate1, coordinate2)) {
 
                             // Valid Move
-                            if(cb->upgradePawn(coordinate2)) { // CURRENT ISSUE 5:47 PM
+                            if(cb->upgradePawn(coordinate2)) { 
                                 char newPiece;
                                 cout << "Please input the character you wnat the Pawn to be upgraded to : " << endl;
                                 while (cin >> newPiece) {
@@ -209,10 +230,8 @@ int main() {
                                     cb->setupWithChar(newPiece, coordinate2);
                                     break;
                                 }
-                            } else cin.ignore();
-                            // cin.ignore(std::numeric_limits<std::streamsize>::max()); // ChatGPT suggested
-                            // Ignore the single next character input by the user. (Cuz we can't assume just one character)
-                            // cout << *(cb);
+                            } else cin.ignore(80, '\n');
+
 
                         } else {
 
@@ -222,7 +241,6 @@ int main() {
                     } else if(cmd2 == "move" && player1.substr(0,8) == "computer") {
                         // Make Computer Move
 
-                        cout << "Human Computer White" << endl;
                         shared_ptr<Computer>  computerWhite = dynamic_pointer_cast<Computer>(cb->getPlayerWhite());
                         int level = computerWhite->getLevel();
 
@@ -256,15 +274,21 @@ int main() {
                         string start, end;
                         cin >> start >> end;
 
-                         try {
+                        try {
                             int y = stoi(start.substr(1));
                             int x = convertToInt(start.substr(0,1)[0]);
+
+                            int x2 = convertToInt(end.substr(0,1)[0]);
+                            int y2 = stoi(end.substr(1));
+                        
+                            if (!(x >= 0 && x <= 7 && y >= 1 && y <= 8 && x2 >= 0 && x2 <= 7 && y2 >= 1 && y2 <= 8)) {
+                                throw invalid_argument("Invalid coordinates");
+                            }
                         } catch (...) {
                             cout << "Invalid input. Please enter valid coordinates." << endl;
                             continue;
                         }
                           
-
                         int x = convertToInt(start.substr(0,1)[0]);
                         int y = stoi(start.substr(1));
                         Vec coordinate1 = Vec{x, y - 1};
@@ -272,8 +296,8 @@ int main() {
                         int x2 = convertToInt(end.substr(0,1)[0]);
                         int y2 = stoi(end.substr(1));
 
-                        if(!(x >= 0 && x <= 7 && y>= 1 && y <= 8 && x2 >= 0 && x2 <= 7 && y2 >= 1 && y2 <= 8)) 
-                        {cout << "Invalid coordinates. Please input a location on the board." << endl; continue;}
+                        // if(!(x >= 0 && x <= 7 && y>= 1 && y <= 8 && x2 >= 0 && x2 <= 7 && y2 >= 1 && y2 <= 8)) 
+                        // {cout << "Invalid coordinates. Please input a location on the board." << endl; continue;}
 
                         Vec coordinate2 = Vec{x2, y2 - 1}; // Start at row 0
                         
@@ -288,7 +312,7 @@ int main() {
                                     if (!((newPiece == 'q') || (newPiece == 'r')  || (newPiece == 'n')  || (newPiece == 'n'))) { cout << "Invalid Input. Try Again!"  << endl; continue;}
                                     cb->setupWithChar(newPiece, coordinate2);
                                 }  
-                            } else cin.ignore();
+                            } else cin.ignore(80, '\n');
    
 
                         } else {
@@ -299,7 +323,6 @@ int main() {
 
                     } else if (cmd2 == "move" && player2.substr(0,8) == "computer") {
 
-                        cout << "Human Computer Black" << endl;
                         shared_ptr<Computer> computerBlack = dynamic_pointer_cast<Computer>(cb->getPlayerBlack());
                         int level = computerBlack->getLevel();
                         Vec end = computerBlack->makeComputerMove(level);
@@ -333,40 +356,74 @@ int main() {
             char piece;
             cb->setupTurn(false); // We just want to change the output to White
 
-            while(cin >> cmd2) { // NEED TO BE ABLE TO HANDLE INVALID INPUT
+            while(cin >> cmd2) { 
                 
                 if(cmd2 == "+") {
 
                     cin >> piece >> coord;
+
+                    try {
+                        int x = convertToInt(coord.substr(0,1)[0]);
+                        int y = stoi(coord.substr(1));
+
+                        if ((!(x >=0 && x <=7) || !(y <= 8 && y >= 1)) || !(piece == 'k' || piece == 'K' || piece == 'q' || piece == 'Q' ||
+                            piece == 'b' || piece == 'B' || piece == 'n' || piece == 'N' ||
+                            piece == 'r' || piece == 'R' || piece == 'p' || piece == 'P')) {
+                            throw invalid_argument("Invalid coordinates");
+                        }
+                    } catch (...) {
+                        cout << "Invalid input. Please enter valid coordinates." << endl;
+                        continue;
+                    }
+
                     int x = convertToInt(coord.substr(0,1)[0]);
                     int y = stoi(coord.substr(1));
                     Vec coordinate = Vec{x, y- 1};
+
+
                     // Need to also check that the char was a proper input TODO
-                    if ((!(x >=0 && x <=7) || !(y <= 8 && y >= 1)) || !(piece == 'k' || piece == 'K' || piece == 'q' || piece == 'Q' ||
-                        piece == 'b' || piece == 'B' || piece == 'n' || piece == 'N' ||
-                        piece == 'r' || piece == 'R' || piece == 'p' || piece == 'P')) {
-                        cout << "Invalid Input. Input a Command Again." << endl;
-                        // I should not be breaking. I should be in the while loop waiting for commands
-                    } else {
+                    // if ((!(x >=0 && x <=7) || !(y <= 8 && y >= 1)) || !(piece == 'k' || piece == 'K' || piece == 'q' || piece == 'Q' ||
+                    //     piece == 'b' || piece == 'B' || piece == 'n' || piece == 'N' ||
+                    //     piece == 'r' || piece == 'R' || piece == 'p' || piece == 'P')) {
+                    //     cout << "Invalid Input. Input a Command Again." << endl;
+                    //     // I should not be breaking. I should be in the while loop waiting for commands
+                    // } else {
                         if(piece == 'k') cb->setBlackKing(coordinate);
                         // Vec black = cb->getBKing();
                         // cout << "BLACK KING: " << black << endl;
                         if(piece == 'K') cb->setWhiteKing(coordinate);
                         cb->setupWithChar(piece, coordinate);
                         cout << *(cb);
-                    }
+                    // }
 
                     
         
                 } else if (cmd2 == "-") {
 
                     cin >> coord;
+
+                    try {
+                        int x = convertToInt(coord.substr(0,1)[0]);
+                        int y = stoi(coord.substr(1));
+
+                         if ((!(x >=0 && x <=7) || !(y <= 8 && y >= 1))) {
+                            throw invalid_argument("Invalid coordinates");
+                        }
+                    } catch (...) {
+                        cout << "Invalid input. Please enter valid coordinates." << endl;
+                        continue;
+                    }
+
+
                     int x = convertToInt(coord.substr(0,1)[0]);
                     int y = stoi(coord.substr(1));
                     // Remove a piece on a board by placing an empty piece on that coordinate
                     Vec coordinate = Vec{x, y - 1}; // We have to minus one because we are 0-7
-                    if ((!(x >=0 && x <=7) || !(y <= 8 && y >= 1))) { cout << "Invalid Input. Input a Command Again." << endl; }
-                    else { cb->setupWithPiece(cb->getEmptyPiece(coordinate), coordinate); cout << *(cb);}
+                    // if ((!(x >=0 && x <=7) || !(y <= 8 && y >= 1))) { cout << "Invalid Input. Input a Command Again." << endl; }
+                    // else { 
+                        cb->setupWithPiece(cb->getEmptyPiece(coordinate), coordinate);
+                        cout << *(cb);
+                        // }
 
                 } else if (cmd2 == "=") {
                     // From my understanding, "makes it colors turn to go next" means when the game start, it is their turn
@@ -396,7 +453,6 @@ int main() {
                     break;
                 }
                 
-
             }
         } else { // Invalid Input
 
