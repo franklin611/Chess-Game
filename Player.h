@@ -32,7 +32,7 @@ class Player : public Observer {
         virtual void notifyACM(Vec start, Vec end) override;
 
         // don't need a notifyChessboard or anything because we are calling chessboard's notify inside chooseHumanMove/chooseComputerMove
-        ~Player() = default;
+        virtual ~Player() = default;
         // vector<vector<Vec>> getLegalMoves(); // TODO: think dont need this
         // virtual shared_ptr<Player> clone() const = 0;
 };
