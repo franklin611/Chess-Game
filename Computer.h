@@ -3,18 +3,26 @@
 
 #include "Player.h"
 #include "Level.h"
+#include <random>
+using namespace std;
 
 class Computer : public Player {
     protected:
+    // level of the player 
     int userLevel;
+    // facilitates what moves a player should prioritize 
     unique_ptr<Level> level = nullptr;
     public:
-        // Computer(bool colour, unique_ptr<ChessBoardObserver> cb, int userLevel); // This was original
+        // computer constructor 
         Computer(bool colour, shared_ptr<ChessBoardObserver> cb, int userLevel);
+        // selects a move based on the level 
+        // ISSUE: why are we feeding it a level when it has access to its own level? 
         Vec makeComputerMove(int userLevel);
+        // ISSUE: does this need to be a member function? 
+        // selects a random move 
         vector<Vec> selectRandomMove(vector<vector<Vec>> &vectors);
+        // returns the level of the computer player 
         int getLevel();
-        // shared_ptr<Player> clone() const override; // Franklin changes dont worry
 };
 
 #endif

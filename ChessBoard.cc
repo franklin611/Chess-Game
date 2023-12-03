@@ -1,36 +1,14 @@
 #include "ChessBoard.h"
-#include "Pawn.h"
-#include "King.h"
-#include "Queen.h"
-#include "Rook.h"
-#include "Knight.h"
-#include "Bishop.h"
-#include "Empty.h"
-#include "Game.h"
-#include <utility>
-#include "Vec.h"
-
 #include "TextDisplay.h"
-#include "GraphicsDisplay.h" // We call their notify
-#include "Observer.h"
+#include "GraphicsDisplay.h" 
 using namespace std;
 
-Vec ChessBoard::getBKing(){ return bKing; }
-Vec ChessBoard::getWKing(){ return wKing; }
-
-// DONE
+// ISSUE: verify the board checks if there are no BLACK pawns on the first row and no WHITE pawns on the last row 
+// checks if there exists one white king, one back king, no black pawns on the first row, no white pawns on the last row
+// and neither king is in check 
 bool ChessBoard::boardIsValid() {
-    // One White KIng - good
-    // One Black King - good
-    // No Pawns on the First Row (Row 0)   -good
-    // No Pawns on the Last Row (Row 7) - good
-    // Neither king is inCheck
     bool oneBlack = false;
     bool oneWhite = false;
-
-    // int rowSize = eb.size();
-    // int colSize = eb[1].size();
-
 
 	for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
@@ -49,10 +27,12 @@ bool ChessBoard::boardIsValid() {
         }
     }
 
+    // if there are only white or only black pieces return false 
     if (!oneBlack || !oneWhite) return false;
+
+    // ISSUE: THIS IS CHECK FUNCTION ISNT TOTALLY RIGHT 
     // If either white (true) or black (false) are in check, not a valid board
     if (isCheck(true) || isCheck(false)) return false;
-
 
     // Checks for Pawns on the first row
 	for (shared_ptr<Piece> p : gb[0]){
@@ -62,46 +42,35 @@ bool ChessBoard::boardIsValid() {
     for (shared_ptr<Piece> p : gb[7]){
         if(p->getType() == 'p' || p->getType() == 'P') return false;
     }
-    // After board is determined to be valid
-    // We shouldnt be running over this because we dont have any player to notify
-	// for (vector<shared_ptr<Piece>> vec : gb) {
-	// 	for (shared_ptr<Piece> p : vec) {
-    //         cout << "do we get here in for loop" << endl;
-    //         // cout << p->getType() << endl;
-    //         if (p == nullptr) break;
-    //         if(p->getTeam() == turn) {
-    //             p->getPossibleMoves(gb);
-    //             Vec v = p->getCoordinate();
-    //             vector<Vec> moves = p->returnPossibleMoves();
-    //             for (Vec end : moves) {
-    //                 testMove(v, end);
-    //             }
-    //         } // Sets up that piece'possible moves
-    //     }
-    // }
-    // turn = !turn;
+  
     td->notify(turn);
-    // cout << "do we get here final" << endl;
-
-    // confirm with franklin this logic works
+    
     return true;
 }
 
+// decides the starting legal moves when a user calls setup
 void ChessBoard::setUpStartMoves(){
+    // assume the game has ended unless the starting turn has legal moves 
     bool isEnd = true;
+
+    // keep track of legal moves 
     vector<Vec> legalMoves;
+
+    // decide the starting turn's legal moves 
     for (vector<shared_ptr<Piece>> vec : gb) {
 		for (shared_ptr<Piece> p : vec) {
-            // cout << "do we get here in for loop" << endl;
-            // cout << p->getType() << endl;
-            // if (p == nullptr) break;
-            if (p->getType() == ' ' || p->getType() == '_' || p == nullptr){ continue; }
+            if (p->getType() == ' ' || p->getType() == '_' || 
+            
+            // ISSUE: WE SHOULDN'T NEED THIS LINE 
+            p == nullptr
+            
+            ){ continue; }
             p->getPossibleMoves(gb);
             Vec v = p->getCoordinate();
             vector<Vec> moves = p->returnPossibleMoves();
             for (Vec end : moves) {
                     if (testMove(v, end, true)){ 
-                        if(p->getTeam() != turn) { // sets up the next turn 
+                        if(p->getTeam() != turn) { 
                             isEnd = false;
                         } else {
                             legalMoves.push_back(end);
@@ -110,52 +79,48 @@ void ChessBoard::setUpStartMoves(){
                 }
         }
     }
-    // cout << "IS END: " << isEnd << endl;
 
+    // ISSUE: WE SHOULDN'T NEED TO DO THIS CHECK SINCE THE BOARD CANNOT START IN CHECK -> GOOD FOR TESTING THO 
     validCheck(legalMoves);
 
+    // if the game starts in stalemate end the game 
     if (isEnd) { endGame(); displayScore = true;  }
 }
 
 
-// DONE
+// gets the type of piece at coordinate 
 char ChessBoard::getType(Vec coordinate){
     shared_ptr<Piece> p = getPiece(coordinate);
     char type = p->getType();
     return type;
 }
 
-// DONE
+// gets the piece at coordinate 
 shared_ptr<Piece> ChessBoard::getPiece(Vec coordinate){
     int row = coordinate.getY();
     int col = coordinate.getX();
     return gb[row][col];
 }
 
-// DONE
-// pass white as the current pawn's colour 
+
+// determines if the pawn at coordinate has moved two 
 bool ChessBoard::pawnMovedTwo(Vec coordinate, bool white){
     char type = getType(coordinate);
     shared_ptr<Piece> p = getPiece(coordinate);
     shared_ptr<Pawn> pawn;
     if (type == 'P' || type == 'p'){ shared_ptr<Pawn> pawn = dynamic_pointer_cast<Pawn>(p); }
     else { return false; }
-
-    if (pawn->pawnMovedTwo(gb, coordinate, white)){
-        return true;
-    }
-    // cout << "reach" << endl;
-    return false;
+    return pawn->pawnMovedTwo(gb, coordinate, white);
 }
 
-// DONE
+// replaces the piece at coordinate with replacement 
 void ChessBoard::replacePiece(Vec coordinate, shared_ptr<Piece> replacement){
     int row = coordinate.getY();
     int col = coordinate.getX();
     gb[row][col] = replacement;
 }
 
-// DONE
+// check if there is a piece on the team "white" at coordinate on the gameboard
 bool ChessBoard::isThere(Vec coordinate, bool white, vector<vector<shared_ptr<Piece>>> board){
 	for (vector<shared_ptr<Piece>> vec : board){
 		for (shared_ptr<Piece> p : vec){
@@ -165,7 +130,7 @@ bool ChessBoard::isThere(Vec coordinate, bool white, vector<vector<shared_ptr<Pi
 	return false;
 }
 
-// DONE
+// determines if a move is a twostep move 
 bool twoStep(Vec start, Vec end){
     int startY = start.getY();
     int endY = end.getY();
@@ -173,47 +138,23 @@ bool twoStep(Vec start, Vec end){
     return false;
 }
 
-// Attach the player observers to each piece
-// It will also now attach the playerWhite and playerBlack pointers
+// Attach the player observers to the chessboard 
 void ChessBoard::setupPlayers(shared_ptr<Observer> pWhite, shared_ptr<Observer> pBlack) {
-    // You can make a unique to a shared, but not other way around
-    // shared_ptr<Observer> sharedWhite = make_shared<Observer>(pWhite);
-    // shared_ptr<Observer> sharedBlack = make_shared<Observer>(pBlack);
     if (playerWhite != nullptr && playerBlack != nullptr) return;
     playerWhite = pWhite;
     playerBlack = pBlack;
-
-    // Iterate through the game board and set up observers for each piece
-    // for (auto& row : gb) {
-    //     for (auto& p : row) {
-    //         if (p) { // Check if the pointer is not null
-    //             p->attachWhite(sharedWhite); // We might have to change this to handle shared_ptr not unique_ptr
-    //             p->attachBlack(sharedBlack);
-    //         }
-    //     }
-    // }
-
 }
 
-// Piece::Piece(struct Vec coordinate, char type, bool colour): coordinate{coordinate}, type{type}, white{colour} {} Piece constructor
-// Empty piece seems to just have a superclass constructor of parent class Piece.
-// To create the empty construcotr, what do I actually pass? (Empty(Vec{row,col}, _ or ' ', true or false)))
-
-// FRANKLIN
-
-// TODO: temporarily taking out graphics display stuff
+// ISSUE: PUT BACK THE GRAPHICS STUFF
 // gd{make_shared<GraphicsDisplay>()}
+// ChessBoard constructor 
 ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_shared<TextDisplay>()}, game{}, bCheck{false}, wCheck{false}, turn{false}, bKing{}, wKing{}, displayScore{false} {
     // Setup the empty board and gameboard
-    // unique_ptr<TextDisplay> td, unique_ptr<GraphicDisplay> gd, I have to make this here
-
     for (int row = 0; row < 8; row++) {
         vector<unique_ptr<Empty>> ebRow;
         vector<shared_ptr<Piece>> gbRow;
         for (int col = 0; col < 8; ++col) {
-            // gb[row][col] = make_shared<Piece>();
-            // Top left corner, the colour of the board is white. Bottom right (7,7) is white as well
-            if((((row % 2 == 0) && (col % 2 == 0)) || ((row % 2 == 1) && (col % 2 == 1)))) { // Alternating of black and white
+            if((((row % 2 == 0) && (col % 2 == 0)) || ((row % 2 == 1) && (col % 2 == 1)))) { 
                 ebRow.push_back(make_unique<Empty>(Empty(Vec{row, col}, '_', true)));
                 shared_ptr<Empty> emptyPtr = std::make_shared<Empty>(Vec{row, col}, '_', true);
                 gbRow.push_back(dynamic_pointer_cast<Piece>(emptyPtr));
@@ -226,31 +167,28 @@ ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_s
         eb.push_back(move(ebRow));
         gb.push_back(move(gbRow));
     }
+    // ISSUE: I DON'T THINK THIS SHOULD BE HERE 
     // graphicsDisplay = gd;
 }
 
+// makes a regular move on the board 
 void ChessBoard::regMove(Vec start, Vec end){
     shared_ptr<Piece> startPiece = getPiece(start);
     shared_ptr<Piece> endPiece = getPiece(end);
-
-    // Vec v = startPiece->getCoordinate();
-    // cout << "here" << endl;
-    // cout << startPiece->getType() << endl;
-    // cout << v << endl;
-    // cout << end << endl;
-    // cout << "here" << endl;
 
     // find the piece at start and change the coordinates of the piece to end
     startPiece->setCoordinate(end);
 
     // move the startPiece to end -> now the piece at end is pointing to the address of startPiece
     replacePiece(end, startPiece);
-    endPiece = startPiece; // now the endPiece points at the (start)piece that we just moved to the end
 
-    // replace the vector at start with the empty piece -> getEmptyPiece needs to return a shared pointer but UNIQUE copy
+    // now the endPiece points at the (start)piece that we just moved to the end
+    endPiece = startPiece; 
+
+    // replace the vector at start with the empty piece 
     shared_ptr<Piece> emptyPiece = getEmptyPiece(start);
 
-    // put the endPiece at start
+    // put the emptyPiece at start
     replacePiece(start, emptyPiece);
 }
 
@@ -258,41 +196,42 @@ void ChessBoard::regMove(Vec start, Vec end){
 void ChessBoard::castleMove(Vec start, Vec end){
     int startX = start.getX();
     int endX = end.getX();
-
-    // cout << startX << " " << endX << endl;
-
     Vec rookCoord;
-    // the y coordinate tells us which colour we want -> keep the y coordinate the same to get the correct rook
+
+    // keep the y coordinate the same to get the correct rook
     rookCoord.setY(end.getY());
 
+    // castle left 
     if (endX == startX - 2){ 
         rookCoord.setX(0);
         Vec endCoord = Vec(end.getX() + 1, end.getY());
-        //cout << "ROOK MOVES TO LEFT: " << gb[endCoord.getY()][endCoord.getX()]->getType() << endl;
         regMove(rookCoord, endCoord);
-        //cout << "ROOK MOVES TO LEFT: " << gb[endCoord.getY()][endCoord.getX()]->getType() << endl;
+    // castle right
     } else if (endX == startX + 3){ 
         rookCoord.setX(7);
         Vec endCoord = Vec(end.getX() - 1, end.getY());
-        //cout << "ROOK MOVES TO RIGHT: " << gb[endCoord.getY()][endCoord.getX()]->getType() << endl;
         regMove(rookCoord, endCoord);
-        //cout << "ROOK MOVES TO RIGHT: " << gb[endCoord.getY()][endCoord.getX()]->getType() << endl;
     }
-
 }
 
+// verifies a legal move is a castle move and notifies the display
 void ChessBoard::isCastleMove(Vec start, Vec end){
     int col = start.getX();
     int endRow = end.getY();
     int endCol = end.getX();
     Vec rookCoord;
+
+    // keep the y coordinate the same to get the correct rook
     rookCoord.setY(end.getY());
+
+    // castle right 
     if ((gb[endRow][endCol]->getType() == 'K' || gb[endRow][endCol]->getType() == 'k')  && (col == endCol - 3)){
         Vec endCoord = Vec(end.getX() - 1, end.getY());
         rookCoord.setX(7);
         char rook = gb[rookCoord.getY()][rookCoord.getX()]->getType();
         char endPiece = gb[endCoord.getY()][endCoord.getX()]->getType();
         td->notifyMoves(rookCoord, rook, endCoord, endPiece, checkString());
+    // castle left 
     } else if ((gb[endRow][endCol]->getType() == 'K' || gb[endRow][endCol]->getType() == 'k')  && (col == endCol + 2)){
         Vec endCoord = Vec(end.getX() + 1, end.getY());
         rookCoord.setX(0);
@@ -302,50 +241,50 @@ void ChessBoard::isCastleMove(Vec start, Vec end){
     }
 }
 
-// DONE
+// removes the captured piece from the board from en passant 
 void ChessBoard::passantMove(Vec start, Vec end){
-    // we consider the board before the move is made 
-
-    // move diagonal and captures sideways 
     shared_ptr<Piece> p = getPiece(end);
     char type = p->getType();
-
-
     Vec rightDiagonal;
     Vec leftDiagonal;
-
-    // y stays the same 
     Vec captureRight = Vec(start.getX() + 1, start.getY());
     Vec captureLeft = Vec(start.getX() - 1, start.getY());
+    // black makes an en passant 
     if (type == 'p'){
         rightDiagonal = Vec(start.getX() + 1, start.getY() - 1);
         leftDiagonal = Vec(start.getX() - 1, start.getY() - 1);
+        // capture to the right
         if (end == rightDiagonal){ 
             if (pawnMovedTwo(captureRight, true)){ td->notify(captureRight, getEmptyPiece(captureRight)->getType()); } 
+        // capture to the left
         } else if ( end == leftDiagonal ){
             if (pawnMovedTwo(captureLeft, true)) { td->notify(captureLeft, getEmptyPiece(captureLeft)->getType()); }
         }  
+    // white makes an en passant 
     } else if (type == 'P'){
         rightDiagonal = Vec(start.getX() + 1, start.getY() + 1);
         leftDiagonal = Vec(start.getX() - 1, start.getY() + 1);
+        // capture to the right
         if ( end == rightDiagonal ){        
             if (pawnMovedTwo(captureRight, false)){ td->notify(captureRight, getEmptyPiece(captureRight)->getType()); }
+        // capture to the left 
         } else if ( end == leftDiagonal ){
             if (pawnMovedTwo(captureLeft, false)) { td->notify(captureLeft, getEmptyPiece(captureLeft)->getType()); }
         }
     }
 }
 
+// makes any type of move on the board 
 void  ChessBoard::makeMove(Vec start, Vec end){
     char startType = getType(start);
     // check if it was a castle move and if it was make the appropriate rook move
     if (startType == 'K' || startType == 'k'){ castleMove(start, end);}
-     // make the move
+    // make the move
     regMove(start, end);
 }
 
 
-// DONE
+// update if a pawn has moved on the board 
 void ChessBoard::updatePawnMoved(Vec start, Vec end){
     shared_ptr<Piece> endPiece = getPiece(end);
     shared_ptr<Pawn> pawn = dynamic_pointer_cast<Pawn>(endPiece);
@@ -353,16 +292,17 @@ void ChessBoard::updatePawnMoved(Vec start, Vec end){
     if (twoStep(start, end)){ pawn->hasMovedTwo(); }
 }
 
-// DONE
+// update if a king has moved on the board 
 void ChessBoard::updateKingMoved(Vec end){
     shared_ptr<Piece> endPiece = getPiece(end);
     shared_ptr<King> king = dynamic_pointer_cast<King>(endPiece);
     king->hasMoved();
 }
 
-// DONE
+// ISSUE: DOESN'T ROOK ALSO HAVE A MOVED BOOLEAN -> I NEVER UPDATED IT WHOOPS 
+
+// update the king's coordinates if they change on the board 
 void ChessBoard::updateKingCoord(Vec end, bool white){
-    // cout << "END: " << end << endl;
     if (!white){
         wKing = end;
     } else {
@@ -370,30 +310,22 @@ void ChessBoard::updateKingCoord(Vec end, bool white){
     }
 }
 
+// ISSUE: THIS IS WRONG AND NEEDS TO BE REPLACED BY THE OTHER ONE IF THERE'S TIME 
 bool ChessBoard::isCheck(bool white){
     Vec kingCoord;
     if (white){ 
         kingCoord = bKing;
-        // cout << "BLACK KING IS: " << kingCoord << endl;
     } else {
         kingCoord = wKing;
-        // cout << "WHITE KING IS: " << kingCoord << endl;
     }
-    // cout << "CHECK: " << white << endl;
-    // cout << "WHITE KING: " << wKing << endl;
-    // cout << "BLACK KING: " << bKing << endl;
-    // cout << "KING COORDINATE: " << kingCoord << endl;
 
     // compare the legal moves of each piece with the king's coordinates
     for(vector<shared_ptr<Piece>> vec : gb){
         for(shared_ptr<Piece> p : vec){
-            if (p->getTeam() != white){ continue; } // skip pieces on our own team
-            // Vec start = p->getCoordinate();
+            // skip pieces not on the specified team 
+            if (p->getTeam() != white){ continue; } 
             for(Vec move : p->returnPossibleMoves()){
                 if (move == kingCoord){
-                    // cout << "START: " << start << endl;
-                    // cout << "MOVE: " << move << endl;
-                    // cout << "KING COORD: " << kingCoord << endl;
                     return true;
                 }
             }
@@ -402,11 +334,9 @@ bool ChessBoard::isCheck(bool white){
     return false;
 }
 
+// identifies if a team is in check and updates the booleans 
 void ChessBoard::validCheck(vector<Vec> legalMoves){
     bool check = false;
-
-    // king is appending its moves twice 
-
     for (Vec move : legalMoves){
         if(turn){ 
             if(bKing == move) {
@@ -420,46 +350,16 @@ void ChessBoard::validCheck(vector<Vec> legalMoves){
             } 
         }
     }
-
     if (!turn) { bCheck = check; }
     else wCheck = check; 
-
-
-
-    //   for (vector<shared_ptr<Piece>> vec : gb){
-    //         for (shared_ptr<Piece> p : vec){
-    //             if (p->getTeam() != turn || p->getType() == '_' || p->getType() == ' '){ continue; }
-    //             p->resetMoves();
-    //             p->getPossibleMoves(gb);
-    //             // cout << "PIECE: " << p->getType() << endl;
-    //             for (Vec move : p->returnPossibleMoves()){
-    //                 // cout << "MOVE: " << move << endl;
-    //                 if(turn){ 
-    //                     if(bKing == move) {
-    //                         check = true; 
-    //                         break; 
-    //                     }
-    //                 } else { 
-    //                     if (wKing == move) {
-    //                         check == true; 
-    //                         break;
-    //                     } 
-    //                 }
-
-    //             }
-    //         }
-    //     }
 }
 
-// DONE
+// modifies the gameboard and notifies the next player of their legal moves 
 void ChessBoard::notify(Vec start, Vec end){
-
-    // Vec black = getBKing();
-    // cout << "BLACK: " << black << endl;
     
+    // alter the game board with the move 
     makeMove(start, end);
     
-
     char startType = getType(end);
 
     // we will also change the king's booleans
@@ -473,28 +373,25 @@ void ChessBoard::notify(Vec start, Vec end){
         updatePawnMoved(start, end);
     }
 
-
-
-     // reset the legal moves of every piece // only go through the opponents
     bool isEnd = true;
     turn = !turn;
-
     vector<Vec> legalMoves;
 
+    // get the legal moves of the current player to see if the opponent is in check 
+    // get the legal moves of the next player to predict their moves 
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
-            // we want the legal moves of the current team as well  
             if (p->getType() == ' ' || p->getType() == '_') { continue; }
             p->resetMoves(); // clear all the legal moves
             p->getPossibleMoves(gb); // get the possible moves for this piece
-            // test every possible move -> which will add it to the legal moves if it passes
             Vec v = p->getCoordinate();
             vector<Vec> moves = p->returnPossibleMoves();
+            // test every possible move 
             for (Vec move : moves){
-                // cout << "START: " << v << endl;
-                // cout << "TEST MOVE" << move << endl;
+                // if the piece is on the next turn's team then see if its legal -> if it has any possible moves the game should continue
                 if (p->getTeam() != turn && testMove(v, move, true)){
                     isEnd = false;
+                // if the piece is on the current team's moves append them to legal moves and see if the opponent is in check 
                 } else if (p->getTeam() == turn && testMove(v, move, false)){
                     legalMoves.push_back(move); 
                 }
@@ -505,20 +402,25 @@ void ChessBoard::notify(Vec start, Vec end){
     shared_ptr<Piece> emptyPiece = getPiece(start);
     shared_ptr<Piece> endPiece = getPiece(end);
 
+    // ISSUE: DOES A PLAYER GET TAKEN OUT OF CHECK? 
+
+    // update if the next player is in check 
     validCheck(legalMoves);
 
     // notify the gd and td
     char startChar = emptyPiece->getType();
     char endChar = endPiece->getType();
     td->notifyMoves(start, startChar, end, endChar, checkString());
+    // graphicsDisplay->notifyMoves(start, startChar, end, endChar, checkString());
+    // ISSUE: ADD NOTIFY GD IN ISCASTLE AND PASSANTMOVE
     isCastleMove(start, end);
     passantMove(start, end);
     td->notify(turn);
-    // graphicsDisplay->notifyMoves(start, startChar, end, endChar, checkString());
     
     if (isEnd) { endGame(); displayScore = true;  }
 }
 
+// update the check string 
 string ChessBoard::checkString(){
     if (wCheck){ return "White"; }
     else if (bCheck) { return "Black"; }
@@ -526,10 +428,7 @@ string ChessBoard::checkString(){
 }
 
 // DONE
-// we can assume that the turn player has no moves
-// should this be negated??? 
 void ChessBoard::endGame() {
-    // cout << "end of game" << endl;
     if (turn) {
         if (wCheck) { game.updateWhite(false); }
         else { game.updateWhite(true); }
@@ -545,10 +444,10 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
 
     vector<vector<shared_ptr<Piece>>> boardCopy;
 
+    // copy the original board 
     for (std::vector<std::shared_ptr<Piece>> vec : gb) {
         std::vector<std::shared_ptr<Piece>> uniqueRow;
         for (std::shared_ptr<Piece> p : vec) {
-            // Copying data from shared_ptr to unique_ptr
             shared_ptr<Piece> newPiece = p->clone();
             uniqueRow.push_back(newPiece);
         }
@@ -559,6 +458,7 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
     Vec wKingCoord;
     Vec bKingCoord;
 
+    // save the coordinates of the king 
     if (!turn && startType != 'K'){
         wKingCoord = wKing;
     } else if (turn && startType != 'k'){
@@ -571,53 +471,47 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
 
     // now we can make edits on the game board which we will later revert
     makeMove(start, end);
-    // we can safely update the booleans of pieces and update
 
     // we will also change the king's booleans
+    // ISSUE: DO I HAVE TO UPDATE THE ROOK COORD IN CASTLE MOVE 
     if (startType == 'K' || startType == 'k'){
         updateKingCoord(end, turn);
         updateKingMoved(end);
     }
 
     // check if the piece that moved is a pawn
-    // TODO: ADD EN PASSANT 
+    // ISSUE: SHOULD THIS CHANGE IF THERE'S AN ENPASSANT 
     if (startType == 'P' || startType == 'p'){
         updatePawnMoved(start, end);
     }
 
-    // int i = 0;
-    // cout << "here" << endl;
+    // store the possibleMoves 
+    vector<Vec> possibleMoves; 
 
+    // reset all the possible moves for the pieces 
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
             if (p->getTeam() != turn || p->getType() == ' ' || p->getType() == '_'){ continue; }
             p->resetMoves(); // clear all the legal moves
-            // cout << p->getType() << endl;
             p->getPossibleMoves(gb); // get the possible moves for this piece
+            // @franklin611 add a for loop to append all possible moves to possibleMoves (489)
+            
         }
     }
 
-    // --------------------- at this point ALL the pieces have possible moves -----------------------------
-    // we need to decide if any of these moves will put the opponent's king in check
-
-
-    // need to check if that move puts the current in check 
-    bool check = isCheck(turn);
-    // there are no legal moves 
-    // cout << bKing << endl;
+    // ISSUE: SWITCH TO ISVALIDCHECK
+    bool check = validCheck(possibleMoves);
     bool legal = false;
-
     bool team = false; 
     if (getPiece(end)->getType() >= 'A' && getPiece(end)->getType() <= 'Z'){ team = true; }
+ 
 
-    // we decide its legal -> notify player
+    // we decide its legal meaning the move does not put itself in check so we notify the players of the moves 
     if (!check && notify){
         if (team){ 
-            // cout << "NOTIFY WHITE: "<< endl;
             playerWhite->notifyLM(start, end); 
-        } // if the next turn (opponent is white)
+        } 
         else { 
-            // cout << "NOTIFY BLACK" << endl;
             playerBlack->notifyLM(start, end); 
         }
         isCaptureMove(start, end, boardCopy);
@@ -627,32 +521,12 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
         legal = true;
     }
 
-    // revert the board -> switch the board copy to the gb
-    // this swap might not work
-    // Yup chatgpt said nada
-    // knight should be at (c, 3) end 
-
-    // after the move was made 
-    // int row = start.getY();
-    // int col = start.getX();
-    // should be knight
-    // cout << "OLD BOARD : " << start << ' ' << boardCopy[row][col]->getType() << endl;
-    // should be empty
-    // cout << "MOVED BOARD : " << start << ' ' << gb[row][col]->getType() << endl;
-    // should be the start coordinate 
-    // Vec c = gb[row][col]->getCoordinate();
-    // cout << c << endl;
+    // revert back to the original board 
     for (size_t row = 0; row < gb.size(); ++row) {
         for (size_t col = 0; col < gb[row].size(); ++col) {
             gb[row][col] = move(boardCopy[row][col]);
         }
     }
-    // should be knight
-    // Vec current = gb[row][col]->getCoordinate();
-    // cout << "CURRENT BOARD : " << current << ' ' << gb[row][col]->getType() << endl;
-    // knight should be at (b, 1) start
-
-    // --------------------- UP TO THIS POINT THE KNIGHT COORDINATES ARE CORRECT -------------------------
 
     // revert the king's coordinates
     if (!turn){ 
@@ -662,12 +536,14 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
     }
 
     return legal;
-    // unique pointers will go out of scope once the function returns
 }
 
+// determines if a move should be categorized as a checkmate move and notifies the player
 void ChessBoard::isCheckMateMove(Vec start, Vec end){
-    // get the possible moves of the current
     bool empty = true;
+
+    // determines the possible moves of the opposite team 
+    // ISSUE: THIS IS BASED ON POSSIBLE NOT LEGAL MOVES -> UPDATE 
     for (vector<shared_ptr<Piece>> vec : gb){
         for (shared_ptr<Piece> p : vec){
             if (p->getTeam() != turn){ continue;}
@@ -677,37 +553,38 @@ void ChessBoard::isCheckMateMove(Vec start, Vec end){
         }
     }
 
+    // if the opposite team as no possible moves and they are in check then that is a checkmate move 
     if (isCheck(turn) && empty){
-        if (!turn){ playerWhite->notifyCMM(start, end); } // if the next turn (opponent is white)
+        if (!turn){ playerWhite->notifyCMM(start, end); } 
         else { playerBlack->notifyCMM(start, end); }
     }
 }
 
-//  did this move put the current team in check
+//  determine if a move will put the other team in check 
 void ChessBoard::isCheckMove(Vec start, Vec end){
+    // ISSUE: BASED ON POSSIBLE NOT LEGAL MOVES 
     if (isCheck(turn)){
         if (!turn){ playerWhite->notifyCheckM(start, end); }
         else { playerBlack->notifyCheckM(start, end); }
     }
 }
 
-// WILL this move capture any pieces on the opposing team
+// determine if this move will capture any pieces on the opposing team
 void ChessBoard::isCaptureMove(Vec start, Vec end, vector<vector<shared_ptr<Piece>>> ob){
-    // if there is a piece at the end coordinate -> it is a capture move
+    // if there is a piece at the end coordinate then it is a capture move
     if (isThere(end, turn, ob)){
         if (!turn){ playerWhite->notifyCapM(start, end); } // if the next turn (opponent is white)
         else { playerBlack->notifyCapM(start, end); }
     }
 }
 
-// did the move take this piece out of a position to be captured
-// We pass a potential move the piece can take from start to end
-// If it reached here, it means it is a legal move alr!
+// categorizes a move as an avoid capture move 
 void ChessBoard::isAvoidCaptureMove(Vec start, Vec end, vector<vector<shared_ptr<Piece>>> ob){
     // assume it is not in a position to be captured
     bool capture = false;
     // was the piece (on the opponent's team) in a position to be captured in the first place in the old board
-    // look at the current team's possible moves if they are equal to the piece's start
+    // ISSUE: THIS IS BASED ON POSSIBLE AND NOT LEGAL MOVES 
+    // look at the current team's legal moves if they are equal to the piece's start
     for (vector<shared_ptr<Piece>> vec : ob){
         for (shared_ptr<Piece> p : vec){
             // Example a7 b7 
@@ -753,40 +630,28 @@ void ChessBoard::isAvoidCaptureMove(Vec start, Vec end, vector<vector<shared_ptr
 }
 
 
-// DONE
+// gets the current turn of the board
 bool ChessBoard::getTurn(){
     return turn;
 }
 
-// DONE
+// sets up a piece at coordinate 
 void ChessBoard::setupWithPiece(shared_ptr<Piece> p, Vec coordinate) {
     int row = coordinate.getY();
     int col = coordinate.getX();
-
     gb[row][col] = p;
-    // That should be fine because I am using this to only setup empty pieces.
-    // It is fine that the gameboard starts and has empty pieces at first
 }
 
-// DONE
-// CHIRA - this was initially shared_ptr<Piece> but i changed to empty
+// returns a copy of an empty piece from an empty board 
 shared_ptr<Empty> ChessBoard::getEmptyPiece(Vec coord){
-    // access the empty board and get the Piece* we want
     int row = coord.getY();
     int col = coord.getX();
-    // COPY CTOR DIDNT WORK 
-    // shoudl be row col,
-    shared_ptr<Empty> emptyPiece = make_shared<Empty>(coord, eb[row][col]->getType(), eb[row][col]->getTeam()); // TODO CHIARA
-    // shared_ptr<Empty> emptyPiece = eb[row][col]->clone();
-    // Assume this copy construtor will work
-
-    // return the copied piece
+    shared_ptr<Empty> emptyPiece = make_shared<Empty>(Vec{col, row}, eb[row][col]->getType(), eb[row][col]->getTeam()); 
     return emptyPiece;
 }
 
-// DONE
+// updates the score if someone forfeits
 void ChessBoard::forfeit(){
-     // We have to change this?
     displayScore = true;
     if (!turn){
         // update score +1 for black
@@ -798,7 +663,7 @@ void ChessBoard::forfeit(){
 }
 
 
-// DONE 
+// restarts a game by resetting the game 
 void ChessBoard::restartGame() {
     for(size_t i = 0; i < eb.size(); ++i) { //The row
         for (size_t j = 0; j < eb[i].size(); ++j) { // The column
@@ -810,24 +675,16 @@ void ChessBoard::restartGame() {
             td->notify(gb[i][j]->getCoordinate(), eb[i][j]->getType()); // Fixed to now notify text display of the change
             
             gb[i][j] = eb[i][j]->clone();
-            // cout << "Type After : " <<  gb[i][j]->getType() << endl;
-            // cout <<  gb[i][j]->getType();
-            // cout << endl;
-            // Assume the copy assignment operator works
         }
         cout << endl;
     }
-    turn = false; // Default turn is always white
+    turn = false; 
     bCheck = false;
     wCheck = false;
     displayScore = false;
-    // We don't need to reset bKing and wKing because it will be reset in next
-    // game or if not, will just be destroyed.
 }
 
-// DONE
-// needs to be fixed to check at the ned
-// fixed
+// sees if a move is considered an upgrade pawn move 
 bool ChessBoard::upgradePawn(Vec end){
     char type = getType(end);
     if (type == 'P' && getPiece(end)->getCoordinate().getY() == 7) {
@@ -839,20 +696,19 @@ bool ChessBoard::upgradePawn(Vec end){
 }
 
 
-// DONE
+// sets the white king coordinate
 void ChessBoard::setWhiteKing(Vec coordinate){
     wKing = coordinate;
 
 }
 
-// DONE
+// sets the black king coordinate 
 void ChessBoard::setBlackKing(Vec coordinate){
     bKing = coordinate;
 
 }
 
-// DONE
-// I need to do dynamic type casting.
+// sets up a piece at coordinate with type 
 void ChessBoard::setupWithChar(char type, Vec coordinate) {
     int row = coordinate.getY();
     int col = coordinate.getX();
@@ -869,27 +725,23 @@ void ChessBoard::setupWithChar(char type, Vec coordinate) {
         gb[row][col] = make_shared<Rook>(coordinate, type, (type == 'R') ? 1 : 0); // Rook
     } else if (type == 'B' || type == 'b') {
         gb[row][col] = make_shared<Bishop>(coordinate, type, (type == 'B') ? 1 : 0); // Bishop
-    } else if (type == ' ' || type == '_') { //These may not be needed but im just having. I dont think it would ever reach it
+    } else if (type == ' ' || type == '_') { 
         gb[row][col] = getEmptyPiece(coordinate);
     } 
 
+    // ISSUE: ADD GRAPHICS DISPLAY
     td->notify(coordinate, type);
     // gd->notify(coordinate, type);
 }
 
-// possible moves in pieces (making sure there's no piece there) legal moves ()
+// if the user does not call setup this function is used to create the default board 
 void ChessBoard::defaultBoard() {
 
     // First setup pawns
     for (int i = 0; i < 8; ++i) {
-        setupWithChar('P', Vec{i, 1}); // White pawns
+        setupWithChar('P', Vec{i, 1}); // White 
         setupWithChar('p', Vec{i, 6}); // Black
-        // x, y. This corresponds to second row
-        // cout << char(getPiece(Vec{i,1})->getCoordinate().getX() + 97) << " ";
-        // cout << getPiece(Vec{i, 1})->getCoordinate().getY() + 1 << getPiece(Vec{i,1})->getType() << endl;
     }
-
-    // Whites are the top side of the board. 0,0
 
     // Setup Rooks
     setupWithChar('R', Vec{0,0});
@@ -899,9 +751,6 @@ void ChessBoard::defaultBoard() {
 
     // Setup Knights
     setupWithChar('N', Vec{1,0}); 
-    // cout << getPiece(Vec{1,0})->getType() << endl;
-    // cout << char(getPiece(Vec{1,0})->getCoordinate().getX() + 97) << endl;
-    // cout << getPiece(Vec{1,0})->getCoordinate().getY() + 1 << endl;
     setupWithChar('N', Vec{6, 0}); // Whites
     setupWithChar('n', Vec{1,7});
     setupWithChar('n', Vec{6, 7}); // Black
@@ -922,47 +771,38 @@ void ChessBoard::defaultBoard() {
     setupWithChar('Q', Vec{4,0}); // White Queen
     setupWithChar('q', Vec{4, 7}); // Black Queen
 
+    // set the legal moves for the pieces of the current turn 
     for (vector<shared_ptr<Piece>> vec : gb) {
 		for (shared_ptr<Piece> p : vec) {
             if(p->getTeam() != turn) {
                 p->getPossibleMoves(gb); 
                 Vec v = p->getCoordinate();
-                // char c = p->getType();
-                // cout << c << endl;
-                // cout << "COORDINATE FIRST: " << v << endl;
                 vector<Vec> moves = p->returnPossibleMoves();
-                for (Vec end : moves) {
-                    // cout << p->getType() << endl;
-                    // cout << v.getX() << ' ' << v.getY() << endl;
-                    // v = p->getCoordinate();
-                    // cout << "COORDINATE SECOND: " << v << endl;
+                for (Vec end : moves) { 
                     testMove(v, end, true);
-
-                    // v = p->getCoordinate();
-                    // cout << "COORDINATE THIRD: " << v << endl;
                 }
-
-                // cout << p->getType() << ':'<< p->getCoordinate().getX() << ' ' << p->getCoordinate().getY() << endl;
-            } // Sets up that piece'possible moves
+            } 
         }
     }
-    // turn = !turn;
+
+    // notify the display of who's turn it is 
+    // ISSUE: ADD GRAPHICS DISPLAY 
     td->notify(turn);
 }
 
+// setup turn during setup and notify the display 
 void ChessBoard::setupTurn(bool turn) {
     this->turn = turn;
-
     td->notify(turn);
 }
 
+// used to skip a turn 
 void ChessBoard::setTurn(bool turn) {
     this->turn = turn;
 
     td->notify(turn);
     bool isEnd = true;
     // set up the turn's moves 
-    // reset all turn's moves 
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
             if (p->getTeam() == turn) { continue; }
@@ -976,22 +816,26 @@ void ChessBoard::setTurn(bool turn) {
             }
         }
     }
+
     if (isEnd) { endGame(); displayScore = true;  }
 }
 
+// returns the playerWhite
 shared_ptr<Observer> ChessBoard::getPlayerWhite() {
     return playerWhite;
 }
 
+// returns the playerBlack 
 shared_ptr<Observer> ChessBoard::getPlayerBlack() {
     return playerBlack;
 }
 
-
+// changes the display score boolean
 void ChessBoard::setDisplayScore(bool b) {
     displayScore = b;
 }
 
+// chessboard output operator 
 ostream& operator<<(ostream& out, const ChessBoard& cb) {
     out << *(cb.td) << endl;
     if (cb.displayScore) {
