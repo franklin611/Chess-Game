@@ -20,12 +20,6 @@ int convertToInt(char c) {
     }
 }
 
-// bool checkInBounds(string coord) {
-
-//     return (coord.substr(0,1)[0] >= 'a' && coord.substr(0,1)[0] <= 'h' && coord.substr(1))
-
-// }
-
 bool validPlayer(const string& player) {
     if (player == "human") return true;
     if (player.length() == 11 && player.substr(0, 8) == "computer") {
@@ -381,13 +375,12 @@ int main() {
 
                         if(colour == "black") {
                             cb->setupTurn(1); // Everything is negated
-                            cout << *(cb);
                         } else if (colour == "white") {
                             cb->setupTurn(0);
-                            cout << *(cb);
                         } else {
                             cout << "Invalid input, please try again." << endl;
                         }
+                        cout << *(cb);
                     } else { cout << "Invalid input, please try again." << endl;}
     
                 } else if (cmd2 == "done") {
@@ -400,12 +393,12 @@ int main() {
                     cout << "Invalid Board Setup" << endl;
                     cb->restartGame();
                     break;
+
                 } else {
 
                     cout << "Invalid Input, try Again" << endl;
 
                 }
-                
             }
         } else { // Invalid Input
 
@@ -416,8 +409,6 @@ int main() {
     }
     // END OF GAME
     cb->setDisplayScore(true);
-    // cout << "Final Score:" << endl;
-    // cout << *(cb); // We not outputting again? 
     cout << endl;
     cout << "Thank you for playing. We hope you enjoyed!" << endl;
     cout << "Make sure to play again!" << endl;
