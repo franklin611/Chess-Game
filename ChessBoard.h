@@ -5,7 +5,7 @@
 #include <iostream>
 #include <memory>
 #include <utility>
-#include "Game.h" 
+#include "Game.h"
 #include "Empty.h"
 #include "King.h"
 #include "Pawn.h"
@@ -22,39 +22,35 @@ using namespace std;
 class TextDisplay;
 class GraphicsDisplay;
 
-// ChessBoard is the controller of the game and controls how the pieces on the board should move as well as decide when a move is legal based on the board 
+// ChessBoard is the controller of the game and controls how the pieces on the board should move as well as decide when a move is legal based on the board
 class ChessBoard: public ChessBoardObserver {
-    // holds the pieces of the game board 
+    // holds the pieces of the game board
     vector<vector<shared_ptr<Piece>>> gb;
 
-    // keeps a copy of what the empty board should look like 
+    // keeps a copy of what the empty board should look like
     vector<vector<unique_ptr<Empty>>> eb;
 
-    // used to notify player white 
+    // used to notify player white
     shared_ptr<Observer> playerWhite;
 
-    // used to notify player black 
+    // used to notify player black
     shared_ptr<Observer> playerBlack;
 
-    // used to output the text display 
+    // used to output the text display
     shared_ptr<TextDisplay> td;
-
-    // used to output the graphics display
-    // shared_ptr<GraphicsDisplay> gd;
-
-    // hosts the score
+    shared_ptr<GraphicsDisplay> gd;
     Game game;
 
-    // keeps track if black is in check 
+    // keeps track if black is in check
     bool bCheck;
 
-    // keeps track if white is in check 
+    // keeps track if white is in check
     bool wCheck;
 
     // keeps track of the turn
-    bool turn; 
+    bool turn;
 
-    // keeps track of the black king's coordinates 
+    // keeps track of the black king's coordinates
     Vec bKing;
 
     // keeps track of the white king's coordinates
@@ -64,10 +60,10 @@ class ChessBoard: public ChessBoardObserver {
     bool displayScore;
 
     public:
-        // verifies if a team is in check 
+        // verifies if a team is in check
         void validCheck(vector<Vec> legalMoves);
 
-        // decides if the td needs to output that a team is in check 
+        // decides if the td needs to output that a team is in check
         string checkString();
 
         // decides the starting legal moves when a user calls setup
@@ -79,7 +75,7 @@ class ChessBoard: public ChessBoardObserver {
         // returns a pointer to the piece at coordinate
         shared_ptr<Piece> getPiece(Vec coordinate);
 
-        // check at that coordinate if a piece is a pawn and it has moved two 
+        // check at that coordinate if a piece is a pawn and it has moved two
         bool pawnMovedTwo(Vec coordinate, bool white);
 
         // check if there is a piece on the team "white" at coordinate on the gameboard
@@ -94,19 +90,19 @@ class ChessBoard: public ChessBoardObserver {
         // chessboard ctor
         ChessBoard();
 
-        // attaches the players as observers 
+        // attaches the players as observers
         void setupPlayers(shared_ptr<Observer> pWhite, shared_ptr<Observer> pblack);
 
-        // makes a regular move on the board 
+        // makes a regular move on the board
         void regMove(Vec start, Vec end);
-        
-        // verifies the move is a castle move and makes the rook move part of the castle move 
+
+        // verifies the move is a castle move and makes the rook move part of the castle move
         void castleMove(Vec start, Vec end);
 
         // combines regular, en passant and castle moves
         void makeMove(Vec start, Vec end);
 
-        // verifies a legal move is a castle move and notifies the display of the rook move 
+        // verifies a legal move is a castle move and notifies the display of the rook move
         void isCastleMove(Vec start, Vec end);
 
         // update the pawn's moved booleans
@@ -115,7 +111,7 @@ class ChessBoard: public ChessBoardObserver {
         // updates the king's moved booleans
         void updateKingMoved(Vec end);
 
-        // updated the black and white king's coordinates kept in the ChessBoard if they change 
+        // updated the black and white king's coordinates kept in the ChessBoard if they change
         void updateKingCoord(Vec end, bool white);
 
         // change the gameboard based on validated move
@@ -137,16 +133,16 @@ class ChessBoard: public ChessBoardObserver {
         void isCheckMateMove(Vec start, Vec end);
 
         // determines if the team "white" is in check on the current gameboard
-        // ISSUE: NEEDS TO BE REMOVED -> CHIARA 
+        // ISSUE: NEEDS TO BE REMOVED -> CHIARA
         bool isCheck(bool white);
 
         // get the turn status
         bool getTurn();
 
-        // if a user calls setup we replace the piece at coordinate with type 
+        // if a user calls setup we replace the piece at coordinate with type
         void setupWithChar(char type, Vec coordinate);
 
-        // if a user calls setup we replace the piece at coordinate with p 
+        // if a user calls setup we replace the piece at coordinate with p
         void setupWithPiece(shared_ptr<Piece> p, Vec coordinate);
 
         // returns a deep copy of an empty piece
@@ -164,34 +160,34 @@ class ChessBoard: public ChessBoardObserver {
         // at this point, the move/turn is finished, we want to check if the piece at end is a pawn and return true/false accordingly
         bool upgradePawn(Vec end);
 
-        // set the default board if a user does not call setup 
+        // set the default board if a user does not call setup
         void defaultBoard();
 
-        // set white king coordinate 
+        // set white king coordinate
         void setWhiteKing(Vec coordinate);
 
-        // set black king coordinate 
+        // set black king coordinate
         void setBlackKing(Vec coordinate);
 
-        // check if it is a valid board after user calls setup 
+        // check if it is a valid board after user calls setup
         bool boardIsValid();
 
-        // skips a turn 
+        // skips a turn
         void setTurn(bool turn);
 
-        // set the displayscore field to true or false if based on if the display need to output the score 
+        // set the displayscore field to true or false if based on if the display need to output the score
         void setDisplayScore(bool b);
 
-        // allows main to access playerWhite 
+        // allows main to access playerWhite
         shared_ptr<Observer> getPlayerWhite();
 
-        // allows main to access playerBlack 
+        // allows main to access playerBlack
         shared_ptr<Observer> getPlayerBlack();
 
-        // removes the captured piece from the board from en passant 
+        // removes the captured piece from the board from en passant
         void passantMove(Vec start, Vec end);
 
-        // change the turn during setup 
+        // change the turn during setup
         void setupTurn(bool turn);
 
         // Returns a bool value of whether a turn is in check or not
@@ -199,7 +195,7 @@ class ChessBoard: public ChessBoardObserver {
 
 
 
-        // used to output the chessboard 
+        // used to output the chessboard
         friend ostream& operator<<(ostream& out, const ChessBoard& cb);
 
 };
