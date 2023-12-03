@@ -359,7 +359,6 @@ void ChessBoard::validCheck(vector<Vec> legalMoves){
 }
 
 // identifies if a team is in check and updates the booleans 
-// Franklin Created (Passed the legalMoves of enemy, and the )
 // Example: legalMoves of Black , playerTurn is false (signifiying white because we want to see if any of black's moves puts white into check)
 bool ChessBoard::IsvalidCheck(vector<Vec> legalMoves, bool playerTurn){
     bool check = false;
@@ -371,7 +370,7 @@ bool ChessBoard::IsvalidCheck(vector<Vec> legalMoves, bool playerTurn){
             }
         } else { 
             if (wKing == move) {
-                check = true;  // Fixed
+                check = true;  
                 break;
             } 
         }

@@ -2,7 +2,7 @@
 
 // function to randomly select a vector from the level's moves
 // info was sourced from https://en.cppreference.com/w/cpp/numeric/random
-vector<Vec> Computer::selectRandomMove(vector<vector<Vec>> &vectors) {
+vector<Vec> selectRandomMove(vector<vector<Vec>> &vectors) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<size_t> outerDist(0, vectors.size() - 1);
@@ -19,26 +19,10 @@ Computer::Computer(bool colour, shared_ptr<ChessBoardObserver> cb, int userLevel
 }
 
 // computer player chooses a move 
-Vec Computer::makeComputerMove(int userLevel) {
+Vec Computer::makeComputerMove() {
 
     // gets all the moves based on its level 
     vector<vector<Vec>> levelsMoves = level->createMoves(legalMoves, captureMoves, checkMoves, checkMateMoves, avoidCaptureMoves);
-
-    for (vector<Vec> moves : legalMoves) {
-        cout << "Legal Start : " <<  moves[0] << "End : " << moves[1] << endl;
-    }
-    for (vector<Vec> moves : captureMoves) {
-        cout << "captureMoves Start : " <<  moves[0] << "End : " << moves[1] << endl;
-    }
-    for (vector<Vec> moves : checkMoves) {
-        cout << "checkMoves Start : " <<  moves[0] << "End : " << moves[1] << endl;
-    }
-    for (vector<Vec> moves : checkMateMoves) {
-        cout << "checkMateMoves Start : " <<  moves[0] << "End : " << moves[1] << endl;
-    }
-    for (vector<Vec> moves : avoidCaptureMoves) {
-        cout << "avoidCaptureMoves Start : " <<  moves[0] << "End : " << moves[1] << endl;
-    }
 
 
     // if there are any moves based on the level 

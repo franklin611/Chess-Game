@@ -16,11 +16,7 @@ class Computer : public Player {
         // computer constructor 
         Computer(bool colour, shared_ptr<ChessBoardObserver> cb, int userLevel);
         // selects a move based on the level 
-        // ISSUE: why are we feeding it a level when it has access to its own level? 
-        Vec makeComputerMove(int userLevel);
-        // ISSUE: does this need to be a member function? 
-        // selects a random move 
-        vector<Vec> selectRandomMove(vector<vector<Vec>> &vectors);
+        Vec makeComputerMove();
         // returns the level of the computer player 
         int getLevel();
 };
