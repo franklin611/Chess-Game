@@ -39,7 +39,7 @@ ostream &operator<<(ostream &out, const TextDisplay &td) {
     int num = 8;
     for (int i = td.theDisplay.size() - 1; i >= 0; --i) {
         out << to_string(num) + ' ';
-        for (int j = 0; j < td.theDisplay.size(); ++j) {
+        for (size_t j = 0; j < td.theDisplay.size(); ++j) {
             out << td.theDisplay[i][j];
         }
         out << endl; // since each row printed on newline

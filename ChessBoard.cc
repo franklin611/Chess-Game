@@ -800,8 +800,8 @@ void ChessBoard::forfeit(){
 
 // DONE 
 void ChessBoard::restartGame() {
-    for(int i = 0; i < eb.size(); ++i) { //The row
-        for (int j = 0; j < eb[i].size(); ++j) { // The column
+    for(size_t i = 0; i < eb.size(); ++i) { //The row
+        for (size_t j = 0; j < eb[i].size(); ++j) { // The column
         // Remmber, we have a vector<vector<>>>>
             // COPY CTOR DIDNT WORK 
             // gb[j][i] = make_shared<Piece>(*(eb[i][j]));

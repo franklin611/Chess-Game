@@ -212,7 +212,6 @@ int main() {
 
                         if(!(x >= 0 && x <= 7 && y>= 1 && y <= 8 && x2 >= 0 && x2 <= 7 && y2 >= 1 && y2 <= 8)) 
                         {cout << "Invalid coordinates. Please input a location on the board." << endl; continue;}
-                        cout << "get here" << endl;
 
                         Vec coordinate2 = Vec{x2, y2 - 1};
                         
