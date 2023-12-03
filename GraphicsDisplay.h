@@ -5,7 +5,7 @@
 #include "Window.h"
 #include <vector>
 #include <string>
-#include "Window.h"
+
 #include <memory>
 class GraphicsDisplay: public DisplayObserver{
     unique_ptr<Xwindow> w;

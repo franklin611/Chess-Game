@@ -352,7 +352,7 @@ void ChessBoard::validCheck(vector<Vec> legalMoves){
             }
         } else {
             if (wKing == move) {
-                check == true;
+                check = true;
                 break;
             }
         }

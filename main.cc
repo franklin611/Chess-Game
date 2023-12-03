@@ -41,6 +41,12 @@ void outputRules() {
     "+----------------------------------------------------+\n"
     "|                                                    |\n"
     "|                    Chess Game                      |\n"
+    "|                   _                                |\n"
+    "|                  | |                               |\n"
+    "|               ___| |__   ___  ___ ___              |\n"
+    "|              / __| '_ \\ / _ \\/ __/ __|             |\n"
+    "|             | (__| | | |  __/\\__ \\__ \\             |\n"
+    "|              \\___|_| |_|\\___||___/___/             |\n"
     "|                                                    |\n"
     "|          By: Chiara, Franklin, Helena              |\n"
     "|                                                    |\n"
@@ -89,7 +95,7 @@ int main() {
         shared_ptr<Player> playerWhite;
         shared_ptr<Player> playerBlack;
 
-        
+
 
         if(cmd == "game") {
             string player1, player2;
@@ -104,7 +110,7 @@ int main() {
 
                     playerWhite = make_shared<Human>(1, cb);
                     playerBlack = make_shared<Human>(0, cb);
-                    cb->setupPlayers(playerWhite, playerBlack); 
+                    cb->setupPlayers(playerWhite, playerBlack);
                     break;
 
                 } else if (player1 == "human" && player2.substr(0,8) == "computer" ) {
@@ -117,23 +123,23 @@ int main() {
                     }
 
                     level2 = stoi(player2.substr(9, 1));
-                    if (!(level2 >= 1 && level2 <= 4)) continue; 
+                    if (!(level2 >= 1 && level2 <= 4)) continue;
                     playerWhite = make_shared<Human>(1, cb);
                     playerBlack = make_shared<Computer>(0, cb, level2);
-                    cb->setupPlayers(playerWhite, playerBlack); 
+                    cb->setupPlayers(playerWhite, playerBlack);
                     break;
 
                 } else if (player1.substr(0,8) == "computer" && player2 == "human" ) {
 
                     try {
-                        level = stoi(player1.substr(9, 1)); 
+                        level = stoi(player1.substr(9, 1));
                     } catch (...) {
                         cout << "Invalid input. Please enter a valid level." << endl;
                         continue;
                     }
 
                     level = stoi(player1.substr(9, 1));
-                    if (!(level >= 1 && level <= 4)) continue; 
+                    if (!(level >= 1 && level <= 4)) continue;
                     playerWhite = make_shared<Computer>(1, cb, level);
                     playerBlack = make_shared<Human>(0, cb);
                     cb->setupPlayers(playerWhite, playerBlack); // Then players
@@ -152,8 +158,8 @@ int main() {
 
                     level = stoi(player1.substr(9, 1)); // Not sure if we can use stoi But this should level = the number in the brackets
                     level2 = stoi(player2.substr(9, 1));
-                    if (!(level2 >= 1 && level2 <= 4)) continue; 
-                    if (!(level >= 1 && level <= 4)) continue; 
+                    if (!(level2 >= 1 && level2 <= 4)) continue;
+                    if (!(level >= 1 && level <= 4)) continue;
 
                     playerWhite = make_shared<Computer>(1, cb, level);
                     playerBlack = make_shared<Computer>(0, cb, level2);
@@ -164,17 +170,17 @@ int main() {
                     cout << "Invalid Input. Please read the rules again. " << endl;
                     cout << "  - game white-player black-player: Starts a new game. 'white-player' and 'black-player' can be 'human' or 'computer[1-4]'" << endl;
                     cin >> cmd;
-                }  
+                }
             }
-            
+
             if(!usedSetup) cb->defaultBoard(); // In both cases setup board first
-            else cb->setUpStartMoves(); 
+            else cb->setUpStartMoves();
 
             string cmd2;
             cout << *(cb);
 
             while(cin >> cmd2) {
-                if(!cb->getTurn()) { //If passes means playerWhite turn. Remember, everything is negated. 
+                if(!cb->getTurn()) { //If passes means playerWhite turn. Remember, everything is negated.
                     if (cmd2 == "move" && player1 == "human") {
 
                         string start, end;
@@ -192,7 +198,7 @@ int main() {
                             cout << "Invalid input. Please enter valid coordinates." << endl;
                             continue;
                         }
-                                            
+
                         int x = convertToInt(start.substr(0,1)[0]);
                         int y = stoi(start.substr(1));
                         Vec coordinate1 = Vec{x, y - 1};
@@ -200,17 +206,17 @@ int main() {
                         int x2 = convertToInt(end.substr(0,1)[0]);
                         int y2 = stoi(end.substr(1));
 
-                        if(!(x >= 0 && x <= 7 && y>= 1 && y <= 8 && x2 >= 0 && x2 <= 7 && y2 >= 1 && y2 <= 8)) 
+                        if(!(x >= 0 && x <= 7 && y>= 1 && y <= 8 && x2 >= 0 && x2 <= 7 && y2 >= 1 && y2 <= 8))
                         {cout << "Invalid coordinates. Please input a location on the board." << endl; continue;}
 
                         Vec coordinate2 = Vec{x2, y2 - 1};
-                        
+
                         shared_ptr<Human> humanWhite = dynamic_pointer_cast<Human>(cb->getPlayerWhite());
 
                         if(humanWhite->makeHumanMove(coordinate1, coordinate2)) {
 
                             // Valid Move
-                            if(cb->upgradePawn(coordinate2)) { 
+                            if(cb->upgradePawn(coordinate2)) {
                                 char newPiece;
                                 cout << "Please input the character you want the Pawn to be upgraded to : " << endl;
                                 while (cin >> newPiece) {
@@ -248,8 +254,8 @@ int main() {
 
                     } else if (cmd2 == "skip") {
 
-                        cb->setTurn(!cb->getTurn()); 
-                        
+                        cb->setTurn(!cb->getTurn());
+
 
                     } else {
 
@@ -267,7 +273,7 @@ int main() {
 
                             int x2 = convertToInt(end.substr(0,1)[0]);
                             int y2 = stoi(end.substr(1));
-                        
+
                             if (!(x >= 0 && x <= 7 && y >= 1 && y <= 8 && x2 >= 0 && x2 <= 7 && y2 >= 1 && y2 <= 8)) {
                                 throw invalid_argument("Invalid coordinates");
                             }
@@ -275,7 +281,7 @@ int main() {
                             cout << "Invalid input. Please enter valid coordinates." << endl;
                             continue;
                         }
-                          
+
                         int x = convertToInt(start.substr(0,1)[0]);
                         int y = stoi(start.substr(1));
                         Vec coordinate1 = Vec{x, y - 1};
@@ -283,13 +289,13 @@ int main() {
                         int x2 = convertToInt(end.substr(0,1)[0]);
                         int y2 = stoi(end.substr(1));
 
-                        // if(!(x >= 0 && x <= 7 && y>= 1 && y <= 8 && x2 >= 0 && x2 <= 7 && y2 >= 1 && y2 <= 8)) 
+                        // if(!(x >= 0 && x <= 7 && y>= 1 && y <= 8 && x2 >= 0 && x2 <= 7 && y2 >= 1 && y2 <= 8))
                         // {cout << "Invalid coordinates. Please input a location on the board." << endl; continue;}
 
                         Vec coordinate2 = Vec{x2, y2 - 1}; // Start at row 0
-                        
+
                         shared_ptr<Human> humanBlack = dynamic_pointer_cast<Human>(cb->getPlayerBlack());
-                        
+
                         if(humanBlack->makeHumanMove(coordinate1, coordinate2)) {
 
                             if(cb->upgradePawn(coordinate2)) {
@@ -298,9 +304,9 @@ int main() {
                                 while (cin >> newPiece) {
                                     if (!((newPiece == 'q') || (newPiece == 'r')  || (newPiece == 'n')  || (newPiece == 'n'))) { cout << "Invalid Input. Try Again!"  << endl; continue;}
                                     cb->setupWithChar(newPiece, coordinate2);
-                                }  
+                                }
                             } else cin.ignore(80, '\n');
-   
+
 
                         } else {
 
@@ -311,7 +317,7 @@ int main() {
                     } else if (cmd2 == "move" && player2.substr(0,8) == "computer") {
 
                         shared_ptr<Computer> computerBlack = dynamic_pointer_cast<Computer>(cb->getPlayerBlack());
-                        
+
                         Vec end = computerBlack->makeComputerMove();
                         if(cb->upgradePawn(end)){
                             cb->setupWithChar('q', end);
@@ -322,16 +328,16 @@ int main() {
                         // Player2 has to lose
                         cb->forfeit();
                         cout << "Current Score: " << endl;
-                        cout << *(cb); 
+                        cout << *(cb);
                         cb->restartGame();
                         break;
 
                     } else if (cmd2 == "skip") {
 
-                        cb->setTurn(!cb->getTurn()); 
-                        
+                        cb->setTurn(!cb->getTurn());
+
                     } else {
-                        
+
                         cout << "Invalid Command. Try again" << endl;
 
                     }
@@ -344,8 +350,8 @@ int main() {
             char piece;
             cb->setupTurn(false); // We just want to change the output to White
 
-            while(cin >> cmd2) { 
-                
+            while(cin >> cmd2) {
+
                 if(cmd2 == "+") {
 
                     cin >> piece >> coord;
@@ -384,8 +390,8 @@ int main() {
                         cout << *(cb);
                     // }
 
-                    
-        
+
+
                 } else if (cmd2 == "-") {
 
                     cin >> coord;
@@ -410,7 +416,7 @@ int main() {
                     // Remove a piece on a board by placing an empty piece on that coordinate
                     Vec coordinate = Vec{x, y - 1}; // We have to minus one because we are 0-7
                     // if ((!(x >=0 && x <=7) || !(y <= 8 && y >= 1))) { cout << "Invalid Input. Input a Command Again." << endl; }
-                    // else { 
+                    // else {
 
                     cb->setupWithChar(cb->getEmptyPiece(coordinate)->getType(), coordinate);
                     cout << *(cb);
@@ -430,9 +436,9 @@ int main() {
                             cout << "Invalid input, please try again." << endl;
                         }
                     } else { cout << "Invalid input, please try again." << endl;}
-    
+
                 } else if (cmd2 == "done") {
-                    
+
                     if(cb->boardIsValid()) {
                         usedSetup = true;
                         break; // Only case where we break
@@ -443,7 +449,7 @@ int main() {
                     cb->restartGame();
                     break;
                 }
-                
+
             }
         } else { // Invalid Input
 
@@ -455,7 +461,7 @@ int main() {
     // END OF GAME
     cb->setDisplayScore(true);
     // cout << "Final Score:" << endl;
-    // cout << *(cb); // We not outputting again? 
+    // cout << *(cb); // We not outputting again?
     cout << endl;
     cout << "Thank you for playing. We hope you enjoyed!" << endl;
     cout << "Make sure to play again!" << endl;
