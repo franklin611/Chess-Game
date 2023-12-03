@@ -194,6 +194,11 @@ class ChessBoard: public ChessBoardObserver {
         // change the turn during setup 
         void setupTurn(bool turn);
 
+        // Returns a bool value of whether a turn is in check or not
+        bool IsvalidCheck(vector<Vec> legalMoves, bool playerTurn);
+
+
+
         // used to output the chessboard 
         friend ostream& operator<<(ostream& out, const ChessBoard& cb);
 

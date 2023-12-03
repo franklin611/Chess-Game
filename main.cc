@@ -354,6 +354,7 @@ int main() {
                 cout << *(cb);
             }
         } else if (cmd == "setup") {
+            cout << "Entered Setup Mode : " << endl;
             string cmd2, coord, colour;
             char piece;
             cb->setupTurn(false); // We just want to change the output to White

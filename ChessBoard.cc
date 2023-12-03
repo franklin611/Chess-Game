@@ -338,7 +338,7 @@ bool ChessBoard::isCheck(bool white){
 void ChessBoard::validCheck(vector<Vec> legalMoves){
     bool check = false;
     for (Vec move : legalMoves){
-        if(turn){ 
+        if(!turn){ 
             if(bKing == move) {
                 check = true; 
                 break; 
@@ -353,6 +353,29 @@ void ChessBoard::validCheck(vector<Vec> legalMoves){
     if (!turn) { bCheck = check; }
     else wCheck = check; 
 }
+
+// identifies if a team is in check and updates the booleans 
+// Franklin Created (Passed the legalMoves of enemy, and the )
+// Example: legalMoves of Black , playerTurn is false (signifiying white because we want to see if any of black's moves puts white into check)
+bool ChessBoard::IsvalidCheck(vector<Vec> legalMoves, bool playerTurn){
+    bool check = false;
+    for (Vec move : legalMoves){
+        if(playerTurn){  // True for white, false for black
+            if(bKing == move) {
+                check = true; 
+                break; 
+            }
+        } else { 
+            if (wKing == move) {
+                check = true;  // Fixed
+                break;
+            } 
+        }
+    }
+    return check; 
+
+}
+
 
 // modifies the gameboard and notifies the next player of their legal moves 
 void ChessBoard::notify(Vec start, Vec end){
@@ -489,18 +512,26 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
     vector<Vec> possibleMoves; 
 
     // reset all the possible moves for the pieces 
+    // White (true) means turn (false)
+    // Black (false) means turn (true)
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
             if (p->getTeam() != turn || p->getType() == ' ' || p->getType() == '_'){ continue; }
             p->resetMoves(); // clear all the legal moves
             p->getPossibleMoves(gb); // get the possible moves for this piece
+
+            for (Vec pMoves : p->returnPossibleMoves()) {
+                possibleMoves.push_back(pMoves);
+            }
             // @franklin611 add a for loop to append all possible moves to possibleMoves (489)
             
         }
     }
 
     // ISSUE: SWITCH TO ISVALIDCHECK
-    bool check = validCheck(possibleMoves);
+    // This checks the possible moves of the turn pieces 
+    bool check = IsvalidCheck(possibleMoves, turn); //Returns true or false based on whose turn it is 
+    // Need Chiara Input
     bool legal = false;
     bool team = false; 
     if (getPiece(end)->getType() >= 'A' && getPiece(end)->getType() <= 'Z'){ team = true; }
@@ -514,6 +545,7 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
         else { 
             playerBlack->notifyLM(start, end); 
         }
+        // Assume move doesnt put us in check, now we check what type of move it is
         isCaptureMove(start, end, boardCopy);
         isCheckMove(start, end);
         isCheckMateMove(start, end);
@@ -535,6 +567,7 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
         swap(bKingCoord, bKing);
     }
 
+    // If it puts us in check, legal stays false
     return legal;
 }
 
@@ -553,8 +586,9 @@ void ChessBoard::isCheckMateMove(Vec start, Vec end){
         }
     }
 
+// TODO
     // if the opposite team as no possible moves and they are in check then that is a checkmate move 
-    if (isCheck(turn) && empty){
+    if (isCheck(!turn) && empty){
         if (!turn){ playerWhite->notifyCMM(start, end); } 
         else { playerBlack->notifyCMM(start, end); }
     }
@@ -563,7 +597,13 @@ void ChessBoard::isCheckMateMove(Vec start, Vec end){
 //  determine if a move will put the other team in check 
 void ChessBoard::isCheckMove(Vec start, Vec end){
     // ISSUE: BASED ON POSSIBLE NOT LEGAL MOVES 
-    if (isCheck(turn)){
+
+    // If we reached here, assume that the move we want to make doesn't put us in check
+    // We check if it puts the enemy in check!
+    // We do !turn, cuz we want to see that the move we simulated in testMove
+    // Puts the enemy king in check
+    
+    if (isCheck(!turn)){
         if (!turn){ playerWhite->notifyCheckM(start, end); }
         else { playerBlack->notifyCheckM(start, end); }
     }

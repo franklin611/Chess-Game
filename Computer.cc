@@ -24,6 +24,23 @@ Vec Computer::makeComputerMove(int userLevel) {
     // gets all the moves based on its level 
     vector<vector<Vec>> levelsMoves = level->createMoves(legalMoves, captureMoves, checkMoves, checkMateMoves, avoidCaptureMoves);
 
+    for (vector<Vec> moves : legalMoves) {
+        cout << "Legal Start : " <<  moves[0] << "End : " << moves[1] << endl;
+    }
+    for (vector<Vec> moves : captureMoves) {
+        cout << "captureMoves Start : " <<  moves[0] << "End : " << moves[1] << endl;
+    }
+    for (vector<Vec> moves : checkMoves) {
+        cout << "checkMoves Start : " <<  moves[0] << "End : " << moves[1] << endl;
+    }
+    for (vector<Vec> moves : checkMateMoves) {
+        cout << "checkMateMoves Start : " <<  moves[0] << "End : " << moves[1] << endl;
+    }
+    for (vector<Vec> moves : avoidCaptureMoves) {
+        cout << "avoidCaptureMoves Start : " <<  moves[0] << "End : " << moves[1] << endl;
+    }
+
+
     // if there are any moves based on the level 
     if (!levelsMoves.empty()) {
         vector<Vec> selectedMove = selectRandomMove(levelsMoves);
