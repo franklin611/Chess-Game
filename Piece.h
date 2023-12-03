@@ -2,82 +2,37 @@
 #define _PIECE_H_
 
 #include <iostream>
-
-// #include "Observer.h"
 #include <vector>
 #include "Vec.h"
 #include <memory>
 using namespace std;
 
-// class Vec;
-
-// queen
-// employ the same logic as bishop and rook combined
-
-// king
-// it only has 8 options + castle
-// check in the 8 options if your own teammate is on that square, then you cannot have that move
-// for castle check ??????????????
-
-// bishop
-// look for the first piece hit while going diagonal in each direction
-// if that piece is your own team go back one space and thats the limit
-// if that piece is not on your own team that space is the limit
-
-// knight
-// it only has 8 options
-// check in the 8 options if your own teammate is on that square, then you cannot have that move
-// can a knight jump over a piece?
-
-// rook
-// look for the first piece hit going forwards and sideways in both directions
-// if that piece is your own team go back one space and thats the limit
-// if that piece is not on your own team that space is the limit
-
-// pawn
-// case 1: move one forward
-// can do this as long as no piece in front of them at all
-// case 2: move two forward
-// can do this only if the pawn has not moved and there is no piece in that square
-// case 3: en passant
-// case 4: capture diagonal
-// only allowed if the opposite team is on that square
-
-// class Empty;
-
 class Piece{
-		// not sure if this needs to be protected ****
 		protected:
-			// unique_ptr<Observer> playerWhite;
-			// unique_ptr<Observer> playerBlack;
-			Vec coordinate;
-			char type;
-			vector<Vec> possibleMoves;
-			bool white;
+			Vec coordinate; // Coordinate of the piece
+			char type; // Char of the piece
+			vector<Vec> possibleMoves; // The piece's possible moves
+			bool white; // Bool value of whether it is a white piece
 		public:
-			// Piece(const Piece* emptyBase);
-			// Piece(Piece& other);
-			// this will respond according to how p moved
-			void resetMoves();
-			// void addLegalMove(Vec end, bool white);  // Not sure if we even need anymore
-			void addTestMove(Vec end);
-			// Directly edits possibleMoves
-			virtual void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) = 0;
-			char getType() const;
-			bool getTeam() const;
 			Piece() = default;
 			Piece(Vec coordinate, char type, bool white);
 			Piece(const Piece& p);
 			Piece(Piece&& p);
 			virtual ~Piece() = default;
-			vector<Vec> getLegalMoves();
-			Vec getCoordinate() const;
-			void setCoordinate(Vec coord);
-			shared_ptr<Piece> pieceAt(vector<vector<shared_ptr<Piece>>> gb, Vec coordinate);
-			bool isEmptyPiece(shared_ptr<Piece> p);
-			bool inBounds(Vec coordinate);
-			vector<Vec> returnPossibleMoves();
-			virtual shared_ptr<Piece> clone() const = 0;
+			void resetMoves(); // Clear the piece's possible moves
+			void addTestMove(Vec end);
+			char getType() const; // Getter
+			bool getTeam() const; // Getter
+			virtual void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) = 0; // To be overriden in each subclass
+			// Each piece would generates its own set of possible moves specific to that piece and the current state of the gameboard
+			Vec getCoordinate() const; // Getter
+			void setCoordinate(Vec coord); // Setter
+			shared_ptr<Piece> pieceAt(vector<vector<shared_ptr<Piece>>> gb, Vec coordinate); // Returns the piece at the coordinate based on the passed gameboard
+			bool isEmptyPiece(shared_ptr<Piece> p); // Returns whether the passed piece is an empty piece
+			bool inBounds(Vec coordinate); // Checks the piece is in bounds of the gameboard
+			vector<Vec> returnPossibleMoves(); // Getter method that returns possibleMoves
+			virtual shared_ptr<Piece> clone() const = 0; // Pure Virtual that is overriden in each subclass
+			// Used for copying/cloning pieces
 };	
 
 #endif

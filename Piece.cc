@@ -5,19 +5,6 @@
 
 void Piece::resetMoves(){ possibleMoves.clear(); }
 
-// void Piece::addLegalMove(Vec end, bool white){ 
-// 	if (white){ playerWhite->notify(coordinate, end); }
-// 	else { playerBlack->notify(coordinate, end); }
-// }
-
-// Piece::Piece(const Piece* emptyBase) {
-//         // Initialize Piece using information from the Empty object
-//         coordinate = emptyBase->getCoordinate();
-//         type = emptyBase->getType();
-//         white = emptyBase->getTeam();
-//         // You may want to initialize other members based on the Empty object
-//     }
-
 Piece::Piece(Piece&& other)
         : coordinate(move(other.coordinate)),
           type(move(other.type)),
@@ -26,49 +13,29 @@ Piece::Piece(Piece&& other)
 
 Piece::Piece(const Piece& p): coordinate(p.coordinate), type(p.type), possibleMoves(p.possibleMoves), white(p.white) {}
 
-// Piece::Piece(Empty& empty): Piece{empty.coordinate, empty.type, empty.white} {}
-
+// Adds a move to possibleMoves of that piece
 void Piece::addTestMove(Vec end){ possibleMoves.push_back(end); }
 
 char Piece::getType() const { return type; }
 
 bool Piece::getTeam() const { return white; }
 
-Piece::Piece(struct Vec coordinate, char type, bool colour): coordinate{coordinate}, type{type}, white{colour} {}
-
-// Piece::Piece(Piece& other) {
-//         // Copy member variables
-//         // if (other.playerWhite) {
-//         //     playerWhite = make_unique<Observer>(*other.playerWhite);
-//         // } else {
-//         //     playerWhite = nullptr;
-//         // }
-
-//         // if (other.playerBlack) {
-//         //     playerBlack = make_unique<Observer>(*other.playerBlack);
-//         // } else {
-//         //     playerBlack = nullptr;
-//         // }
-
-//         coordinate = other.get;
-//         type = other.type;
-//         possibleMoves = other.possibleMoves;
-//         white = other.white;
-// }
+// It wsa struct coordinate before TODO
+Piece::Piece(Vec coordinate, char type, bool colour): coordinate{coordinate}, type{type}, white{colour} {}
 
 Vec Piece::getCoordinate() const { return coordinate; }
 
 void Piece::setCoordinate(Vec coord){ coordinate = coord; }
 
 shared_ptr<Piece> Piece::pieceAt(vector<vector<shared_ptr<Piece>>> gb, Vec coordinate) {
+    // First checks that the passed coordinate is in bounds (A safety handle)
     if ((!(coordinate.getX() <= 7 && coordinate.getX() >= 0)) || (!(coordinate.getY() <= 7 && coordinate.getY() >= 0))) return nullptr;
-
     int row = coordinate.getY();
     int col = coordinate.getX();
-
-    return gb[row][col];
+    return gb[row][col]; // Retunrs the piece at that coordinate where Y is row and X is column
 }
 
+// Checks if it is an empty piece
 bool Piece::isEmptyPiece(shared_ptr<Piece> p) {
     if (p->getType() == ' ' || p->getType() == '_') {
         return true;
@@ -77,19 +44,14 @@ bool Piece::isEmptyPiece(shared_ptr<Piece> p) {
     }
 }
 
-
+// Check if the coordinate is in bounds of the gameboard
 bool Piece::inBounds(Vec coordinate) {
     int row = coordinate.getY();
     int col = coordinate.getX();
     return (row >= 0 && row <= 7 && col >= 0 && col <= 7);
 }
 
-
+// A getter method
 vector<Vec> Piece::returnPossibleMoves() {
     return possibleMoves;
 }
-
-
-// shared_ptr<Piece> Piece::clone() const {
-//     return make_shared<Piece>(*this);
-// }
