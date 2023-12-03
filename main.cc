@@ -100,8 +100,6 @@ int main() {
 
             // Can now handle invalid input from the user
             while (cin >> player1 >> player2) {
-                int length1 = player1.length();
-                int length2 = player2.length();
 
                 if (!(validPlayer(player1) || validPlayer(player2))) {
                     cout << "Invalid Input. Please read the rules again. " << endl;
