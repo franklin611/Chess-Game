@@ -72,9 +72,7 @@ void outputRules() {
 
 int main() {
     string cmd;
-    // Xwindow xw;
     bool usedSetup = false;
-    // ChessBoard cb; // Default chessBoard constructor
     shared_ptr<ChessBoard> cb = make_shared<ChessBoard>();
 
     outputRules();
@@ -94,24 +92,19 @@ int main() {
         
 
         if(cmd == "game") {
-            // Observer -> Player -> Computer or Human. They are subclasses of Observer
             string player1, player2;
             int level, level2;
-
-            // Can now handle invalid input from the user
             while (cin >> player1 >> player2) {
-
-                if (!(validPlayer(player1) || validPlayer(player2))) {
+                if (!(validPlayer(player1) && validPlayer(player2))) {
                     cout << "Invalid Input. Please read the rules again. " << endl;
                     cout << "  - game white-player black-player: Starts a new game. 'white-player' and 'black-player' can be 'human' or 'computer[1-4]'" << endl;
                     cin >> cmd;
                     continue;
-                } 
-                else if (player1 == "human" && player2 == "human") {
+                } else if (player1 == "human" && player2 == "human") {
 
                     playerWhite = make_shared<Human>(1, cb);
                     playerBlack = make_shared<Human>(0, cb);
-                    cb->setupPlayers(playerWhite, playerBlack); // Then players
+                    cb->setupPlayers(playerWhite, playerBlack); 
                     break;
 
                 } else if (player1 == "human" && player2.substr(0,8) == "computer" ) {
@@ -127,14 +120,13 @@ int main() {
                     if (!(level2 >= 1 && level2 <= 4)) continue; 
                     playerWhite = make_shared<Human>(1, cb);
                     playerBlack = make_shared<Computer>(0, cb, level2);
-
-                    cb->setupPlayers(playerWhite, playerBlack); // Then players
+                    cb->setupPlayers(playerWhite, playerBlack); 
                     break;
 
                 } else if (player1.substr(0,8) == "computer" && player2 == "human" ) {
 
                     try {
-                        level = stoi(player1.substr(9, 1)); // Not sure if we can use stoi But this should level = the number in the brackets
+                        level = stoi(player1.substr(9, 1)); 
                     } catch (...) {
                         cout << "Invalid input. Please enter a valid level." << endl;
                         continue;
@@ -172,10 +164,8 @@ int main() {
                     cout << "Invalid Input. Please read the rules again. " << endl;
                     cout << "  - game white-player black-player: Starts a new game. 'white-player' and 'black-player' can be 'human' or 'computer[1-4]'" << endl;
                     cin >> cmd;
-                }
-                
+                }  
             }
-            
             
             if(!usedSetup) cb->defaultBoard(); // In both cases setup board first
             else cb->setUpStartMoves(); 
@@ -241,10 +231,7 @@ int main() {
 
                         shared_ptr<Computer>  computerWhite = dynamic_pointer_cast<Computer>(cb->getPlayerWhite());
 
-                        // cout << computerWhite->getLevel() << endl;
-                        int level = computerWhite->getLevel();
-
-                        Vec end = computerWhite->makeComputerMove(level); // TO DO UPDATE WITH HELENA'S NEW FUNCTION
+                        Vec end = computerWhite->makeComputerMove(); // TO DO UPDATE WITH HELENA'S NEW FUNCTION
                         if(cb->upgradePawn(end)){
                             cb->setupWithChar('Q', end);
                         }
@@ -324,10 +311,8 @@ int main() {
                     } else if (cmd2 == "move" && player2.substr(0,8) == "computer") {
 
                         shared_ptr<Computer> computerBlack = dynamic_pointer_cast<Computer>(cb->getPlayerBlack());
-                        int level = computerBlack->getLevel();
-                        // cout << computerBlack->getLevel() << endl;
                         
-                        Vec end = computerBlack->makeComputerMove(level);
+                        Vec end = computerBlack->makeComputerMove();
                         if(cb->upgradePawn(end)){
                             cb->setupWithChar('q', end);
                         }

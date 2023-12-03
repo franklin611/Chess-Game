@@ -337,12 +337,8 @@ bool ChessBoard::isCheck(bool white){
 // identifies if a team is in check and updates the booleans 
 void ChessBoard::validCheck(vector<Vec> legalMoves){
     bool check = false;
-    cout << "King Coordinate Black : " << bKing << endl;
-    cout << "King Coordinate White : " << wKing << endl;
     for (Vec move : legalMoves){
-        cout << "Moves : " << move << endl;
         if(turn){ 
-            cout << "here" << endl;
             if(bKing == move) {
                 check = true; 
                 break; 
