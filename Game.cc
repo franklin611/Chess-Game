@@ -7,6 +7,7 @@ Game::Game() : blackScore{0}, whiteScore{0} {}
 void Game::updateWhite(bool half) {
     if (half) {
         whiteScore += 0.5;
+        blackScore += 0.5;  
     } else {
         ++whiteScore;
     }
@@ -15,6 +16,7 @@ void Game::updateWhite(bool half) {
 void Game::updateBlack(bool half) {
     if (half) {
         blackScore += 0.5;
+        whiteScore += 0.5;
     } else {
         ++blackScore;
     }

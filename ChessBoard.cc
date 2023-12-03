@@ -337,8 +337,12 @@ bool ChessBoard::isCheck(bool white){
 // identifies if a team is in check and updates the booleans 
 void ChessBoard::validCheck(vector<Vec> legalMoves){
     bool check = false;
+    cout << "King Coordinate Black : " << bKing << endl;
+    cout << "King Coordinate White : " << wKing << endl;
     for (Vec move : legalMoves){
-        if(!turn){ 
+        cout << "Moves : " << move << endl;
+        if(turn){ 
+            cout << "here" << endl;
             if(bKing == move) {
                 check = true; 
                 break; 
@@ -350,7 +354,7 @@ void ChessBoard::validCheck(vector<Vec> legalMoves){
             } 
         }
     }
-    if (!turn) { bCheck = check; }
+    if (turn) { bCheck = check; }
     else wCheck = check; 
 }
 
@@ -410,12 +414,15 @@ void ChessBoard::notify(Vec start, Vec end){
             Vec v = p->getCoordinate();
             vector<Vec> moves = p->returnPossibleMoves();
             // test every possible move 
+            cout << "START: "<< v << endl;
             for (Vec move : moves){
                 // if the piece is on the next turn's team then see if its legal -> if it has any possible moves the game should continue
                 if (p->getTeam() != turn && testMove(v, move, true)){
+                    // cout << "firs if statement " << move << endl;
                     isEnd = false;
                 // if the piece is on the current team's moves append them to legal moves and see if the opponent is in check 
-                } else if (p->getTeam() == turn && testMove(v, move, false)){
+                } else if (testMove(v, move, false)){
+                   //  cout << "second if statement " << move << endl;
                     legalMoves.push_back(move); 
                 }
             }
@@ -430,7 +437,8 @@ void ChessBoard::notify(Vec start, Vec end){
     // update if the next player is in check 
     validCheck(legalMoves);
 
-    // notify the gd and td
+    
+        // notify the gd and td
     char startChar = emptyPiece->getType();
     char endChar = endPiece->getType();
     td->notifyMoves(start, startChar, end, endChar, checkString());
@@ -443,7 +451,7 @@ void ChessBoard::notify(Vec start, Vec end){
     if (isEnd) { endGame(); displayScore = true;  }
 }
 
-// update the check string 
+// update the check string
 string ChessBoard::checkString(){
     if (wCheck){ return "White"; }
     else if (bCheck) { return "Black"; }
@@ -453,11 +461,15 @@ string ChessBoard::checkString(){
 // DONE
 void ChessBoard::endGame() {
     if (turn) {
-        if (wCheck) { game.updateWhite(true); }
-        else { game.updateWhite(false); }
+        cout << "bCheck : " << bCheck << endl;
+        cout << "wCheck : " << wCheck << endl;
+        if (bCheck) { game.updateWhite(false); }
+        else { game.updateWhite(true); }
     } else {
-        if (bCheck) { game.updateBlack(true); }
-        else { game.updateBlack(false); }
+        cout << "bCheck : " << bCheck << endl;
+        cout << "wCheck : " << wCheck << endl;
+        if (wCheck) { game.updateBlack(false); }
+        else { game.updateBlack(true); }
     }
 }
 
@@ -530,11 +542,12 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
 
     // ISSUE: SWITCH TO ISVALIDCHECK
     // This checks the possible moves of the turn pieces 
-    bool check = IsvalidCheck(possibleMoves, turn); //Returns true or false based on whose turn it is 
-    // Need Chiara Input
+    bool check = IsvalidCheck(possibleMoves, turn); //Returns true or false based on whose turn it is
     bool legal = false;
     bool team = false; 
     if (getPiece(end)->getType() >= 'A' && getPiece(end)->getType() <= 'Z'){ team = true; }
+
+    if (!check){ legal = true; }
  
 
     // we decide its legal meaning the move does not put itself in check so we notify the players of the moves 
@@ -550,8 +563,8 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
         isCheckMove(start, end);
         isCheckMateMove(start, end);
         isAvoidCaptureMove(start, end, boardCopy);
-        legal = true;
     }
+
 
     // revert back to the original board 
     for (size_t row = 0; row < gb.size(); ++row) {
