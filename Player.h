@@ -4,7 +4,7 @@
 #include "ChessBoardObserver.h"
 #include <memory> // Not sure if we need
 #include "Vec.h"
-#include <vector> // if I have the include in .h then don't need in .cc
+#include <vector> 
 using namespace std;
 
 
@@ -12,6 +12,7 @@ using namespace std;
 class Player : public Observer {
     protected:
     bool colour;
+    // Moves are categorized into 5 different types
     vector<vector<Vec>> legalMoves;
     vector<vector<Vec>> captureMoves;
     vector<vector<Vec>> checkMoves;
@@ -22,19 +23,14 @@ class Player : public Observer {
     // friend class Computer;
     public:
         Player(bool colour, shared_ptr<ChessBoardObserver> cb); // since it's not a vector of observers then don't need attach and detach, just in ctor
-
-        // TODO: this should be that it gets notified by chessboard
-        // this is so it can get notified by Pieces
-        void notifyLM(Vec start, Vec end) override; // this will add a legal move to the legal moves field
+        // Each of the below notifys will add a start and end move to their respective set of moves
+        void notifyLM(Vec start, Vec end) override; 
         virtual void notifyCapM(Vec start, Vec end) override;
         virtual void notifyCheckM(Vec start, Vec end) override;
         virtual void notifyCMM(Vec start, Vec end) override;
         virtual void notifyACM(Vec start, Vec end) override;
-
         // don't need a notifyChessboard or anything because we are calling chessboard's notify inside chooseHumanMove/chooseComputerMove
         ~Player() = default;
-        // vector<vector<Vec>> getLegalMoves(); // TODO: think dont need this
-        // virtual shared_ptr<Player> clone() const = 0;
 };
 
 #endif
