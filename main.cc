@@ -420,14 +420,17 @@ int main() {
                     }
 
 
+
+
                     int x = convertToInt(coord.substr(0,1)[0]);
                     int y = stoi(coord.substr(1));
                     // Remove a piece on a board by placing an empty piece on that coordinate
                     Vec coordinate = Vec{x, y - 1}; // We have to minus one because we are 0-7
                     // if ((!(x >=0 && x <=7) || !(y <= 8 && y >= 1))) { cout << "Invalid Input. Input a Command Again." << endl; }
                     // else { 
-                        cb->setupWithPiece(cb->getEmptyPiece(coordinate), coordinate);
-                        cout << *(cb);
+
+                    cb->setupWithChar(cb->getEmptyPiece(coordinate)->getType(), coordinate);
+                    cout << *(cb);
                         // }
 
                 } else if (cmd2 == "=") {

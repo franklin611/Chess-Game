@@ -776,7 +776,7 @@ shared_ptr<Empty> ChessBoard::getEmptyPiece(Vec coord){
     int col = coord.getX();
     // COPY CTOR DIDNT WORK 
     // shoudl be row col,
-    shared_ptr<Empty> emptyPiece = make_shared<Empty>(Vec{col, row}, eb[row][col]->getType(), eb[row][col]->getTeam()); // TODO CHIARA
+    shared_ptr<Empty> emptyPiece = make_shared<Empty>(coord, eb[row][col]->getType(), eb[row][col]->getTeam()); // TODO CHIARA
     // shared_ptr<Empty> emptyPiece = eb[row][col]->clone();
     // Assume this copy construtor will work
 
