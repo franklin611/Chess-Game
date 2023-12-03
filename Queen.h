@@ -10,7 +10,8 @@ class Queen : public Piece {
         Queen(const Queen& other);
         Queen(Vec coordinate, char type, bool white);
         void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) override;
-        shared_ptr<Piece> clone() const override;
+        // Queen's overriden getPossibleMoves that populates its own possible moves
+        shared_ptr<Piece> clone() const override; // For piece subclass copying/cloning
 };
 
 #endif
