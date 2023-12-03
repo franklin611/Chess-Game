@@ -29,6 +29,7 @@ class Player : public Observer {
         virtual void notifyCapM(Vec start, Vec end) override;
         virtual void notifyCheckM(Vec start, Vec end) override;
         virtual void notifyCMM(Vec start, Vec end) override;
+        virtual void notifyACM(Vec start, Vec end) override;
 
         // don't need a notifyChessboard or anything because we are calling chessboard's notify inside chooseHumanMove/chooseComputerMove
         ~Player() = default;

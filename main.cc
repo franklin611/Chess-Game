@@ -28,7 +28,7 @@ int convertToInt(char c) {
 
 bool validPlayer(const string& player) {
     if (player == "human") return true;
-    if (player.length() == 1 && player.substr(0, 8) == "computer") {
+    if (player.length() == 11 && player.substr(0, 8) == "computer") {
         int level = player[9] - '0';  // Convert character to integer
         return level >= 1 && level <= 4;
     }
@@ -129,6 +129,7 @@ int main() {
                     if (!(level2 >= 1 && level2 <= 4)) continue; 
                     playerWhite = make_shared<Human>(1, cb);
                     playerBlack = make_shared<Computer>(0, cb, level2);
+
                     cb->setupPlayers(playerWhite, playerBlack); // Then players
                     break;
 
@@ -224,7 +225,7 @@ int main() {
                             // Valid Move
                             if(cb->upgradePawn(coordinate2)) { 
                                 char newPiece;
-                                cout << "Please input the character you wnat the Pawn to be upgraded to : " << endl;
+                                cout << "Please input the character you want the Pawn to be upgraded to : " << endl;
                                 while (cin >> newPiece) {
                                     if (!((newPiece == 'Q') || (newPiece == 'R')  || (newPiece == 'N')  || (newPiece == 'B'))){ cout << "Invalid Input. Try Again!"  << endl; continue;}
                                     cb->setupWithChar(newPiece, coordinate2);
@@ -242,6 +243,8 @@ int main() {
                         // Make Computer Move
 
                         shared_ptr<Computer>  computerWhite = dynamic_pointer_cast<Computer>(cb->getPlayerWhite());
+
+                        // cout << computerWhite->getLevel() << endl;
                         int level = computerWhite->getLevel();
 
                         Vec end = computerWhite->makeComputerMove(level); // TO DO UPDATE WITH HELENA'S NEW FUNCTION
@@ -325,6 +328,8 @@ int main() {
 
                         shared_ptr<Computer> computerBlack = dynamic_pointer_cast<Computer>(cb->getPlayerBlack());
                         int level = computerBlack->getLevel();
+                        // cout << computerBlack->getLevel() << endl;
+                        
                         Vec end = computerBlack->makeComputerMove(level);
                         if(cb->upgradePawn(end)){
                             cb->setupWithChar('q', end);

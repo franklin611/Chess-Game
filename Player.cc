@@ -8,7 +8,7 @@ void Player::notifyLM(Vec start, Vec end) {
     vector<Vec> newMove = {start, end};
     legalMoves.emplace_back(newMove);
     // cout << "MEMORY ADDRESS OF PLAYER " << colour << " IN NOTIFY: " << this << endl;
-    cout << "move: " << newMove[0] << ", " << newMove[1] << endl;
+    // cout << "move: " << newMove[0] << ", " << newMove[1] << endl;
     // cout << "MOVES: " << legalMoves.size() << endl;
 }
 
@@ -24,6 +24,11 @@ void Player::notifyCheckM(Vec start, Vec end) {
 void Player::notifyCMM(Vec start, Vec end) {
     vector<Vec> newMove = {start, end};
     checkMateMoves.emplace_back(newMove);
+}
+
+void Player::notifyACM(Vec start, Vec end) {
+    vector<Vec> newMove = {start, end};
+    avoidCaptureMoves.emplace_back(newMove);
 }
 
 // vector<vector<Vec>> Player::getLegalMoves() {

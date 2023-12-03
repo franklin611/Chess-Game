@@ -415,7 +415,7 @@ void ChessBoard::validCheck(vector<Vec> legalMoves){
             }
         } else { 
             if (wKing == move) {
-                check == true; 
+                check = true;  // Fixed
                 break;
             } 
         }
@@ -613,11 +613,11 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
     // we decide its legal -> notify player
     if (!check && notify){
         if (team){ 
-            cout << "NOTIFY WHITE: "<< endl;
+            // cout << "NOTIFY WHITE: "<< endl;
             playerWhite->notifyLM(start, end); 
         } // if the next turn (opponent is white)
         else { 
-            cout << "NOTIFY BLACK" << endl;
+            // cout << "NOTIFY BLACK" << endl;
             playerBlack->notifyLM(start, end); 
         }
         isCaptureMove(start, end, boardCopy);
@@ -701,6 +701,8 @@ void ChessBoard::isCaptureMove(Vec start, Vec end, vector<vector<shared_ptr<Piec
 }
 
 // did the move take this piece out of a position to be captured
+// We pass a potential move the piece can take from start to end
+// If it reached here, it means it is a legal move alr!
 void ChessBoard::isAvoidCaptureMove(Vec start, Vec end, vector<vector<shared_ptr<Piece>>> ob){
     // assume it is not in a position to be captured
     bool capture = false;
@@ -708,22 +710,34 @@ void ChessBoard::isAvoidCaptureMove(Vec start, Vec end, vector<vector<shared_ptr
     // look at the current team's possible moves if they are equal to the piece's start
     for (vector<shared_ptr<Piece>> vec : ob){
         for (shared_ptr<Piece> p : vec){
-            if (p->getTeam() != turn){ continue; }
+            // Example a7 b7 
+            // If it is our team, we dont care for them
+            if (p->getTeam() != turn || p->getType() == ' ' || p->getType() == '_'){ continue; }
+            // cout << p->getType() << endl;
+            // cout << "Kings (sepcific example) Team: " << p->getTeam() << endl;
+            // cout << "Start: " << start << endl;
+            // cout << "End : " << end << endl;
+            // It hit b6 b7, so it determined that it was a move
             p->resetMoves();
             p->getPossibleMoves(ob);
             for (Vec move: p->returnPossibleMoves()){
-                if (move == start){ capture = true; break;}
+                // cout << "Start position of piece we want to determine the avoid move of : " << start << endl;
+                // cout << "Move by " << p->getType() <<  move <<  endl;
+                if (move == start){
+                // cout << "Piece doing move " << p->getType() << endl;
+                capture = true; break;}
             }
         }
     }
 
     if (!capture){ return; }
+    capture  = false;
 
     // will the move take the piece out of a position to be captured
     // consider the board after the move was made, will any of the other team's pieces capture mine (which is at end)
     for (vector<shared_ptr<Piece>> vec: gb){
         for (shared_ptr<Piece> p : vec){
-            if (p->getTeam() != turn){ continue; }
+            if (p->getTeam() == turn){ continue; } // We should be checking current team's turn?
             p->resetMoves();
             p->getPossibleMoves(gb);
             for (Vec move: p->returnPossibleMoves()){
@@ -733,8 +747,8 @@ void ChessBoard::isAvoidCaptureMove(Vec start, Vec end, vector<vector<shared_ptr
     }
 
     if (!capture){
-        if (!turn){ playerWhite->notifyCheckM(start, end); }
-        else { playerBlack->notifyCheckM(start, end); }
+        if (!turn){ playerWhite->notifyACM(start, end); }
+        else { playerBlack->notifyACM(start, end); }
     }
 }
 
