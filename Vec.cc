@@ -31,7 +31,6 @@ void Vec::setX(int num){ x = num; }
 void Vec::setY(int num){ y = num; }
 
 ostream &operator<<(ostream &out, Vec &v) {
-
-    cout << "(" << char(v.getX() + 97) << ", " << v.getY() + 1<< ")";
+    cout << "(" << char(v.getX() + 97) << ", " << v.getY() + 1<< ")"; // Conversion from our gameboard to coordinates on an actual chessboard
     return out;
 }

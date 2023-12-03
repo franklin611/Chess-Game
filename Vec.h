@@ -17,7 +17,7 @@ class Vec {
 			Vec(Vec&& other);
 			Vec(const Vec& other);
 			Vec& operator=(const Vec& other);
-			friend ostream &operator<<(ostream &out, Vec &v);
+			friend ostream &operator<<(ostream &out, Vec &v); // Output operator to help display Vec coordinates tranlsated to points on the board
 };
 
 #endif
