@@ -3,14 +3,14 @@
 
 Rook::~Rook(){}
 
-Rook::Rook(): Piece{}, moved{false} {}
+Rook::Rook(): Piece{}, moved{false} {} // Moved is default assumed to be false
 
 Rook::Rook(const Rook& other): Piece{other}, moved{other.moved} {}
 
 Rook::Rook(Vec coordinate, char type, bool white) : Piece{coordinate, type, white}, moved{false} {}
-// To make Chiara's life easier, I can also just check if there is a piece there.
-// If our team, we can't make that move and break the for loop (Assuming we have 4 for loops for each
-// direction) if it is an enemy team, capturing is the last move we can make then break. 
+
+// Get the specific Rook's possible moves based on the state of the gameboard
+// Possible Moves are just moves the piece can take when taking into account the pieces on the board and the nove pattern of a Rook, not taking into consideration whether the move is valid or not
 void Rook::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec move;
     shared_ptr<Piece> p;
@@ -18,12 +18,11 @@ void Rook::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     for(int i = 1; i < 8; ++i) {
         // Going Down
         move = Vec{coordinate.getX(), coordinate.getY() + i};
-        p = pieceAt(gb, move);
+        p = pieceAt(gb, move); // Checks the piece at the potential move of the Rook
         if(inBounds(move) && isEmptyPiece(p)) {
             possibleMoves.push_back(move);
         } else if (inBounds(move) && !(p->getTeam() == getTeam())) {
             //Either out of bounds or not an empty piece
-            // Still in bounds and is an enemy piece
             possibleMoves.push_back(move);
             break;
             // Last Capture Move
@@ -70,9 +69,9 @@ void Rook::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
             break;
         } 
     }
-    // Above were just the regular moves. Now to consider the Castle
-    // Will be done in King
-    // I do not need to worry about it in Rooks
+
+    // Castle Moves are considered the King's possibleMoves in our implementation
+
 }
 
 bool Rook::getMoved() {
@@ -82,6 +81,3 @@ bool Rook::getMoved() {
 shared_ptr<Piece> Rook::clone() const {
     return make_shared<Rook>(*this);
 }
-
-
-
