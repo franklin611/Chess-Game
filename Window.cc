@@ -76,10 +76,10 @@ void Xwindow::setUpFont(const std::string& fontname) {
     XSetFont(d, gc, font->fid);
 } // Xwindow::setUpFont
 
-void Xwindow::drawString(int x, int y, string msg, int colour, const std::string& fontName) {
+void Xwindow::drawString(int x, int y, string msg, int colour) {
     unsigned long prevCol = 1;
     XSetForeground(d, gc, colours[colour]);
-    setUpFont(fontName);
+    // setUpFont(fontName);
     XDrawString(d, w, gc, x, y, msg.c_str(), msg.length());
     XSetForeground(d, gc, prevCol);
 } // Xwindow::drawString

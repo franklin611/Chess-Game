@@ -46,10 +46,10 @@ void GraphicsDisplay::notifyMoves(Vec start, char typeStart, Vec end, char typeE
 
 // draws the string/piece at the specified location
 void GraphicsDisplay::notify(Vec start, char typeStart) {
-    string font = "-b&h-lucidatypewriter-bold-r-normal-sans-20-140-100-100-m-120-iso8859-10";
+    // string font = "-b&h-lucidatypewriter-bold-r-normal-sans-20-140-100-100-m-120-iso8859-10";
     int xCoord = (start.getX() - 1) * dim;
     int yCoord = (6 - start.getY()) * dim; // flip for y-coord to start from the bottom
-    w->drawString(xCoord + 90, yCoord + 100, string(1, typeStart), 1, font);
+    w->drawString(xCoord + 90, yCoord + 100, string(1, typeStart), 1);
 }
 
 // this notify is part of pure virtual from DisplayObservers but is never called, so no implementation
