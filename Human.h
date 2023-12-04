@@ -6,9 +6,11 @@
 
 class Human: public Player {
     public:
+        // Human Constructor
         Human(bool colour, shared_ptr<ChessBoardObserver> cb);
+
+        // Returns true or false if a move inputted by the human user was made
         bool makeHumanMove(Vec start, Vec end);
-        // shared_ptr<Player> clone() const override;
 };
 
 #endif
