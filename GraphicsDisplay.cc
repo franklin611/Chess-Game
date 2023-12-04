@@ -54,4 +54,4 @@ void GraphicsDisplay::notify(Vec start, char typeStart) {
 
 // this notify is part of pure virtual from DisplayObservers but is never called, so no implementation
 void GraphicsDisplay::notify(bool white) {}
-GraphicsDisplay::~GraphicsDisplay() {}
+// GraphicsDisplay::~GraphicsDisplay() {}
