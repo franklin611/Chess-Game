@@ -20,6 +20,7 @@ class GraphicsDisplay: public DisplayObserver{
         void notify(Vec start, char typeStart) override;
         void notify(bool white) override;
         ~GraphicsDisplay() = default; // default since using unique_ptrs
+        void Blank();
 };
 
 #endif

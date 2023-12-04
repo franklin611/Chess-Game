@@ -181,6 +181,7 @@ ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_s
         eb.push_back(move(ebRow));
         gb.push_back(move(gbRow));
     }
+    gd->Blank();
 }
 
 // makes a regular move on the board
@@ -472,7 +473,7 @@ void ChessBoard::notify(Vec start, Vec end){
 // updates if a player took themselves out of check
 void ChessBoard::updateCheck(vector<Vec> moves, bool team){
     bool check = false;
-
+    
     for (Vec move : moves){
         if(team){
             if(bKing == move) {

@@ -1,7 +1,17 @@
 #include "GraphicsDisplay.h"
 
 // sets up the graphic's chessboard in window
-GraphicsDisplay::GraphicsDisplay() : w{make_unique<Xwindow>()}, dim{500/8} {
+// add dimensions in the unique pointer bracket 
+GraphicsDisplay::GraphicsDisplay() : w{make_unique<Xwindow>(800, 800)}, dim{800/8} {
+    // DOESNT WORK
+}
+
+// TODO HELENA
+// TLDR: Had issues setting up the colours in the terminals in MC3003 Lab. Caroline advised us some potential fixes.
+// One of them was repeated for loops in the constructor, which did not work. We created a seperate function that does what is done in the constructor
+// and we call it in our chessboard constructor to draw colours on the display
+void GraphicsDisplay::Blank() {
+    dim =800/8;
     int x_pos = 0;
     int y_pos = 0;
     for (int i = 0; i < 8; ++i) {
@@ -16,6 +26,35 @@ GraphicsDisplay::GraphicsDisplay() : w{make_unique<Xwindow>()}, dim{500/8} {
         y_pos += dim;
         x_pos = 0; // this brings back to start (LHS) doesn't actually fill in
     }
+    x_pos = 0;
+    y_pos = 0;
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            if ((((i % 2) == 0) && ((j % 2) == 0)) || (((i % 2) == 1) && ((j % 2) == 1))) {
+                w->fillRectangle(x_pos, y_pos, dim, dim, Xwindow::White);
+            } else {
+                w->fillRectangle(x_pos, y_pos, dim, dim, Xwindow::Blue);
+            }
+            x_pos += dim; // goes to the next column
+        }
+        y_pos += dim;
+        x_pos = 0; // this brings back to start (LHS) doesn't actually fill in
+    }
+    x_pos = 0;
+    y_pos = 0;
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            if ((((i % 2) == 0) && ((j % 2) == 0)) || (((i % 2) == 1) && ((j % 2) == 1))) {
+                w->fillRectangle(x_pos, y_pos, dim, dim, Xwindow::White);
+            } else {
+                w->fillRectangle(x_pos, y_pos, dim, dim, Xwindow::Blue);
+            }
+            x_pos += dim; // goes to the next column
+        }
+        y_pos += dim;
+        x_pos = 0; // this brings back to start (LHS) doesn't actually fill in
+    }
+    
 }
 
 // re-displays pieces that have been moved, including the tile/square
@@ -49,8 +88,17 @@ void GraphicsDisplay::notify(Vec start, char typeStart) {
     // string font = "-b&h-lucidatypewriter-bold-r-normal-sans-20-140-100-100-m-120-iso8859-10";
     int xCoord = (start.getX() - 1) * dim;
     int yCoord = (6 - start.getY()) * dim; // flip for y-coord to start from the bottom
-    w->drawString(xCoord + 90, yCoord + 100, string(1, typeStart), 1);
+    w->drawString(xCoord + 145, yCoord + 155, string(1, typeStart));
 }
+
+// // draws the string/piece at the specified location
+// void GraphicsDisplay::notify(Vec start, char typeStart) {
+//     string font = "-b&h-lucidatypewriter-bold-r-normal-sans-20-140-100-100-m-120-iso8859-10";
+//     int xCoord = (start.getX() - 1) * dim;
+//     int yCoord = (6 - start.getY()) * dim; // flip for y-coord to start from the bottom
+//     w->drawString(xCoord + 145, yCoord + 155, string(1, typeStart, font));
+// }
+
 
 // this notify is part of pure virtual from DisplayObservers but is never called, so no implementation
 void GraphicsDisplay::notify(bool white) {}
