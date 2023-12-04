@@ -17,7 +17,7 @@ class Rook : public Piece {
 
         ~Rook() override;
 
-        // Overrides superclass function. Determines the possible moves of a pawn
+        // Overrides superclass function. Determines the possible moves
         void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) override; 
 
         // Getter method

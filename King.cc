@@ -14,8 +14,9 @@ bool King::getMoved() {
     return moved;
 }
 
+// Determines all the possible moves the King can take
+// Not only does it have its regular up, down,left, right, diagonals, but we also determine if itcan castle or not
 void King::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
-    // My understanding of the board is kinda wonky cuz we made top left 0 0 and white on that row
     Vec moveUp = Vec{coordinate.getX(), coordinate.getY() - 1};
     Vec moveLeft = Vec{coordinate.getX() - 1, coordinate.getY()};
     Vec moveRight = Vec{coordinate.getX() + 1, coordinate.getY()};
@@ -28,10 +29,6 @@ void King::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec castleLeft = Vec{coordinate.getX() - 2, coordinate.getY()};
     Vec castleRight = Vec{coordinate.getX() + 3, coordinate.getY()};
 
-
-    // Consider two cases of "Left" for White and Black
-    // Check image in Discord
-    // Need to dynamically cast the piece pointers to King pointers
     shared_ptr<King> king = dynamic_pointer_cast<King>(gb[coordinate.getY()][coordinate.getX()]);
 
     Vec move;
@@ -43,6 +40,8 @@ void King::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     move2 = Vec{coordinate.getX() - 2, coordinate.getY()};
     
     // I need to check as well that there is a rook to castle
+    // Checks that there is no pieces between the King and rook, checks that a castle move is in bounds, that both the rook and king have not moved
+    // and that there is an actual King and Rook of the same team to castle with
     if (!moved &&  inBounds(move) && inBounds(move2) && inBounds(Vec{coordinate.getX() - 3, coordinate.getY()}) && (!(king->getMoved()) && isEmptyPiece(p) && isEmptyPiece(p2))) {
         if ((pieceAt(gb, Vec{coordinate.getX() - 3, coordinate.getY()})->getType() == 'R' && getTeam()) || (pieceAt(gb, Vec{coordinate.getX() - 3, coordinate.getY()})->getType() == 'r' && !getTeam())) {
             possibleMoves.push_back(castleLeft);
@@ -64,6 +63,8 @@ void King::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
         }
     }
 
+    // Determines if each of moves above is a valid move
+    // It must either be an empty piece there, or it is an enemy piece there
     p = pieceAt(gb, moveUp);
     if (inBounds(moveUp) && (isEmptyPiece(p) || (p->getTeam() != getTeam()))) {
         possibleMoves.push_back(moveUp);
@@ -96,19 +97,9 @@ void King::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     if (inBounds(bottomDiagonalRight) && (isEmptyPiece(p) || (p->getTeam() != getTeam()))) {
         possibleMoves.push_back(bottomDiagonalRight);
     }
-    // Left Castle
-    // THis is how a castle movehappens
-    // 1. 
-    // 2. 
-    // 3. castleMove(start,end).THis is only called when the move (start,end) is from a King
-    //      I just have to pass the start and end move. It willrecognize if it is a  + 2move by a King
-    
 }
 
-// I need to check the logic for a castle
-
+// Deep copy
 shared_ptr<Piece> King::clone() const {
     return make_shared<King>(*this);
 }
-
-
