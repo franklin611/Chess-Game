@@ -1,5 +1,8 @@
 #include "Rook.h"
 
+void Rook::hasMoved(){
+    moved = true;
+}
 
 Rook::~Rook(){}
 
