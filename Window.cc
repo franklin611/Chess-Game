@@ -32,7 +32,6 @@ Xwindow::Xwindow(int width, int height) {
   XColor xcolour;
   Colormap cmap;
   char color_vals[5][10]={"white", "black", "red", "green", "blue"};
-
   cmap=DefaultColormap(d,DefaultScreen(d));
   for(int i=0; i < 5; ++i) {
       XParseColor(d,cmap,color_vals[i],&xcolour);
