@@ -65,10 +65,8 @@ bool ChessBoard::boardIsValid() {
     }
 
     td->notify(turn);
-    gd->notify(turn); // TODO: dont think we need this
-    // cout << "do we get here final" << endl;
+    gd->notify(turn); 
 
-    // confirm with franklin this logic works
     return true;
 }
 
@@ -164,8 +162,6 @@ void ChessBoard::setupPlayers(shared_ptr<Observer> pWhite, shared_ptr<Observer> 
     playerBlack = pBlack;
 }
 
-// ISSUE: PUT BACK THE GRAPHICS STUFF
-// gd{make_shared<GraphicsDisplay>()}
 ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_shared<TextDisplay>()}, gd{make_shared<GraphicsDisplay>()}, game{}, bCheck{false}, wCheck{false}, turn{false}, bKing{}, wKing{}, displayScore{false} {
     // Setup the empty board and gameboard
     for (int row = 0; row < 8; row++) {
@@ -185,8 +181,6 @@ ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_s
         eb.push_back(move(ebRow));
         gb.push_back(move(gbRow));
     }
-    // ISSUE: I DON'T THINK THIS SHOULD BE HERE
-    // graphicsDisplay = gd;
 }
 
 // makes a regular move on the board
@@ -210,7 +204,7 @@ void ChessBoard::regMove(Vec start, Vec end){
     replacePiece(start, emptyPiece);
 }
 
-// DONE
+// makes the rook part of the castle move on the board
 void ChessBoard::castleMove(Vec start, Vec end){
     int startX = start.getX();
     int endX = end.getX();
@@ -223,7 +217,6 @@ void ChessBoard::castleMove(Vec start, Vec end){
         rookCoord.setX(0);
         Vec endCoord = Vec(end.getX() + 1, end.getY());
         regMove(rookCoord, endCoord);
-        //cout << "ROOK MOVES TO LEFT: " << gb[endCoord.getY()][endCoord.getX()]->getType() << endl;
     } else if (endX == startX + 3){
         rookCoord.setX(7);
         Vec endCoord = Vec(end.getX() - 1, end.getY());
@@ -261,7 +254,6 @@ void ChessBoard::isCastleMove(Vec start, Vec end){
 
 // removes the captured piece from the board from en passant
 void ChessBoard::passantMove(Vec start, Vec end){
-    // we consider the board before the move is made
 
     // move diagonal and captures sideways
     shared_ptr<Piece> p = getPiece(end);
@@ -281,6 +273,7 @@ void ChessBoard::passantMove(Vec start, Vec end){
         } else if ( end == leftDiagonal ){
             if (pawnMovedTwo(captureLeft, true)) { td->notify(captureLeft, getEmptyPiece(captureLeft)->getType()); }
         }
+    // white makes an en passant 
     } else if (type == 'P'){
         rightDiagonal = Vec(start.getX() + 1, start.getY() + 1);
         leftDiagonal = Vec(start.getX() - 1, start.getY() + 1);
@@ -336,7 +329,7 @@ void ChessBoard::updateKingCoord(Vec end, bool white){
     }
 }
 
-// ISSUE: THIS IS WRONG AND NEEDS TO BE REPLACED BY THE OTHER ONE IF THERE'S TIME
+// checks if the possible moves will put white in check 
 bool ChessBoard::isCheck(bool white){
     Vec kingCoord;
     if (white){
@@ -494,13 +487,13 @@ string ChessBoard::checkString(){
 // should this be negated???
 void ChessBoard::endGame() {
     if (turn) {
-        cout << "bCheck : " << bCheck << endl;
-        cout << "wCheck : " << wCheck << endl;
+        // cout << "bCheck : " << bCheck << endl;
+        // cout << "wCheck : " << wCheck << endl;
         if (bCheck) { game.updateWhite(false); }
         else { game.updateWhite(true); }
     } else {
-        cout << "bCheck : " << bCheck << endl;
-        cout << "wCheck : " << wCheck << endl;
+        // cout << "bCheck : " << bCheck << endl;
+        // cout << "wCheck : " << wCheck << endl;
         if (wCheck) { game.updateBlack(false); }
         else { game.updateBlack(true); }
     }
@@ -586,9 +579,11 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
     // we decide its legal meaning the move does not put itself in check so we notify the players of the moves
     if (!check && notify){
         if (team){
+            // cout << "NOTIFY WHITE: "<< endl;
             playerWhite->notifyLM(start, end);
         } // if the next turn (opponent is white)
         else {
+            // cout << "NOTIFY BLACK" << endl;
             playerBlack->notifyLM(start, end);
         }
         // assume move doesnt put us in check, now we check what type of move it is
@@ -635,7 +630,6 @@ void ChessBoard::isCheckMateMove(Vec start, Vec end){
     bool empty = true;
 
     // determines the possible moves of the opposite team
-    // ISSUE: THIS IS BASED ON POSSIBLE NOT LEGAL MOVES -> UPDATE
     for (vector<shared_ptr<Piece>> vec : gb){
         for (shared_ptr<Piece> p : vec){
             if (p->getTeam() != turn){ continue;}
@@ -645,7 +639,6 @@ void ChessBoard::isCheckMateMove(Vec start, Vec end){
         }
     }
 
-// TODO
     // if the opposite team as no possible moves and they are in check then that is a checkmate move
     if (isCheck(!turn) && empty){
         if (!turn){ playerWhite->notifyCMM(start, end); }
@@ -655,13 +648,6 @@ void ChessBoard::isCheckMateMove(Vec start, Vec end){
 
 //  determine if a move will put the other team in check
 void ChessBoard::isCheckMove(Vec start, Vec end){
-    // ISSUE: BASED ON POSSIBLE NOT LEGAL MOVES
-
-    // If we reached here, assume that the move we want to make doesn't put us in check
-    // We check if it puts the enemy in check!
-    // We do !turn, cuz we want to see that the move we simulated in testMove
-    // Puts the enemy king in check
-
     if (isCheck(!turn)){
         if (!turn){ playerWhite->notifyCheckM(start, end); }
         else { playerBlack->notifyCheckM(start, end); }
@@ -682,25 +668,14 @@ void ChessBoard::isAvoidCaptureMove(Vec start, Vec end, vector<vector<shared_ptr
     // assume it is not in a position to be captured
     bool capture = false;
     // was the piece (on the opponent's team) in a position to be captured in the first place in the old board
-    // ISSUE: THIS IS BASED ON POSSIBLE AND NOT LEGAL MOVES
     // look at the current team's legal moves if they are equal to the piece's start
     for (vector<shared_ptr<Piece>> vec : ob){
         for (shared_ptr<Piece> p : vec){
-            // Example a7 b7
-            // If it is our team, we dont care for them
             if (p->getTeam() != turn || p->getType() == ' ' || p->getType() == '_'){ continue; }
-            // cout << p->getType() << endl;
-            // cout << "Kings (sepcific example) Team: " << p->getTeam() << endl;
-            // cout << "Start: " << start << endl;
-            // cout << "End : " << end << endl;
-            // It hit b6 b7, so it determined that it was a move
             p->resetMoves();
             p->getPossibleMoves(ob);
             for (Vec move: p->returnPossibleMoves()){
-                // cout << "Start position of piece we want to determine the avoid move of : " << start << endl;
-                // cout << "Move by " << p->getType() <<  move <<  endl;
                 if (move == start){
-                // cout << "Piece doing move " << p->getType() << endl;
                 capture = true; break;}
             }
         }
@@ -713,7 +688,7 @@ void ChessBoard::isAvoidCaptureMove(Vec start, Vec end, vector<vector<shared_ptr
     // consider the board after the move was made, will any of the other team's pieces capture mine (which is at end)
     for (vector<shared_ptr<Piece>> vec: gb){
         for (shared_ptr<Piece> p : vec){
-            if (p->getTeam() == turn){ continue; } // We should be checking current team's turn?
+            if (p->getTeam() == turn){ continue; } 
             p->resetMoves();
             p->getPossibleMoves(gb);
             for (Vec move: p->returnPossibleMoves()){
@@ -738,12 +713,7 @@ bool ChessBoard::getTurn(){
 shared_ptr<Empty> ChessBoard::getEmptyPiece(Vec coord){
     int row = coord.getY();
     int col = coord.getX();
-    // COPY CTOR DIDNT WORK
-    // shoudl be row col,
-    shared_ptr<Empty> emptyPiece = make_shared<Empty>(Vec{col, row}, eb[row][col]->getType(), eb[row][col]->getTeam()); // TODO CHIARA
-    // shared_ptr<Empty> emptyPiece = eb[row][col]->clone();
-    // Assume this copy construtor will work
-
+    shared_ptr<Empty> emptyPiece = make_shared<Empty>(Vec{col, row}, eb[row][col]->getType(), eb[row][col]->getTeam()); 
     // return the copied piece
     return emptyPiece;
 }
@@ -765,12 +735,7 @@ void ChessBoard::forfeit(){
 void ChessBoard::restartGame() {
     for(size_t i = 0; i < eb.size(); ++i) { //The row
         for (size_t j = 0; j < eb[i].size(); ++j) { // The column
-        // Remmber, we have a vector<vector<>>>>
-            // COPY CTOR DIDNT WORK
-            // gb[j][i] = make_shared<Piece>(*(eb[i][j]));
-            // cout << "Type Before : " <<  gb[i][j]->getType() << endl;
-
-            td->notify(gb[i][j]->getCoordinate(), eb[i][j]->getType()); // Fixed to now notify text display of the change
+            td->notify(gb[i][j]->getCoordinate(), eb[i][j]->getType()); 
             gd->notify(gb[i][j]->getCoordinate(), eb[i][j]->getType());
 
             gb[i][j] = eb[i][j]->clone();
@@ -828,7 +793,6 @@ void ChessBoard::setupWithChar(char type, Vec coordinate) {
         gb[row][col] = getEmptyPiece(coordinate);
     }
 
-    // ISSUE: ADD GRAPHICS DISPLAY
     td->notify(coordinate, type);
     gd->notify(coordinate, type);
 }
@@ -850,9 +814,6 @@ void ChessBoard::defaultBoard() {
 
     // Setup Knights
     setupWithChar('N', Vec{1,0});
-    // cout << getPiece(Vec{1,0})->getType() << endl;
-    // cout << char(getPiece(Vec{1,0})->getCoordinate().getX() + 97) << endl;
-    // cout << getPiece(Vec{1,0})->getCoordinate().getY() + 1 << endl;
     setupWithChar('N', Vec{6, 0}); // Whites
     setupWithChar('n', Vec{1,7});
     setupWithChar('n', Vec{6, 7}); // Black
@@ -887,17 +848,15 @@ void ChessBoard::defaultBoard() {
         }
     }
 
-    // notify the display of who's turn it is
-    // ISSUE: ADD GRAPHICS DISPLAY
     td->notify(turn);
-    gd->notify(turn); //TODO: check
+    gd->notify(turn); 
 }
 
 // setup turn during setup and notify the display
 void ChessBoard::setupTurn(bool turn) {
     this->turn = turn;
     td->notify(turn);
-    gd->notify(turn); //TODO: check
+    gd->notify(turn); 
 
 }
 
@@ -906,7 +865,7 @@ void ChessBoard::setTurn(bool turn) {
     this->turn = turn;
 
     td->notify(turn);
-    gd->notify(turn); //TODO: check
+    gd->notify(turn); 
 
     bool isEnd = true;
     // set up the turn's moves

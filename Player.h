@@ -2,7 +2,7 @@
 #define _PLAYER_H_
 #include "Observer.h"
 #include "ChessBoardObserver.h"
-#include <memory> // Not sure if we need
+#include <memory> 
 #include "Vec.h"
 #include <vector> 
 using namespace std;
@@ -19,8 +19,6 @@ class Player : public Observer {
     vector<vector<Vec>> checkMateMoves;
     vector<vector<Vec>> avoidCaptureMoves;
     shared_ptr<ChessBoardObserver> cb; // player has a singular observer (chessboard)
-    // vector of vectors that contain vec (start and end)
-    // friend class Computer;
     public:
         Player(bool colour, shared_ptr<ChessBoardObserver> cb); // since it's not a vector of observers then don't need attach and detach, just in ctor
         // Each of the below notifys will add a start and end move to their respective set of moves
@@ -29,7 +27,7 @@ class Player : public Observer {
         virtual void notifyCheckM(Vec start, Vec end) override;
         virtual void notifyCMM(Vec start, Vec end) override;
         virtual void notifyACM(Vec start, Vec end) override;
-        // don't need a notifyChessboard or anything because we are calling chessboard's notify inside chooseHumanMove/chooseComputerMove
+        // destructor 
         ~Player() = default;
 };
 

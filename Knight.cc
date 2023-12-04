@@ -1,8 +1,10 @@
 #include "Knight.h"
 #include "ChessBoard.h"
 
+// default constructor 
 Knight::Knight(Vec coordinate, char type, bool colour): Piece{coordinate, type, colour} {}
 
+// copy constructor 
 Knight::Knight(const Knight& other): Piece{other} {}
 
 // The possibleMoves of the knight based on the current gameboard

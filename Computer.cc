@@ -34,6 +34,7 @@ Vec Computer::makeComputerMove() {
         checkMateMoves.clear(); 
         avoidCaptureMoves.clear();
         legalMoves.clear();
+        cout << "MOVE: " << selectedMove[0] << ' ' << selectedMove[1] << endl;
         return selectedMove[1];
     // otherwise just pick a legal move 
     } else {
@@ -44,6 +45,7 @@ Vec Computer::makeComputerMove() {
         checkMateMoves.clear();
         avoidCaptureMoves.clear();
         legalMoves.clear();
+        cout << "MOVE: " << onlyLegalMove[0] << ' ' << onlyLegalMove[1] << endl;
         return onlyLegalMove[1];
     }
 

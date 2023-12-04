@@ -5,6 +5,7 @@
 
 class Empty : public Piece {
     public:
+        // default constructor 
         Empty();
 
         // Copy constructor

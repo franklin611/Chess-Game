@@ -6,9 +6,11 @@
 class Rook : public Piece {
     bool moved; // Boolean value if the Rook has moved (For castling)
     public:
-        
+        // Default Constructor 
         Rook();
-        
+
+        // update if rook has moved 
+        void hasMoved();
 
         // Copy Constructor
         Rook(const Rook & other);
@@ -23,8 +25,6 @@ class Rook : public Piece {
 
         // Getter method
         bool getMoved();  
-
-        void hasMoved();
 
          // Creates a deep copy of a Rook 
         shared_ptr<Piece> clone() const override; // Used for subclass cloning

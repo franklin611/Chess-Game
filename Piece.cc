@@ -3,30 +3,38 @@
 #include "Observer.h"
 #include "Empty.h"
 
+// resets the possible moves of a piece 
 void Piece::resetMoves(){ possibleMoves.clear(); }
 
+// piece copy constructor 
 Piece::Piece(Piece&& other)
         : coordinate(move(other.coordinate)),
           type(move(other.type)),
           possibleMoves(move(other.possibleMoves)),
           white(move(other.white)) {}
 
+// Piece constructor 
 Piece::Piece(const Piece& p): coordinate(p.coordinate), type(p.type), possibleMoves(p.possibleMoves), white(p.white) {}
 
 // Adds a move to possibleMoves of that piece
 void Piece::addTestMove(Vec end){ possibleMoves.push_back(end); }
 
+// gets the type of piece 
 char Piece::getType() const { return type; }
 
+// gets the team of a piece 
 bool Piece::getTeam() const { return white; }
 
-// It wsa struct coordinate before TODO
+// default constructor 
 Piece::Piece(Vec coordinate, char type, bool colour): coordinate{coordinate}, type{type}, white{colour} {}
 
+// gets the coordinate of a piece 
 Vec Piece::getCoordinate() const { return coordinate; }
 
+// sets the coordinate of a piece 
 void Piece::setCoordinate(Vec coord){ coordinate = coord; }
 
+// returns the piece at a specific coordinate 
 shared_ptr<Piece> Piece::pieceAt(vector<vector<shared_ptr<Piece>>> gb, Vec coordinate) {
     // First checks that the passed coordinate is in bounds (A safety handle)
     if ((!(coordinate.getX() <= 7 && coordinate.getX() >= 0)) || (!(coordinate.getY() <= 7 && coordinate.getY() >= 0))) return nullptr;

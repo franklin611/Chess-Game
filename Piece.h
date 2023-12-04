@@ -14,13 +14,18 @@ class Piece{
 			vector<Vec> possibleMoves; // The piece's possible moves
 			bool white; // Bool value of whether it is a white piece
 		public:
+			// default constructor 
 			Piece() = default;
+			// default constructor 
 			Piece(Vec coordinate, char type, bool white);
+			// copy constructor 
 			Piece(const Piece& p);
+			// move constructor 
 			Piece(Piece&& p);
+			// destructor 
 			virtual ~Piece() = default;
 			void resetMoves(); // Clear the piece's possible moves
-			void addTestMove(Vec end);
+			void addTestMove(Vec end); // adds a move to the possible moves 
 			char getType() const; // Getter
 			bool getTeam() const; // Getter
 			virtual void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) = 0; // To be overriden in each subclass

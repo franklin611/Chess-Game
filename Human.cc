@@ -1,7 +1,7 @@
 #include "Human.h"
 #include "ChessBoard.h"
 
-
+// default constructor 
 Human::Human(bool colour, shared_ptr<ChessBoardObserver> cb) : Player{colour, cb} {}
 
 // Checks that the user inputted an end move that exists in the piece at the Vec start set of legal moves

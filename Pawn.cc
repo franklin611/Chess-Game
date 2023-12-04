@@ -1,22 +1,27 @@
 #include "Pawn.h"
 
+// update that a pawn has moved 
 void Pawn::hasMoved(){
 	moved = true;
 }
 
+// updated that a pawn has moved two spaces at start
 void Pawn::hasMovedTwo(){
 	movedTwo = true;
 }
 
-// Value of moved starts as false
+// default constructor 
 Pawn::Pawn(Vec coordinate, char type, bool white) : Piece{coordinate, type, white}, movedTwo{false}, moved{false} {}
 
+// copy constructor 
 Pawn::Pawn(const Pawn& other) : Piece{other}, movedTwo{other.movedTwo}, moved{other.moved} {}
 
+// return the moved boolean
 bool Pawn::getMoved(){
 	return moved; 
 }
 
+// return the movedTwo boolean 
 bool Pawn::getMovedTwo(){
 	return movedTwo;
 }
@@ -87,6 +92,7 @@ bool Pawn::canPassantRight(vector<vector<shared_ptr<Piece>>> gb, Vec passantRigh
 	}
 }
 
+// checks if a pawn is able to en passant to the left of the board 
 bool Pawn::canPassantLeft(vector<vector<shared_ptr<Piece>>> gb, Vec passantLeft) {
 	if (!inBounds(passantLeft)) { return false; }
 	if (getTeam() && coordinate.getY() == 4 && pawnMovedTwo(gb, passantLeft, !this->getTeam())){
@@ -112,6 +118,7 @@ bool Pawn::pawnMovedTwo(vector<vector<shared_ptr<Piece>>> gb, Vec coordinate, bo
 
 }
 
+// deep copy clone function
 shared_ptr<Piece> Pawn::clone() const {
     return make_shared<Pawn>(*this);
 }

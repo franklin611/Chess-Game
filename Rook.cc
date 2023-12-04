@@ -1,15 +1,20 @@
 #include "Rook.h"
 
+// updates if a rook has moved 
 void Rook::hasMoved(){
     moved = true;
 }
 
+// destructor 
 Rook::~Rook(){}
 
+// default constructor 
 Rook::Rook(): Piece{}, moved{false} {} // Moved is default assumed to be false
 
+// copy constructor 
 Rook::Rook(const Rook& other): Piece{other}, moved{other.moved} {}
 
+// default constructor 
 Rook::Rook(Vec coordinate, char type, bool white) : Piece{coordinate, type, white}, moved{false} {}
 
 // Get the specific Rook's possible moves based on the state of the gameboard
@@ -72,15 +77,14 @@ void Rook::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
             break;
         } 
     }
-
-    // Castle Moves are considered the King's possibleMoves in our implementation
-
 }
 
+// returns the moved boolean 
 bool Rook::getMoved() {
     return moved;
 }
 
+// deep copy clone function 
 shared_ptr<Piece> Rook::clone() const {
     return make_shared<Rook>(*this);
 }

@@ -1,10 +1,12 @@
 #include "Queen.h"
 
+// default constructor 
 Queen::Queen(Vec coordinate, char type, bool white) : Piece{coordinate, type, white} {} 
-// Since Queen has no extra fields, use Piece's constructor
 
+// copy constructor 
 Queen::Queen(const Queen& other): Piece{other} {}
 
+// updates the queen's possible moves 
 void Queen::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec move;
     shared_ptr<Piece> p;

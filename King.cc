@@ -1,21 +1,25 @@
 #include "King.h"
 
+// default constructor 
 King::King(Vec coordinate, char type, bool colour): Piece{coordinate, type, colour}, moved{false} {}
 
+// default constructor 
 King::King() : Piece{}, moved{false} {}
 
+// copy constructor 
 King::King(const King& other) : Piece{other}, moved{other.moved} {}
 
+// updates if the king has moved
 void King::hasMoved(){
     moved = true;
 }
 
+// accesses the king's moved boolean
 bool King::getMoved() {
     return moved;
 }
 
 // Determines all the possible moves the King can take
-// Not only does it have its regular up, down,left, right, diagonals, but we also determine if itcan castle or not
 void King::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     Vec moveUp = Vec{coordinate.getX(), coordinate.getY() - 1};
     Vec moveLeft = Vec{coordinate.getX() - 1, coordinate.getY()};
@@ -39,7 +43,6 @@ void King::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     move = Vec{coordinate.getX() - 1, coordinate.getY()};
     move2 = Vec{coordinate.getX() - 2, coordinate.getY()};
     
-    // I need to check as well that there is a rook to castle
     // Checks that there is no pieces between the King and rook, checks that a castle move is in bounds, that both the rook and king have not moved
     // and that there is an actual King and Rook of the same team to castle with
     if (!moved &&  inBounds(move) && inBounds(move2) && inBounds(Vec{coordinate.getX() - 3, coordinate.getY()}) && (!(king->getMoved()) && isEmptyPiece(p) && isEmptyPiece(p2))) {

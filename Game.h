@@ -5,9 +5,10 @@
 using namespace std;
 
 class Game {
-    float blackScore; // Score of the Black and White team
-    float whiteScore;
+    float blackScore; // Score of the Black team
+    float whiteScore; // Score of the White team
     public:
+        // default constructor 
         Game();
 
         // Update the whiteScore field

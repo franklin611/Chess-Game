@@ -126,8 +126,7 @@ int main() {
                     }
                     
                     level2 = stoi(player2.substr(9, 1));
-                    // if (!(level2 >= 1 && level2 <= 4)) continue; // If the user has inputted an incorrect number
-                    // // continue the if statement and reach the invalid input
+                    // continue the if statement and reach the invalid input
                     playerWhite = make_shared<Human>(1, cb);
                     playerBlack = make_shared<Computer>(0, cb, level2);
                     // Create a human and computer player based on the level
@@ -156,7 +155,7 @@ int main() {
                 } else if (player1.substr(0,8) == "computer" && player2.substr(0,8) == "computer" ) {
 
                     try {
-                        level = stoi(player1.substr(9, 1)); // Not sure if we can use stoi But this should level = the number in the brackets
+                        level = stoi(player1.substr(9, 1)); 
                         level2 = stoi(player2.substr(9, 1));
                         if (!(level >= 1 && level <= 4 && level2 >= 1 && level2 <=4))  {
                             throw invalid_argument("Invalid Level");
@@ -166,10 +165,8 @@ int main() {
                         continue;
                     }
 
-                    level = stoi(player1.substr(9, 1)); // Not sure if we can use stoi But this should level = the number in the brackets
+                    level = stoi(player1.substr(9, 1)); 
                     level2 = stoi(player2.substr(9, 1));
-                    // if (!(level2 >= 1 && level2 <= 4)) continue;
-                    // if (!(level >= 1 && level <= 4)) continue;
 
                     playerWhite = make_shared<Computer>(1, cb, level);
                     playerBlack = make_shared<Computer>(0, cb, level2);

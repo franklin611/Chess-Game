@@ -15,6 +15,7 @@ void Game::updateWhite(bool half) {
     }
 }
 
+// updates the black score if it's checkmate or stalemate 
 void Game::updateBlack(bool half) {
     if (half) {
         blackScore += 0.5;
@@ -24,6 +25,7 @@ void Game::updateBlack(bool half) {
     }
 }
 
+// outputs the score 
 ostream &operator<<(ostream &out, const Game &g) {
     out << "White: " << g.whiteScore << endl << "Black: " << g.blackScore;
     return out;

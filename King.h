@@ -7,6 +7,7 @@ class King : public Piece {
         bool moved;
     public:
 
+        // default constructor 
         King();
 
         // Copy constructor
@@ -21,6 +22,7 @@ class King : public Piece {
         // Getters
         bool getMoved();
 
+        // updates if the king has moved 
         void hasMoved();
 
         // Deep copy of King pieces
