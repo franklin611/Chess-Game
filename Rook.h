@@ -8,6 +8,7 @@ class Rook : public Piece {
     public:
         
         Rook();
+        
 
         // Copy Constructor
         Rook(const Rook & other);
@@ -22,6 +23,8 @@ class Rook : public Piece {
 
         // Getter method
         bool getMoved();  
+
+        void hasMoved();
 
          // Creates a deep copy of a Rook 
         shared_ptr<Piece> clone() const override; // Used for subclass cloning
