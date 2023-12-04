@@ -119,8 +119,7 @@ shared_ptr<Piece> ChessBoard::getPiece(Vec coordinate){
     return gb[row][col];
 }
 
-// DONE
-// pass white as the current pawn's colour
+// returns if the pawn moved forward two spaces at start
 bool ChessBoard::pawnMovedTwo(Vec coordinate, bool white){
     char type = getType(coordinate);
     shared_ptr<Piece> p = getPiece(coordinate);
@@ -162,6 +161,7 @@ void ChessBoard::setupPlayers(shared_ptr<Observer> pWhite, shared_ptr<Observer> 
     playerBlack = pBlack;
 }
 
+// ChessBoard Constructor
 ChessBoard::ChessBoard() : playerWhite{nullptr}, playerBlack{nullptr}, td{make_shared<TextDisplay>()}, gd{make_shared<GraphicsDisplay>()}, game{}, bCheck{false}, wCheck{false}, turn{false}, bKing{}, wKing{}, displayScore{false} {
     // Setup the empty board and gameboard
     for (int row = 0; row < 8; row++) {
@@ -469,6 +469,7 @@ void ChessBoard::notify(Vec start, Vec end){
     if (isEnd) { endGame(); displayScore = true;  }
 }
 
+// updates if a player took themselves out of check
 void ChessBoard::updateCheck(vector<Vec> moves, bool team){
     bool check = false;
 
@@ -508,7 +509,7 @@ void ChessBoard::endGame() {
 }
 
 
-// DONE
+// simulates a move and tests if it is legal -> will notify the players based on notify bool 
 bool ChessBoard::testMove(Vec start, Vec end, bool notify){
 
     vector<vector<shared_ptr<Piece>>> boardCopy;
@@ -585,11 +586,9 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
     // we decide its legal meaning the move does not put itself in check so we notify the players of the moves
     if (!check && notify){
         if (team){
-            // cout << "NOTIFY WHITE: "<< endl;
             playerWhite->notifyLM(start, end);
         } // if the next turn (opponent is white)
         else {
-            // cout << "NOTIFY BLACK" << endl;
             playerBlack->notifyLM(start, end);
         }
         // assume move doesnt put us in check, now we check what type of move it is
@@ -599,21 +598,6 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
         isAvoidCaptureMove(start, end, boardCopy);
     }
 
-    // revert the board -> switch the board copy to the gb
-    // this swap might not work
-    // Yup chatgpt said nada
-    // knight should be at (c, 3) end
-
-    // after the move was made
-    // int row = start.getY();
-    // int col = start.getX();
-    // should be knight
-    // cout << "OLD BOARD : " << start << ' ' << boardCopy[row][col]->getType() << endl;
-    // should be empty
-    // cout << "MOVED BOARD : " << start << ' ' << gb[row][col]->getType() << endl;
-    // should be the start coordinate
-    // Vec c = gb[row][col]->getCoordinate();
-    // cout << c << endl;
     for (size_t row = 0; row < gb.size(); ++row) {
         for (size_t col = 0; col < gb[row].size(); ++col) {
             gb[row][col] = move(boardCopy[row][col]);
@@ -737,7 +721,7 @@ void ChessBoard::forfeit(){
 }
 
 
-// DONE
+// resets the gameboard to start a new game 
 void ChessBoard::restartGame() {
     for(size_t i = 0; i < eb.size(); ++i) { //The row
         for (size_t j = 0; j < eb[i].size(); ++j) { // The column
