@@ -2,10 +2,11 @@
 #define _OBSERVER_H_
 
 #include "Vec.h"
-#include <memory> // Not sure if we need
+// #include <memory> // Not sure if we need
 class Observer {
-  // vector<vector<Vec>> legalMoves;
  public:
+  // Pure Virtual functions to be overriden in each subclass
+  // They will be used by the Observer subclasses to notify the player,a subclass, about new moves
   virtual void notifyLM(Vec start, Vec end) = 0;
   virtual void notifyCapM(Vec start, Vec end) = 0;
   virtual void notifyCheckM(Vec start, Vec end) = 0;
