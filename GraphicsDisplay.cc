@@ -6,9 +6,9 @@ GraphicsDisplay::GraphicsDisplay() : w{make_unique<Xwindow>()}, dim{500/8} {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             if (((i % 2 == 0) && (j % 2 == 0)) || ((i % 2 == 1) && (j % 2 == 1))) {
-                w->fillRectangle(x_pos, y_pos, dim, dim, Xwindow::Blue);
-            } else {
                 w->fillRectangle(x_pos, y_pos, dim, dim, Xwindow::White);
+            } else {
+                w->fillRectangle(x_pos, y_pos, dim, dim, Xwindow::Blue);
             }
             x_pos += dim; // Move to the next column
         }
@@ -22,10 +22,20 @@ void GraphicsDisplay::notifyMoves(Vec start, char typeStart, Vec end, char typeE
     int yCoord = (7 - start.getY()) * dim;
 
     if ((start.getX() % 2 == 0) && (start.getY() % 2 == 0) || ((start.getX() % 2 == 1) && (start.getY() % 2 == 1))) {
-        w->fillRectangle(xCoord, yCoord, dim, dim, Xwindow::White);
+        w->fillRectangle(xCoord, yCoord, dim, dim, Xwindow::Blue);
     } else {
-         w->fillRectangle(xCoord, yCoord, dim, dim, Xwindow::Blue);
+         w->fillRectangle(xCoord, yCoord, dim, dim, Xwindow::White);
     }
+
+     xCoord = end.getX() * dim;
+     yCoord = (7 - end.getY()) * dim;
+
+    if ((end.getX() % 2 == 0) && (end.getY() % 2 == 0) || ((end.getX() % 2 == 1) && (end.getY() % 2 == 1))) {
+        w->fillRectangle(xCoord, yCoord, dim, dim, Xwindow::Blue);
+    } else {
+         w->fillRectangle(xCoord, yCoord, dim, dim, Xwindow::White);
+    }
+
     this->notify(end, typeEnd);
 }
 
