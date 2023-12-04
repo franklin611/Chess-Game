@@ -61,6 +61,10 @@ class ChessBoard: public ChessBoardObserver {
     bool displayScore;
 
     public:
+
+        // update if a player took themselves out of check 
+        void updateCheck(vector<Vec> moves, bool team);
+
         // updates if a rook moves on the board
         void updateRookMove(Vec end);
 

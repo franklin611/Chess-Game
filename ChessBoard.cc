@@ -357,8 +357,6 @@ bool ChessBoard::isCheck(bool white){
 void ChessBoard::validCheck(vector<Vec> legalMoves){
     bool check = false;
 
-    // king is appending its moves twice
-
     for (Vec move : legalMoves){
         if(turn){
             if(bKing == move) {
@@ -401,11 +399,7 @@ bool ChessBoard::IsvalidCheck(vector<Vec> legalMoves, bool playerTurn){
 // modifies the gameboard and notifies the next player of their legal moves
 void ChessBoard::notify(Vec start, Vec end){
 
-    // Vec black = getBKing();
-    // cout << "BLACK: " << black << endl;
-
     makeMove(start, end);
-
 
     char startType = getType(end);
 
@@ -428,6 +422,7 @@ void ChessBoard::notify(Vec start, Vec end){
     bool isEnd = true;
     turn = !turn;
     vector<Vec> legalMoves;
+    vector<Vec> legalMoves2;
 
     // get the legal moves of the current player to see if the opponent is in check
     // get the legal moves of the next player to predict their moves
@@ -440,12 +435,11 @@ void ChessBoard::notify(Vec start, Vec end){
             Vec v = p->getCoordinate();
             vector<Vec> moves = p->returnPossibleMoves();
             // test every possible move
-            // cout << "START: "<< v << endl;
             for (Vec move : moves){
                 // if the piece is on the next turn's team then see if its legal -> if it has any possible moves the game should continue
                 if (p->getTeam() != turn && testMove(v, move, true)){
-                    // cout << "firs if statement " << move << endl;
                     isEnd = false;
+                    legalMoves2.push_back(move);
                 } else if (p->getTeam() == turn && testMove(v, move, false)){
                     legalMoves.push_back(move);
                 }
@@ -456,13 +450,14 @@ void ChessBoard::notify(Vec start, Vec end){
     shared_ptr<Piece> emptyPiece = getPiece(start);
     shared_ptr<Piece> endPiece = getPiece(end);
 
-    // ISSUE: DOES A PLAYER GET TAKEN OUT OF CHECK?
-
     // update if the next player is in check
     validCheck(legalMoves);
 
+    // update if the move that was just made took yourself out of check 
+    updateCheck(legalMoves2, !turn);
 
-        // notify the gd and td
+
+    // notify the gd and td
     char startChar = emptyPiece->getType();
     char endChar = endPiece->getType();
     td->notifyMoves(start, startChar, end, endChar, checkString());
@@ -470,9 +465,28 @@ void ChessBoard::notify(Vec start, Vec end){
     isCastleMove(start, end);
     passantMove(start, end);
     td->notify(turn);
-    // graphicsDisplay->notifyMoves(start, startChar, end, endChar, checkString());
 
     if (isEnd) { endGame(); displayScore = true;  }
+}
+
+void ChessBoard::updateCheck(vector<Vec> moves, bool team){
+    bool check = false;
+
+    for (Vec move : moves){
+        if(team){
+            if(bKing == move) {
+                check = true;
+                break;
+            }
+        } else {
+            if (wKing == move) {
+                check = true;
+                break;
+            }
+        }
+    }
+    if (team) { bCheck = check; }
+    else wCheck = check;
 }
 
 // update the check string
@@ -482,18 +496,12 @@ string ChessBoard::checkString(){
     return "";
 }
 
-// DONE
-// we can assume that the turn player has no moves
-// should this be negated???
+// ends the game and updates the score
 void ChessBoard::endGame() {
     if (turn) {
-        // cout << "bCheck : " << bCheck << endl;
-        // cout << "wCheck : " << wCheck << endl;
         if (bCheck) { game.updateWhite(false); }
         else { game.updateWhite(true); }
     } else {
-        // cout << "bCheck : " << bCheck << endl;
-        // cout << "wCheck : " << wCheck << endl;
         if (wCheck) { game.updateBlack(false); }
         else { game.updateBlack(true); }
     }
@@ -502,8 +510,6 @@ void ChessBoard::endGame() {
 
 // DONE
 bool ChessBoard::testMove(Vec start, Vec end, bool notify){
-
-
 
     vector<vector<shared_ptr<Piece>>> boardCopy;
 
