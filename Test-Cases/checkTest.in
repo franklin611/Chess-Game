@@ -5,4 +5,4 @@ setup
 done
 game human human
 move f3 f4
-move e5 e4
+move e5 e6
