@@ -738,11 +738,7 @@ bool ChessBoard::getTurn(){
 shared_ptr<Empty> ChessBoard::getEmptyPiece(Vec coord){
     int row = coord.getY();
     int col = coord.getX();
-    // COPY CTOR DIDNT WORK
-    // shoudl be row col,
-    shared_ptr<Empty> emptyPiece = make_shared<Empty>(Vec{col, row}, eb[row][col]->getType(), eb[row][col]->getTeam()); // TODO CHIARA
-    // shared_ptr<Empty> emptyPiece = eb[row][col]->clone();
-    // Assume this copy construtor will work
+    shared_ptr<Empty> emptyPiece = make_shared<Empty>(Vec{col, row}, eb[row][col]->getType(), eb[row][col]->getTeam()); 
 
     // return the copied piece
     return emptyPiece;
@@ -765,17 +761,10 @@ void ChessBoard::forfeit(){
 void ChessBoard::restartGame() {
     for(size_t i = 0; i < eb.size(); ++i) { //The row
         for (size_t j = 0; j < eb[i].size(); ++j) { // The column
-        // Remmber, we have a vector<vector<>>>>
-            // COPY CTOR DIDNT WORK
-            // gb[j][i] = make_shared<Piece>(*(eb[i][j]));
-            // cout << "Type Before : " <<  gb[i][j]->getType() << endl;
-
             td->notify(gb[i][j]->getCoordinate(), eb[i][j]->getType()); // Fixed to now notify text display of the change
             gd->notify(gb[i][j]->getCoordinate(), eb[i][j]->getType());
-
             gb[i][j] = eb[i][j]->clone();
         }
-        cout << endl;
     }
     turn = false;
     bCheck = false;
@@ -850,9 +839,6 @@ void ChessBoard::defaultBoard() {
 
     // Setup Knights
     setupWithChar('N', Vec{1,0});
-    // cout << getPiece(Vec{1,0})->getType() << endl;
-    // cout << char(getPiece(Vec{1,0})->getCoordinate().getX() + 97) << endl;
-    // cout << getPiece(Vec{1,0})->getCoordinate().getY() + 1 << endl;
     setupWithChar('N', Vec{6, 0}); // Whites
     setupWithChar('n', Vec{1,7});
     setupWithChar('n', Vec{6, 7}); // Black
