@@ -1,11 +1,13 @@
 #include "Knight.h"
 #include "ChessBoard.h"
-// Can just call the Piece's default constructor because no difference between Knight and Piece
 
 Knight::Knight(Vec coordinate, char type, bool colour): Piece{coordinate, type, colour} {}
+
 Knight::Knight(const Knight& other): Piece{other} {}
 
+// The possibleMoves of the knight based on the current gameboard
 void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
+    // The different moves the knight can take (The different L shaped moves)
     Vec topRight1;
     Vec topRight2;
     Vec topLeft1;
@@ -17,12 +19,6 @@ void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     int coordx = coordinate.getX();
     int coordy = coordinate.getY();
 
-    //cout << "knight" << endl;
-
-    
-// Actually, it shouldn't matter if it is black or white. 
-// x is col 
-// y is row 
     topRight1 = Vec{coordx + 1, coordy - 2};
     topRight2 = Vec{coordx + 2, coordy - 1};
         
@@ -35,11 +31,11 @@ void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     bottomLeft1 = Vec{coordx - 2, coordy + 1};
     bottomLeft2 = Vec{coordx - 1, coordy + 2};
 
-    
-    // Need to check if teammate or enemy team
 
     Vec move = topRight1;
     shared_ptr<Piece> p = pieceAt(gb,move);
+    // For each of the above L shaped moves, checks if the move is in bounds, and that
+    // there is an empty piece there or an enemy piece
     if(inBounds(move) && isEmptyPiece(p)) {
         possibleMoves.push_back(move);
     } else if (inBounds(move) && (p->getTeam() != getTeam())) {
@@ -103,8 +99,7 @@ void Knight::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
     
 }
 
+// Deep clone of the Knight
 shared_ptr<Piece> Knight::clone() const {
     return make_shared<Knight>(*this);
 }
-
-

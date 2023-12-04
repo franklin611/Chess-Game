@@ -6,13 +6,21 @@
 class Rook : public Piece {
     bool moved; // Boolean value if the Rook has moved (For castling)
     public:
-        Rook();
+        // Copy Constructor
         Rook(const Rook & other);
+
+        // Default Constructor 
         Rook(Vec coordinate, char type, bool white); // Rook constructor with speciic values
+
         ~Rook() override;
-        void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) override; // Overrides the Piece superclass getPossibleMoves.
-        // Populates the Rook's possibleMoves field
-        bool getMoved();  // Getter method
+
+        // Overrides superclass function. Determines the possible moves of a pawn
+        void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) override; 
+
+        // Getter method
+        bool getMoved();  
+
+         // Creates a deep copy of a Rook 
         shared_ptr<Piece> clone() const override; // Used for subclass cloning
 };
 
