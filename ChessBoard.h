@@ -24,7 +24,8 @@ class GraphicsDisplay;
 
 // ChessBoard is the controller of the game and controls how the pieces on the board should move as well as decide when a move is legal based on the board
 class ChessBoard: public ChessBoardObserver {
-    // holds the pieces of the game board
+
+    // holds the pieces of the game board 
     vector<vector<shared_ptr<Piece>>> gb;
 
     // keeps a copy of what the empty board should look like
@@ -60,7 +61,10 @@ class ChessBoard: public ChessBoardObserver {
     bool displayScore;
 
     public:
-        // verifies if a team is in check
+        // updates if a rook moves on the board
+        void updateRookMove(Vec end);
+
+        // verifies if a team is in check 
         void validCheck(vector<Vec> legalMoves);
 
         // decides if the td needs to output that a team is in check
