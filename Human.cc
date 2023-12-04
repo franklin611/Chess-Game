@@ -4,8 +4,7 @@
 
 Human::Human(bool colour, shared_ptr<ChessBoardObserver> cb) : Player{colour, cb} {}
 
-// Checks that the user inputted start and end exist in that speciic piece's, located at the start coordinate,
-// set of legal moves
+// Checks that the user inputted an end move that exists in the piece at the Vec start set of legal moves
 bool Human::makeHumanMove(Vec start, Vec end){
     for (size_t i = 0; i < legalMoves.size(); ++i) {
         if (legalMoves[i][0] == start && legalMoves[i][1] == end) {
