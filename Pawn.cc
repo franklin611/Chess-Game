@@ -60,7 +60,9 @@ void Pawn::getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) {
 	}
 	// Determines if the piece can take move two steps
 	p = pieceAt(gb,twoStep);
-	if (inBounds(twoStep) && isEmptyPiece(p) && !moved){
+	shared_ptr<Piece> pCheck = pieceAt(gb,moveUp);
+	// Need to make sure that it is also an empty piece between them
+	if (inBounds(twoStep) && inBounds(moveUp) && isEmptyPiece(pCheck) && isEmptyPiece(p) && !moved){
 		possibleMoves.push_back(twoStep);
 	} 
 	// Logic for determining if the Pawn can passantLeft or right

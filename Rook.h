@@ -6,6 +6,9 @@
 class Rook : public Piece {
     bool moved; // Boolean value if the Rook has moved (For castling)
     public:
+        
+        Rook();
+
         // Copy Constructor
         Rook(const Rook & other);
 

@@ -18,7 +18,7 @@ class Queen : public Piece {
 
         // Creates a deep copy of a Queen 
         shared_ptr<Piece> clone() const override; 
-}
+};
 
 #endif
 
