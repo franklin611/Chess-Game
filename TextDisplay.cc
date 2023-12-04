@@ -5,7 +5,7 @@ using namespace std;
 
 // Default constructor - Creates the empty board
 TextDisplay::TextDisplay() {
-    // Creates the default board with '_' and ' ' 
+    // Creates the default board with '_' and ' '
     for (size_t i = 0; i <= 7; ++i) {
         vector<char> row;
         for (size_t j = 0; j <= 7; ++j) {
@@ -31,7 +31,7 @@ void TextDisplay::notify(Vec start, char typeStart) {
     theDisplay[start.getY()][start.getX()] = typeStart;
 }
 
-void TextDisplay::notify(bool white) { 
+void TextDisplay::notify(bool white) {
     // call this inside of setup as well as when making any move
     if (white) {colour = "Black";}
     else {colour = "White";}
@@ -52,7 +52,7 @@ ostream &operator<<(ostream &out, const TextDisplay &td) {
     out << endl;
     out << "  abcdefgh" << endl;
     out << endl;
-    // Outputs The turn and if a player is in check
+    // Outputs the turn and if a player is in check
     if (td.str_check.length() > 0) out << td.str_check << " is in check." << endl; // empty string is true, so if not empty string output
     out << "It's " << td.colour << "'s turn" << endl;
     out << "---------------------" << endl;

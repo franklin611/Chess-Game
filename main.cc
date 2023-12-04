@@ -258,8 +258,8 @@ int main() {
 
                     } else if (cmd2 == "skip") { // Skip the current turn
 
-                        cb->setTurn(!cb->getTurn()); 
-                        
+                        cb->setTurn(!cb->getTurn());
+
                     } else {
 
                         cout << "Invalid Command. Try again" << endl;
@@ -326,7 +326,7 @@ int main() {
                     } else if(cmd2 == "resign") {
                         // Player2 has to lose
                         cb->forfeit();
-                        cout << *(cb); 
+                        cout << *(cb);
                         cb->restartGame();
                         break;
 
@@ -441,7 +441,7 @@ int main() {
             cout << "Invalid Input, try Again" << endl;
 
         }
-        cout << "To get started with a match, enter game or setup." << endl;
+        if(!cin.eof()) cout << "To get started with a match, enter game or setup." << endl;
     }
     // END OF GAME
     cb->setDisplayScore(true);

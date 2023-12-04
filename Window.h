@@ -1,3 +1,5 @@
+// code sourced from assignment 4's provided window.cc
+
 #ifndef __WINDOW_H__
 #define __WINDOW_H__
 #include <X11/Xlib.h>

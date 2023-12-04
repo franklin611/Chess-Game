@@ -1,3 +1,5 @@
+// code sourced from assignment 4's provided window.cc 
+
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <iostream>
@@ -64,10 +66,7 @@ void Xwindow::fillRectangle(int x, int y, int width, int height, int colour) {
   XSetForeground(d, gc, colours[Black]);
 }
 
-// void Xwindow::drawString(int x, int y, string msg) {
-//   XDrawString(d, w, DefaultGC(d, s), x, y, msg.c_str(), msg.length());
-// }
-
+// sourced from piazza post 2180 by caroline
 void Xwindow::setUpFont(const std::string& fontname) {
     XFontStruct * font = XLoadQueryFont(d, fontname.c_str() );
     if (! font ) {
