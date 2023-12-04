@@ -726,11 +726,6 @@ void ChessBoard::forfeit(){
 void ChessBoard::restartGame() {
     for(size_t i = 0; i < eb.size(); ++i) { //The row
         for (size_t j = 0; j < eb[i].size(); ++j) { // The column
-        // Remmber, we have a vector<vector<>>>>
-            // COPY CTOR DIDNT WORK
-            // gb[j][i] = make_shared<Piece>(*(eb[i][j]));
-            // cout << "Type Before : " <<  gb[i][j]->getType() << endl;
-
             td->notify(gb[i][j]->getCoordinate(), eb[i][j]->getType()); // Fixed to now notify text display of the change
             gd->notify(gb[i][j]->getCoordinate(), eb[i][j]->getType());
             gb[i][j] = eb[i][j]->clone();
