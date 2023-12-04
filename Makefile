@@ -17,5 +17,3 @@ $(EXEC): $(OBJECTS)
 .PHONY: clean
 clean:
 	rm -f $(OBJECTS) $(DEPENDS) $(EXEC)
-
-# Copied from assignment

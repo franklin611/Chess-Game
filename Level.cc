@@ -21,7 +21,7 @@ vector<vector<Vec>> LevelTwo::createMoves(
     for (size_t i = 0; i < checkMoves.size(); ++i) {
         twoMoves.emplace_back(checkMoves[i]);
     };
-    return twoMoves;
+    return twoMoves; // vector<vector<Vec>> that contains two classes of moves 
 }
 
 // Level 3: prefers avoiding capture, capturing moves, and checks.
@@ -38,7 +38,7 @@ vector<vector<Vec>> LevelThree::createMoves(
     for (size_t i = 0; i < avoidCaptureMoves.size(); ++i) {
         threeMoves.emplace_back(avoidCaptureMoves[i]);
     };
-    return threeMoves;
+    return threeMoves; // vector<vector<Vec>> that contains three classes of moves 
 }
 
 // Level 4: prefers checkmate moves and checks
@@ -52,8 +52,5 @@ vector<vector<Vec>> LevelFour::createMoves(
     for (size_t i = 0; i < checkMoves.size(); ++i) {
         fourMoves.emplace_back(checkMoves[i]);
     };
-    return fourMoves;
+    return fourMoves; // vector<vector<Vec>> that contains four classes of moves 
 }
-
-
-
