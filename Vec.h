@@ -28,7 +28,7 @@ class Vec {
 			Vec(const Vec& other);
 			// copy assignment operator 
 			Vec& operator=(const Vec& other);
-			friend ostream &operator<<(ostream &out, Vec &v); // Output operator to help display Vec coordinates tranlsated to points on the board
+			friend ostream &operator<<(ostream &out, Vec &v); // Output operator to help display Vec coordinates translated to points on the board
 };
 
 #endif
