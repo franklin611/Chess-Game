@@ -32,9 +32,6 @@ bool ChessBoard::boardIsValid() {
     vector<Vec> whiteMoves; 
     vector<Vec> blackMoves; 
 
-    cout << "here" << endl;
-    int i = 0;
-
     for (vector<shared_ptr<Piece>> vec : gb){
         for (shared_ptr<Piece> p : vec){
             Vec v = p->getCoordinate();
@@ -42,12 +39,9 @@ bool ChessBoard::boardIsValid() {
             char type = p->getType();
             if (type == '_' || type == ' ') { continue; }
             for (Vec move : p->returnPossibleMoves()){
-                cout << "TYPE: " << type << endl;
-                cout << "MOVE: " << move << endl;
                 if (turn && testMove(v, move, false)){
                     blackMoves.push_back(move);
                 } else if (!turn && testMove(v, move, false)) {
-                    cout << "white" << endl;
                     whiteMoves.push_back(move);
                 }
             }
