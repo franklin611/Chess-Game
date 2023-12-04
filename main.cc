@@ -81,14 +81,6 @@ int main() {
     outputRules();
 
     while (cin >> cmd) {
-        // Make a prompt output to get enter game or setup
-        // We prompt the user to enter game or setup
-        // If they enter game, they immediately start a game. THey are prompted for player 1 and player 2
-        // After that, we check whether they inputted setup before this (inputting setup before this meant they setup a custom board). If false
-        // use the default board. If true, that means they used setup beforehand so we use that custome board.
-        // If we are to use the default board, we simply default construct that gameboard and get players
-        // If we we are to use the custom board, we just get players cuz we already created this custom board in setup.
-        // On top of this, we have a isEnd that resets the gameBoard and players.
         shared_ptr<Player> playerWhite;
         shared_ptr<Player> playerBlack;
 
