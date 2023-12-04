@@ -29,8 +29,8 @@ bool ChessBoard::boardIsValid() {
     // if there are only white or only black pieces return false
     if (!oneBlack || !oneWhite) return false;
 
-    vector<Vec> whiteMoves; 
-    vector<Vec> blackMoves; 
+    vector<Vec> whiteMoves;
+    vector<Vec> blackMoves;
 
     for (vector<shared_ptr<Piece>> vec : gb){
         for (shared_ptr<Piece> p : vec){
@@ -48,7 +48,7 @@ bool ChessBoard::boardIsValid() {
         }
     }
 
-    // double check this is right 
+    // double check this is right
     bool blackCheck = IsvalidCheck(whiteMoves, true);
     bool whiteCheck = IsvalidCheck(blackMoves, false);
 
@@ -99,7 +99,7 @@ void ChessBoard::setUpStartMoves(){
         }
     }
 
-    // sees if the starting team is in check -> extra setp  
+    // sees if the starting team is in check -> extra setp
     validCheck(legalMoves);
 
     // if the game starts in stalemate end the game
@@ -374,38 +374,38 @@ void ChessBoard::validCheck(vector<Vec> legalMoves){
             }
         } else {
             if (wKing == move) {
-                check = true;  
+                check = true;
                 break;
             }
         }
     }
     if (turn) { bCheck = check; }
-    else wCheck = check; 
+    else wCheck = check;
 }
 
-// identifies if a team is in check and updates the booleans 
+// identifies if a team is in check and updates the booleans
 // Example: legalMoves of Black , playerTurn is false (signifiying white because we want to see if any of black's moves puts white into check)
 bool ChessBoard::IsvalidCheck(vector<Vec> legalMoves, bool playerTurn){
     bool check = false;
     for (Vec move : legalMoves){
-        if(playerTurn){  
+        if(playerTurn){
             if(bKing == move) {
-                check = true; 
-                break; 
-            }
-        } else { 
-            if (wKing == move) {
-                check = true;  
+                check = true;
                 break;
-            } 
+            }
+        } else {
+            if (wKing == move) {
+                check = true;
+                break;
+            }
         }
     }
-    return check; 
+    return check;
 
 }
 
 
-// modifies the gameboard and notifies the next player of their legal moves 
+// modifies the gameboard and notifies the next player of their legal moves
 void ChessBoard::notify(Vec start, Vec end){
 
     // Vec black = getBKing();
@@ -427,7 +427,7 @@ void ChessBoard::notify(Vec start, Vec end){
         updatePawnMoved(start, end);
     }
 
-    // check if the piece that moved is a rook 
+    // check if the piece that moved is a rook
     if (startType == 'R' || startType == 'r'){
         updateRookMove(end);
     }
@@ -447,7 +447,7 @@ void ChessBoard::notify(Vec start, Vec end){
             Vec v = p->getCoordinate();
             vector<Vec> moves = p->returnPossibleMoves();
             // test every possible move
-            cout << "START: "<< v << endl;
+            // cout << "START: "<< v << endl;
             for (Vec move : moves){
                 // if the piece is on the next turn's team then see if its legal -> if it has any possible moves the game should continue
                 if (p->getTeam() != turn && testMove(v, move, true)){
@@ -548,7 +548,7 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
         updateKingMoved(end);
     }
 
-    // update the rook booleans 
+    // update the rook booleans
     if (startType == 'r' || startType == 'R'){
         updateRookMove(end);
     }
@@ -561,7 +561,7 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
     // store the possibleMoves
     vector<Vec> possibleMoves;
 
-    // reset all the possible moves for the pieces 
+    // reset all the possible moves for the pieces
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
             if (p->getTeam() != turn || p->getType() == ' ' || p->getType() == '_'){ continue; }
@@ -573,8 +573,8 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
         }
     }
 
-    // this checks the possible moves of the turn pieces 
-    bool check = IsvalidCheck(possibleMoves, turn); // returns true or false based on whose turn it is 
+    // this checks the possible moves of the turn pieces
+    bool check = IsvalidCheck(possibleMoves, turn); // returns true or false based on whose turn it is
     bool legal = false;
 
     bool team = false;
@@ -586,11 +586,9 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
     // we decide its legal meaning the move does not put itself in check so we notify the players of the moves
     if (!check && notify){
         if (team){
-            cout << "NOTIFY WHITE: "<< endl;
             playerWhite->notifyLM(start, end);
         } // if the next turn (opponent is white)
         else {
-            cout << "NOTIFY BLACK" << endl;
             playerBlack->notifyLM(start, end);
         }
         // assume move doesnt put us in check, now we check what type of move it is

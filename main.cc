@@ -236,8 +236,8 @@ int main() {
 
                     } else if (cmd2 == "skip") {
 
-                        cb->setTurn(!cb->getTurn()); 
-                        
+                        cb->setTurn(!cb->getTurn());
+
                     } else {
 
                         cout << "Invalid Command. Try again" << endl;
@@ -304,7 +304,7 @@ int main() {
                     } else if(cmd2 == "resign") {
                         // Player2 has to lose
                         cb->forfeit();
-                        cout << *(cb); 
+                        cout << *(cb);
                         cb->restartGame();
                         break;
 
@@ -354,7 +354,7 @@ int main() {
                     if(piece == 'K') cb->setWhiteKing(coordinate);
                     cb->setupWithChar(piece, coordinate);
                      cout << *(cb);
-   
+
                 } else if (cmd2 == "-") {
 
                     cin >> coord;
@@ -415,7 +415,7 @@ int main() {
             cout << "Invalid Input, try Again" << endl;
 
         }
-        cout << "To get started with a match, enter game or setup." << endl;
+        if(!cin.eof()) cout << "To get started with a match, enter game or setup." << endl;
     }
     // END OF GAME
     cb->setDisplayScore(true);
