@@ -734,13 +734,6 @@ bool ChessBoard::getTurn(){
     return turn;
 }
 
-// sets up a piece at coordinate
-void ChessBoard::setupWithPiece(shared_ptr<Piece> p, Vec coordinate) {
-    int row = coordinate.getY();
-    int col = coordinate.getX();
-    gb[row][col] = p;
-}
-
 // returns a copy of an empty piece from an empty board
 shared_ptr<Empty> ChessBoard::getEmptyPiece(Vec coord){
     int row = coord.getY();
