@@ -5,12 +5,18 @@
 using namespace std;
 
 class Game {
-    float blackScore;
+    float blackScore; // Score of the Black and White team
     float whiteScore;
     public:
         Game();
-        void updateWhite(bool half);
+
+        // Update the whiteScore field
+        void updateWhite(bool half); 
+
+        // Update the blackScore field
         void updateBlack(bool half);
+
+        // Output operator for the scores of the current game
         friend ostream &operator<<(ostream &out, const Game &g);
 
 };

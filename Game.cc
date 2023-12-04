@@ -2,8 +2,10 @@
 #include <iostream>
 using namespace std;
 
+// Default constructor
 Game::Game() : blackScore{0}, whiteScore{0} {}
 
+// Determines whether to update the score by +1 or +0.5 depending on a checkmate or stalemate 
 void Game::updateWhite(bool half) {
     if (half) {
         whiteScore += 0.5;
@@ -23,7 +25,6 @@ void Game::updateBlack(bool half) {
 }
 
 ostream &operator<<(ostream &out, const Game &g) {
-    // out << "Final Score:" << endl << "White: " << g.whiteScore << endl << "Black: " << g.blackScore;
     out << "White: " << g.whiteScore << endl << "Black: " << g.blackScore;
     return out;
 }
