@@ -730,7 +730,6 @@ void ChessBoard::restartGame() {
 
             gb[i][j] = eb[i][j]->clone();
         }
-        cout << endl;
     }
     turn = false;
     bCheck = false;
