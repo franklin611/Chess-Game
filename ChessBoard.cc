@@ -65,7 +65,6 @@ bool ChessBoard::boardIsValid() {
     }
 
     td->notify(turn);
-    gd->notify(turn); 
 
     return true;
 }
@@ -839,14 +838,12 @@ void ChessBoard::defaultBoard() {
     }
 
     td->notify(turn);
-    gd->notify(turn); 
 }
 
 // setup turn during setup and notify the display
 void ChessBoard::setupTurn(bool turn) {
     this->turn = turn;
     td->notify(turn);
-    gd->notify(turn); 
 
 }
 
@@ -855,7 +852,6 @@ void ChessBoard::setTurn(bool turn) {
     this->turn = turn;
 
     td->notify(turn);
-    gd->notify(turn); 
 
     bool isEnd = true;
     // set up the turn's moves

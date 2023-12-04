@@ -18,7 +18,6 @@ class GraphicsDisplay: public DisplayObserver{
         void notifyMoves(Vec start, char typeStart, Vec end, char typeEnd, string check) override;
         // Overwritten notify to change the display's character at a specific coordinate
         void notify(Vec start, char typeStart) override;
-        void notify(bool white) override;
         ~GraphicsDisplay() = default; // default since using unique_ptrs
         void Blank();
 };

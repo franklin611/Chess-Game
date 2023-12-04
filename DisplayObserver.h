@@ -11,7 +11,7 @@ class DisplayObserver {
     // notifies the display to change a singular piece at a singular coordinate 
     virtual void notify(Vec start, char typeStart) = 0;
     // notify the display of a turn change 
-    virtual void notify(bool white) = 0;
+    virtual void notify(bool white);
     // destructor 
     virtual ~DisplayObserver();
 };

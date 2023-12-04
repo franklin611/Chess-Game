@@ -91,15 +91,3 @@ void GraphicsDisplay::notify(Vec start, char typeStart) {
     w->drawString(xCoord + 145, yCoord + 155, string(1, typeStart));
 }
 
-// // draws the string/piece at the specified location
-// void GraphicsDisplay::notify(Vec start, char typeStart) {
-//     string font = "-b&h-lucidatypewriter-bold-r-normal-sans-20-140-100-100-m-120-iso8859-10";
-//     int xCoord = (start.getX() - 1) * dim;
-//     int yCoord = (6 - start.getY()) * dim; // flip for y-coord to start from the bottom
-//     w->drawString(xCoord + 145, yCoord + 155, string(1, typeStart, font));
-// }
-
-
-// this notify is part of pure virtual from DisplayObservers but is never called, so no implementation
-void GraphicsDisplay::notify(bool white) {}
-

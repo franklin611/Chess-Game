@@ -66,24 +66,6 @@ void Xwindow::fillRectangle(int x, int y, int width, int height, int colour) {
   XSetForeground(d, gc, colours[Black]);
 }
 
-// // sourced from piazza post 2180 by caroline
-// void Xwindow::setUpFont(const std::string& fontname) {
-//     XFontStruct * font = XLoadQueryFont(d, fontname.c_str() );
-//     if (! font ) {
-//         cerr << "unable to load font " << fontname << ": using fixed" << endl;
-//         font = XLoadQueryFont(d, "-adobe-new century schoolbook-medium-r-normal--24-240-75-75-p-137-iso8859-13");
-//     }
-//     XSetFont(d, gc, font->fid);
-// } // Xwindow::setUpFont
-
-// void Xwindow::drawString(int x, int y, string msg, int colour) {
-//     unsigned long prevCol = 1;
-//     XSetForeground(d, gc, colours[colour]);
-//     // setUpFont(fontName);
-//     XDrawString(d, w, gc, x, y, msg.c_str(), msg.length());
-//     XSetForeground(d, gc, prevCol);
-// } // Xwindow::drawString
-
 void Xwindow::drawString(int x, int y, string msg) {
   XDrawString(d, w, DefaultGC(d, s), x, y, msg.c_str(), msg.length());
 }
