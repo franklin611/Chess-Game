@@ -317,6 +317,7 @@ int main() {
                         cb->forfeit();
                         cout << *(cb);
                         cb->restartGame();
+                        usedSetup = false;
                         break;
 
                     } else if (cmd2 == "skip") {
@@ -333,6 +334,7 @@ int main() {
                 if(cb->getDisplayScore()) {
                     cout << *(cb);
                     cb->restartGame();
+                    usedSetup = false;
                     break;
                 } else {
                     cout << *(cb);
