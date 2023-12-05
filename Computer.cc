@@ -18,6 +18,10 @@ Computer::Computer(bool colour, shared_ptr<ChessBoardObserver> cb, int userLevel
     else if (userLevel == 4) {level = make_unique<LevelFour>();}
 }
 
+Computer::Computer(Computer &&other) {
+    swap(userLevel, other.userLevel);
+    swap(level, other.level);
+}
 // computer player chooses a move 
 Vec Computer::makeComputerMove() {
 
@@ -56,4 +60,22 @@ int Computer::getLevel() {
     return userLevel;
 }
 
+shared_ptr<Player> Computer::clone() const {
+    return make_shared<Computer>(*this);
+}
 
+Computer::Computer(const Computer& other)
+        : Player(other), userLevel(other.userLevel) {
+            if (other.userLevel) {
+                // Assuming Level has a copy constructor
+                if (userLevel == 1){
+                    level = make_unique<LevelOne>(*dynamic_cast<LevelOne*>(other.level.get()));
+                } else if (userLevel == 2){
+                    level = make_unique<LevelTwo>(*dynamic_cast<LevelTwo*>(other.level.get()));
+                } else if (userLevel == 3){
+                    level = make_unique<LevelThree>(*dynamic_cast<LevelThree*>(other.level.get()));
+                } else {
+                    level = make_unique<LevelFour>(*dynamic_cast<LevelFour*>(other.level.get()));
+                }
+            }
+        }

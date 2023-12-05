@@ -52,7 +52,7 @@ Xwindow::Xwindow(int width, int height) {
 
   XSynchronize(d,True);
 
-  usleep(10000);
+  usleep(1000);
 }
 
 Xwindow::~Xwindow() {
@@ -69,4 +69,24 @@ void Xwindow::fillRectangle(int x, int y, int width, int height, int colour) {
 void Xwindow::drawString(int x, int y, string msg) {
   XDrawString(d, w, DefaultGC(d, s), x, y, msg.c_str(), msg.length());
 }
+
+// These functions were used on our personal pcs where the font worked. Will showcase for demo
+// // sourced from piazza post 2180 by caroline
+// void Xwindow::setUpFont(const std::string& fontname) {
+//     XFontStruct * font = XLoadQueryFont(d, fontname.c_str() );
+//     if (! font ) {
+//       cerr << "unable to load font " << fontname << ": using fixed" << endl;
+//       font = XLoadQueryFont(d, "-adobe-new century schoolbook-medium-r-normal--24-240-75-75-p-137-iso8859-13");
+//     }
+//     XSetFont(d, gc, font->fid);
+// } // Xwindow::setUpFont
+
+// // (This function was used on our personal computers where the fonts worked)
+// void Xwindow::drawString(int x, int y, string msg, int colour,const std::string& fontName) {
+//     unsigned long prevCol = 1;
+//     XSetForeground(d, gc, colours[colour]);
+//     setUpFont(fontName);
+//     XDrawString(d, w, gc, x, y, msg.c_str(), msg.length());
+//     XSetForeground(d, gc, prevCol);
+// } // Xwindow::drawString
 

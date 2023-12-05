@@ -141,7 +141,6 @@ class ChessBoard: public ChessBoardObserver {
         void isCheckMateMove(Vec start, Vec end);
 
         // determines if the team "white" is in check on the current gameboard
-        // ISSUE: NEEDS TO BE REMOVED -> CHIARA
         bool isCheck(bool white);
 
         // get the turn status

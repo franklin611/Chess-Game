@@ -735,6 +735,9 @@ void ChessBoard::restartGame() {
     bCheck = false;
     wCheck = false;
     displayScore = false;
+    playerWhite = nullptr;
+    playerBlack = nullptr;
+    gd->Blank();
 }
 
 // sees if a move is considered an upgrade pawn move

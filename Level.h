@@ -16,6 +16,7 @@ public:
         vector<vector<Vec>> avoidCaptureMoves) = 0;
         // Each level will override this pure virtual method and take in parameters, which could be empty
         // for each set of moves
+    virtual ~Level() = default;
 };
 
 // Each Level Class, from 1-4 

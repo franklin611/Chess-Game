@@ -11,6 +11,9 @@ class Human: public Player {
 
         // Returns true or false if a move inputted by the human user was made
         bool makeHumanMove(Vec start, Vec end);
+
+        // clone function 
+        virtual shared_ptr<Player> clone() const override; 
 };
 
 #endif
