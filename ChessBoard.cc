@@ -273,7 +273,7 @@ void ChessBoard::passantMove(Vec start, Vec end){
         } else if ( end == leftDiagonal ){
             if (pawnMovedTwo(captureLeft, true)) { td->notify(captureLeft, getEmptyPiece(captureLeft)->getType()); }
         }
-    // white makes an en passant 
+    // white makes an en passant
     } else if (type == 'P'){
         rightDiagonal = Vec(start.getX() + 1, start.getY() + 1);
         leftDiagonal = Vec(start.getX() - 1, start.getY() + 1);
@@ -329,7 +329,7 @@ void ChessBoard::updateKingCoord(Vec end, bool white){
     }
 }
 
-// checks if the possible moves will put white in check 
+// checks if the possible moves will put white in check
 bool ChessBoard::isCheck(bool white){
     Vec kingCoord;
     if (white){
@@ -453,7 +453,7 @@ void ChessBoard::notify(Vec start, Vec end){
     // update if the next player is in check
     validCheck(legalMoves);
 
-    // update if the move that was just made took yourself out of check 
+    // update if the move that was just made took yourself out of check
     updateCheck(legalMoves2, !turn);
 
 
@@ -472,7 +472,7 @@ void ChessBoard::notify(Vec start, Vec end){
 // updates if a player took themselves out of check
 void ChessBoard::updateCheck(vector<Vec> moves, bool team){
     bool check = false;
-    
+
     for (Vec move : moves){
         if(team){
             if(bKing == move) {
@@ -511,7 +511,7 @@ void ChessBoard::endGame() {
 }
 
 
-// simulates a move and tests if it is legal -> will notify the players based on notify bool 
+// simulates a move and tests if it is legal -> will notify the players based on notify bool
 bool ChessBoard::testMove(Vec start, Vec end, bool notify){
 
     vector<vector<shared_ptr<Piece>>> boardCopy;
@@ -680,7 +680,7 @@ void ChessBoard::isAvoidCaptureMove(Vec start, Vec end, vector<vector<shared_ptr
     // consider the board after the move was made, will any of the other team's pieces capture mine (which is at end)
     for (vector<shared_ptr<Piece>> vec: gb){
         for (shared_ptr<Piece> p : vec){
-            if (p->getTeam() == turn){ continue; } 
+            if (p->getTeam() == turn){ continue; }
             p->resetMoves();
             p->getPossibleMoves(gb);
             for (Vec move: p->returnPossibleMoves()){
@@ -705,7 +705,7 @@ bool ChessBoard::getTurn(){
 shared_ptr<Empty> ChessBoard::getEmptyPiece(Vec coord){
     int row = coord.getY();
     int col = coord.getX();
-    shared_ptr<Empty> emptyPiece = make_shared<Empty>(Vec{col, row}, eb[row][col]->getType(), eb[row][col]->getTeam()); 
+    shared_ptr<Empty> emptyPiece = make_shared<Empty>(Vec{col, row}, eb[row][col]->getType(), eb[row][col]->getTeam());
 
     // return the copied piece
     return emptyPiece;
@@ -724,7 +724,7 @@ void ChessBoard::forfeit(){
 }
 
 
-// resets the gameboard to start a new game 
+// resets the gameboard to start a new game
 void ChessBoard::restartGame() {
     for(size_t i = 0; i < eb.size(); ++i) { //The row
         for (size_t j = 0; j < eb[i].size(); ++j) { // The column

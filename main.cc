@@ -84,11 +84,11 @@ int main() {
         shared_ptr<Player> playerWhite;
         shared_ptr<Player> playerBlack;
 
-        // If the user chooses to start a match 
+        // If the user chooses to start a match
         if(cmd == "game") {
             string player1, player2;
             int level, level2;
-            
+
             // While loop to handle input from the user for player 1 and player 2
             while (cin >> player1 >> player2) {
                 if (!(validPlayer(player1) && validPlayer(player2))) { // If Invalid players
@@ -103,7 +103,7 @@ int main() {
                     playerWhite = make_shared<Human>(1, cb);
                     playerBlack = make_shared<Human>(0, cb);
                     cb->setupPlayers(playerWhite, playerBlack); // Setup the Observers of chessboard as playerWhite and playerBlack
-                    break; 
+                    break;
 
                 } else if (player1 == "human" && player2.substr(0,8) == "computer" ) { // If human and computer
 
@@ -116,7 +116,7 @@ int main() {
                         cout << "Invalid input. Please enter a valid level." << endl;
                         continue;
                     }
-                    
+
                     level2 = stoi(player2.substr(9, 1));
                     // continue the if statement and reach the invalid input
                     playerWhite = make_shared<Human>(1, cb);
@@ -147,7 +147,7 @@ int main() {
                 } else if (player1.substr(0,8) == "computer" && player2.substr(0,8) == "computer" ) {
 
                     try {
-                        level = stoi(player1.substr(9, 1)); 
+                        level = stoi(player1.substr(9, 1));
                         level2 = stoi(player2.substr(9, 1));
                         if (!(level >= 1 && level <= 4 && level2 >= 1 && level2 <=4))  {
                             throw invalid_argument("Invalid Level");
@@ -157,7 +157,7 @@ int main() {
                         continue;
                     }
 
-                    level = stoi(player1.substr(9, 1)); 
+                    level = stoi(player1.substr(9, 1));
                     level2 = stoi(player2.substr(9, 1));
 
                     playerWhite = make_shared<Computer>(1, cb, level);
@@ -173,7 +173,7 @@ int main() {
             }
 
             // If the user did not use setup, we setup a default board
-            if(!usedSetup) cb->defaultBoard(); 
+            if(!usedSetup) cb->defaultBoard();
             else cb->setUpStartMoves(); // Else, we set up the starting moves of the custom board
 
             string cmd2;
@@ -212,12 +212,13 @@ int main() {
                         shared_ptr<Human> humanWhite = dynamic_pointer_cast<Human>(cb->getPlayerWhite());
                         if(humanWhite->makeHumanMove(coordinate1, coordinate2)) { // Returns if it was a valid move
                             // Valid Move
-                            if(cb->upgradePawn(coordinate2)) { // If a Pawn was moved to the end of the board 
+                            if(cb->upgradePawn(coordinate2)) { // If a Pawn was moved to the end of the board
                                 char newPiece;
                                 cout << "Please input the character you want the Pawn to be upgraded to : " << endl;
                                 while (cin >> newPiece) {
                                     if (!((newPiece == 'Q') || (newPiece == 'R')  || (newPiece == 'N')  || (newPiece == 'B'))){ cout << "Invalid Input. Try Again!"  << endl; continue;}
                                     cb->setupWithChar(newPiece, coordinate2); // Handle invalid input
+                                    cb->isCheck(cb->getTurn());
                                     break;
                                 }
                             } else cin.ignore(80, '\n'); // Ignore extra characters if the user incorrectly thought the move they made was an upgrade move
@@ -234,6 +235,7 @@ int main() {
                         Vec end = computerWhite->makeComputerMove(); // Returns the end coordinate of the move
                         if(cb->upgradePawn(end)){ // If the random move made upgraded a Pawn, automatically convert it to a Queen
                             cb->setupWithChar('Q', end);
+                            cb->isCheck(cb->getTurn());
                         }
 
                     } else if(cmd2 == "resign") { // If the player chooses to resign
@@ -243,6 +245,7 @@ int main() {
 
                         // Restart the Match. Sets values and fields back to their default values
                         cb->restartGame(); // Restart match
+                        usedSetup = false;
                         break;
 
                     } else if (cmd2 == "skip") { // Skip the current turn
@@ -293,6 +296,7 @@ int main() {
                                 while (cin >> newPiece) {
                                     if (!((newPiece == 'q') || (newPiece == 'r')  || (newPiece == 'n')  || (newPiece == 'n'))) { cout << "Invalid Input. Try Again!"  << endl; continue;}
                                     cb->setupWithChar(newPiece, coordinate2);
+                                    cb->isCheck(cb->getTurn());
                                 }
                             } else cin.ignore(80, '\n');
 
@@ -310,6 +314,8 @@ int main() {
                         Vec end = computerBlack->makeComputerMove();
                         if(cb->upgradePawn(end)){
                             cb->setupWithChar('q', end);
+                            // bool blackCheck = cb->isCheck(cb->getTurn());
+
                         }
 
                     } else if(cmd2 == "resign") {
@@ -330,7 +336,7 @@ int main() {
 
                     }
                 }
-                
+
                 if(cb->getDisplayScore()) {
                     cout << *(cb);
                     cb->restartGame();
@@ -341,12 +347,12 @@ int main() {
                 }
             }
         } else if (cmd == "setup") { // If the user chooses to enter setup mode
-            cout << "Entered Setup Mode : " << endl; 
+            cout << "Entered Setup Mode : " << endl;
             string cmd2, coord, colour;
             char piece;
-            
+
             // Set the default turn as White goes first with the option to change by the user
-            cb->setupTurn(false); 
+            cb->setupTurn(false);
 
             while(cin >> cmd2) {
 
@@ -372,13 +378,13 @@ int main() {
                     int x = convertToInt(coord.substr(0,1)[0]);
                     int y = stoi(coord.substr(1));
                     Vec coordinate = Vec{x, y- 1};
-                        
+
                     // If any of the added pieces are kings, set the White and Black King coordinates of the chessboard
-                    if(piece == 'k') cb->setBlackKing(coordinate); 
+                    if(piece == 'k') cb->setBlackKing(coordinate);
                     if(piece == 'K') cb->setWhiteKing(coordinate);
                     cb->setupWithChar(piece, coordinate); // Setup the board with the inputted piece at the coordinate
                     cout << *(cb);
-   
+
                 } else if (cmd2 == "-") { //Remove the piece at the coordinate
 
                     cin >> coord;
@@ -403,7 +409,7 @@ int main() {
                     cout << *(cb);
 
                 } else if (cmd2 == "=") { // Sets the turn when the game starts
-                    
+
                     if (cin >> colour) {
 
                         if(colour == "black") {
