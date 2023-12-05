@@ -1,60 +1,32 @@
 #include "GraphicsDisplay.h"
 
 // sets up the graphic's chessboard in window
-// add dimensions in the unique pointer bracket 
+// add dimensions in the unique pointer bracket
 GraphicsDisplay::GraphicsDisplay() : w{make_unique<Xwindow>(800, 800)}, dim{800/8} {
     // DOESNT WORK
 }
 
-// TODO HELENA
 // TLDR: Had issues setting up the colours in the terminals in MC3003 Lab. Caroline advised us some potential fixes.
 // One of them was repeated for loops in the constructor, which did not work. We created a seperate function that does what is done in the constructor
-// and we call it in our chessboard constructor to draw colours on the display
+// and we call it in our chessboard constructor to draw colours on the display. We do this multiple times to ensure that it is loaded
 void GraphicsDisplay::Blank() {
     dim =800/8;
-    int x_pos = 0;
-    int y_pos = 0;
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
-            if ((((i % 2) == 0) && ((j % 2) == 0)) || (((i % 2) == 1) && ((j % 2) == 1))) {
-                w->fillRectangle(x_pos, y_pos, dim, dim, Xwindow::White);
-            } else {
-                w->fillRectangle(x_pos, y_pos, dim, dim, Xwindow::Blue);
+    for (int i = 0; i < 5; ++i) {
+        int x_pos = 0;
+        int y_pos = 0;
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8; ++j) {
+                if ((((i % 2) == 0) && ((j % 2) == 0)) || (((i % 2) == 1) && ((j % 2) == 1))) {
+                    w->fillRectangle(x_pos, y_pos, dim, dim, Xwindow::White);
+                } else {
+                    w->fillRectangle(x_pos, y_pos, dim, dim, Xwindow::Blue);
+                }
+                x_pos += dim; // goes to the next column
             }
-            x_pos += dim; // goes to the next column
+            y_pos += dim;
+            x_pos = 0; // this brings back to start (LHS) doesn't actually fill in
         }
-        y_pos += dim;
-        x_pos = 0; // this brings back to start (LHS) doesn't actually fill in
-    }
-    x_pos = 0;
-    y_pos = 0;
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
-            if ((((i % 2) == 0) && ((j % 2) == 0)) || (((i % 2) == 1) && ((j % 2) == 1))) {
-                w->fillRectangle(x_pos, y_pos, dim, dim, Xwindow::White);
-            } else {
-                w->fillRectangle(x_pos, y_pos, dim, dim, Xwindow::Blue);
-            }
-            x_pos += dim; // goes to the next column
         }
-        y_pos += dim;
-        x_pos = 0; // this brings back to start (LHS) doesn't actually fill in
-    }
-    x_pos = 0;
-    y_pos = 0;
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
-            if ((((i % 2) == 0) && ((j % 2) == 0)) || (((i % 2) == 1) && ((j % 2) == 1))) {
-                w->fillRectangle(x_pos, y_pos, dim, dim, Xwindow::White);
-            } else {
-                w->fillRectangle(x_pos, y_pos, dim, dim, Xwindow::Blue);
-            }
-            x_pos += dim; // goes to the next column
-        }
-        y_pos += dim;
-        x_pos = 0; // this brings back to start (LHS) doesn't actually fill in
-    }
-    
 }
 
 // re-displays pieces that have been moved, including the tile/square
