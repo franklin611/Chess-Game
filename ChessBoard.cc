@@ -497,6 +497,8 @@ string ChessBoard::checkString(){
     return "";
 }
 
+bool ChessBoard::getDisplayScore(){ return displayScore; }
+
 // ends the game and updates the score
 void ChessBoard::endGame() {
     if (turn) {
@@ -737,6 +739,8 @@ void ChessBoard::restartGame() {
     displayScore = false;
     playerWhite = nullptr;
     playerBlack = nullptr;
+    Vec v = Vec(0, 7);
+    td->notifyMoves(v, ' ', v, ' ', "");
     gd->Blank();
 }
 
@@ -786,7 +790,7 @@ void ChessBoard::setupWithChar(char type, Vec coordinate) {
     }
 
     td->notify(coordinate, type);
-    gd->notify(coordinate, type);
+    gd->notifyMoves(coordinate, type, coordinate, type, "");
 }
 
 // if the user does not call setup this function is used to create the default board

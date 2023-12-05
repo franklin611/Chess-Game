@@ -16,9 +16,6 @@ Piece::Piece(Piece&& other)
 // Piece constructor
 Piece::Piece(const Piece& p): coordinate(p.coordinate), type(p.type), possibleMoves(p.possibleMoves), white(p.white) {}
 
-// Adds a move to possibleMoves of that piece
-void Piece::addTestMove(Vec end){ possibleMoves.push_back(end); }
-
 // gets the type of piece
 char Piece::getType() const { return type; }
 

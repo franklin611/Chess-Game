@@ -13,7 +13,6 @@ class Computer : public Player {
     // facilitates what moves a player should prioritize
     unique_ptr<Level> level = nullptr;
     public:
-        Computer(Computer &&other);
         // computer constructor
         Computer(bool colour, shared_ptr<ChessBoardObserver> cb, int userLevel);
         // selects a move based on the level
@@ -22,10 +21,6 @@ class Computer : public Player {
         int getLevel();
         // destructor 
         virtual ~Computer() = default;
-        // clone function
-        shared_ptr<Player> clone() const override; 
-        // copy constructor 
-        Computer(const Computer& other);
 };
 
 #endif

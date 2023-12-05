@@ -61,6 +61,8 @@ class ChessBoard: public ChessBoardObserver {
     bool displayScore;
 
     public:
+        // get the display score 
+        bool getDisplayScore();
 
         // update if a player took themselves out of check 
         void updateCheck(vector<Vec> moves, bool team);

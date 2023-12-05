@@ -1,7 +1,14 @@
 setup 
-+ k d8
-+ Q d6
++ k a8 
++ Q h7
++ Q g7
 + K e6
 done
 game human human 
-move d6 d7
+move h7 h8 
+setup 
++ k a7
++ Q h7
++ K e6 
+done 
+game computer[1] computer[1]

@@ -16,8 +16,4 @@ bool Human::makeHumanMove(Vec start, Vec end){
     return false;
 }
 
-// clone function 
-shared_ptr<Player> Human::clone() const {
-    return make_shared<Human>(*this);
-}
 

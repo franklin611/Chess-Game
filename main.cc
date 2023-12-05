@@ -231,8 +231,6 @@ int main() {
                         // Make Computer Move
                         // Dynamically Cast the Observers playerWhite to a Computer to have access to Computer Class functions
                         shared_ptr<Computer>  computerWhite = dynamic_pointer_cast<Computer>(cb->getPlayerWhite());
-                        // dynamic_pointer_cast<Computer>(cb->getPlayerWhite());
-                        cout << computerWhite << endl;
                         Vec end = computerWhite->makeComputerMove(); // Returns the end coordinate of the move
                         if(cb->upgradePawn(end)){ // If the random move made upgraded a Pawn, automatically convert it to a Queen
                             cb->setupWithChar('Q', end);
@@ -331,7 +329,14 @@ int main() {
 
                     }
                 }
-                cout << *(cb);
+                
+                if(cb->getDisplayScore()) {
+                    cout << *(cb);
+                    cb->restartGame();
+                    break;
+                } else {
+                    cout << *(cb);
+                }
             }
         } else if (cmd == "setup") { // If the user chooses to enter setup mode
             cout << "Entered Setup Mode : " << endl; 
