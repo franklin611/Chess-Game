@@ -139,6 +139,9 @@ class ChessBoard: public ChessBoardObserver {
         // determines if a move is considered a check move and notifies the player
         void isCheckMove(Vec start, Vec end);
 
+        // determines after a pawn promotion if the current turn is in check 
+        void pawnPromotionCheck(char type, Vec end);
+
         // determines if a move is considered a checkmate move and notifies the player
         void isCheckMateMove(Vec start, Vec end);
 

@@ -218,7 +218,7 @@ int main() {
                                 while (cin >> newPiece) {
                                     if (!((newPiece == 'Q') || (newPiece == 'R')  || (newPiece == 'N')  || (newPiece == 'B'))){ cout << "Invalid Input. Try Again!"  << endl; continue;}
                                     cb->setupWithChar(newPiece, coordinate2); // Handle invalid input
-                                    cb->isCheck(cb->getTurn());
+                                    cb->pawnPromotionCheck(newPiece, coordinate2);
                                     break;
                                 }
                             } else cin.ignore(80, '\n'); // Ignore extra characters if the user incorrectly thought the move they made was an upgrade move
@@ -235,7 +235,7 @@ int main() {
                         Vec end = computerWhite->makeComputerMove(); // Returns the end coordinate of the move
                         if(cb->upgradePawn(end)){ // If the random move made upgraded a Pawn, automatically convert it to a Queen
                             cb->setupWithChar('Q', end);
-                            cb->isCheck(cb->getTurn());
+                            cb->pawnPromotionCheck('Q', end);
                         }
 
                     } else if(cmd2 == "resign") { // If the player chooses to resign
@@ -296,7 +296,7 @@ int main() {
                                 while (cin >> newPiece) {
                                     if (!((newPiece == 'q') || (newPiece == 'r')  || (newPiece == 'n')  || (newPiece == 'n'))) { cout << "Invalid Input. Try Again!"  << endl; continue;}
                                     cb->setupWithChar(newPiece, coordinate2);
-                                    cb->isCheck(cb->getTurn());
+                                    cb->pawnPromotionCheck(newPiece, coordinate2);
                                 }
                             } else cin.ignore(80, '\n');
 
@@ -314,8 +314,7 @@ int main() {
                         Vec end = computerBlack->makeComputerMove();
                         if(cb->upgradePawn(end)){
                             cb->setupWithChar('q', end);
-                            // bool blackCheck = cb->isCheck(cb->getTurn());
-
+                            cb->pawnPromotionCheck('q', end);
                         }
 
                     } else if(cmd2 == "resign") {

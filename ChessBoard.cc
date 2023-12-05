@@ -395,6 +395,35 @@ bool ChessBoard::IsvalidCheck(vector<Vec> legalMoves, bool playerTurn){
 
 }
 
+// determines if the current turns team is in check 
+void ChessBoard::pawnPromotionCheck(char type, Vec end){
+    bool isEnd = true;
+    vector<Vec> legalMoves;
+    for (vector<shared_ptr<Piece>> vec : gb){
+        for (shared_ptr<Piece> p : vec){
+            Vec v = p->getCoordinate(); 
+            vector<Vec> moves = p->returnPossibleMoves(); 
+            for (Vec move : moves){
+                if (testMove(v, move, false)){
+                    if (p->getTeam() != turn){
+                        isEnd = false;
+                    } else {
+                        legalMoves.push_back(move);
+                    }
+                }
+            }
+        }
+    }
+
+    updateCheck(legalMoves, turn);
+    if (bCheck){
+        td->notifyMoves(end, type, end, type, "Black");
+    } else if (wCheck){
+        td->notifyMoves(end, type, end, type, "White");
+    }
+
+    if (isEnd) {endGame(); displayScore = true; }
+}
 
 // modifies the gameboard and notifies the next player of their legal moves
 void ChessBoard::notify(Vec start, Vec end){
