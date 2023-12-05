@@ -85,16 +85,15 @@ void ChessBoard::setUpStartMoves(){
             Vec v = p->getCoordinate();
             vector<Vec> moves = p->returnPossibleMoves();
             for (Vec end : moves) {
-                    if (testMove(v, end, true)){
-                        if(p->getTeam() != turn) { // sets up the next turn
-                            isEnd = false;
-                        } else {
-                            legalMoves.push_back(end);
-                        }
+                    if (p->getTeam() != turn && testMove(v, end, true)){ // sets up the next turn
+                        isEnd = false;
+                    } else if (p->getTeam() == turn && testMove(v, end, false)){
+                        legalMoves.push_back(end);
                     }
-                }
+             }
         }
     }
+
 
     // sees if the starting team is in check -> extra setp
     validCheck(legalMoves);
@@ -377,21 +376,18 @@ void ChessBoard::validCheck(vector<Vec> legalMoves){
 // identifies if a team is in check and updates the booleans
 // Example: legalMoves of Black , playerTurn is false (signifiying white because we want to see if any of black's moves puts white into check)
 bool ChessBoard::IsvalidCheck(vector<Vec> legalMoves, bool playerTurn){
-    bool check = false;
     for (Vec move : legalMoves){
         if(playerTurn){
             if(bKing == move) {
-                check = true;
-                break;
+                return true;
             }
         } else {
             if (wKing == move) {
-                check = true;
-                break;
+                return true;
             }
         }
     }
-    return check;
+    return false;
 
 }
 
@@ -432,10 +428,16 @@ void ChessBoard::notify(Vec start, Vec end){
 
     char startType = getType(end);
 
-    // we will also change the king's booleans
+    // update the king booleans
     if (startType == 'K' || startType == 'k'){
-        updateKingCoord(end, !turn);
         updateKingMoved(end);
+    }  
+
+    // change the king's coordinates if it moved 
+    if (startType == 'K'){
+        updateKingCoord(end, false);
+    } else if (startType == 'k'){
+        updateKingCoord(end, true);
     }
 
     // check if the piece that moved is a pawn
@@ -556,27 +558,22 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
     }
 
     char startType = getType(start);
-    Vec wKingCoord;
-    Vec bKingCoord;
-
-    // save the coordinates of the king
-    if (!turn && startType != 'K'){
-        wKingCoord = wKing;
-    } else if (turn && startType != 'k'){
-        bKingCoord = bKing;
-    } else if (!turn){
-        wKingCoord = start;
-    } else {
-        bKingCoord = start;
-    }
+    Vec wKingCoord = wKing;
+    Vec bKingCoord = bKing;
 
     // now we can make edits on the game board which we will later revert
     makeMove(start, end);
 
     // we will also change the king's booleans
     if (startType == 'K' || startType == 'k'){
-        updateKingCoord(end, turn);
         updateKingMoved(end);
+    }  
+
+    // change the king's coordinates if it moved 
+    if (startType == 'K'){
+        updateKingCoord(end, false);
+    } else if (startType == 'k'){
+        updateKingCoord(end, true);
     }
 
     // update the rook booleans
@@ -595,8 +592,10 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
     // reset all the possible moves for the pieces
     for (vector<shared_ptr<Piece>> vec : gb){
 		for (shared_ptr<Piece> p : vec){
-            if (p->getTeam() != turn || p->getType() == ' ' || p->getType() == '_'){ continue; }
             p->resetMoves(); // clear all the legal moves
+            if (p->getType() == ' ' || p->getType() == '_'){ continue; }
+            if (!notify) { if (p->getTeam() == turn) { continue; } }
+            if (notify) {if (p->getTeam() != turn) { continue; } }
             p->getPossibleMoves(gb); // get the possible moves for this piece
             for (Vec pMoves : p->returnPossibleMoves()) {
                 possibleMoves.push_back(pMoves);
@@ -605,14 +604,18 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
     }
 
     // this checks the possible moves of the turn pieces
-    bool check = IsvalidCheck(possibleMoves, turn); // returns true or false based on whose turn it is
+    bool check;
+    if (notify){
+        check = IsvalidCheck(possibleMoves, turn); // returns true or false based on whose turn it is
+    } else {
+        check = IsvalidCheck(possibleMoves, !turn); // returns true or false based on whose turn it is
+    }
     bool legal = false;
 
     bool team = false;
     if (getPiece(end)->getType() >= 'A' && getPiece(end)->getType() <= 'Z'){ team = true; }
 
     if (!check){ legal = true; }
-
 
     // we decide its legal meaning the move does not put itself in check so we notify the players of the moves
     if (!check && notify){
@@ -636,11 +639,8 @@ bool ChessBoard::testMove(Vec start, Vec end, bool notify){
     }
 
     // revert the king's coordinates
-    if (!turn){
-        swap(wKingCoord, wKing);
-    } else {
-        swap(bKingCoord, bKing);
-    }
+    wKing = wKingCoord;
+    bKing = bKingCoord;
 
     // If it puts us in check, legal stays false
     return legal;
