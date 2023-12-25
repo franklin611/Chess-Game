@@ -1,0 +1,8 @@
+setup
++ k a1
++ K b7
++ P b8
+done
+game human human
+resign
+
