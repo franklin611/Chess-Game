@@ -297,6 +297,7 @@ int main() {
                                     if (!((newPiece == 'q') || (newPiece == 'r')  || (newPiece == 'n')  || (newPiece == 'n'))) { cout << "Invalid Input. Try Again!"  << endl; continue;}
                                     cb->setupWithChar(newPiece, coordinate2);
                                     cb->pawnPromotionCheck(newPiece, coordinate2);
+                                    break;
                                 }
                             } else cin.ignore(80, '\n');
 
