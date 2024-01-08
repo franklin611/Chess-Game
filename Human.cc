@@ -1,15 +1,19 @@
 #include "Human.h"
+#include "ChessBoard.h"
 
-Human::Human(bool colour, unique_ptr<Observer> cb) : Player{colour, std::move(cb)} {}
+// default constructor 
+Human::Human(bool colour, shared_ptr<ChessBoardObserver> cb) : Player{colour, cb} {}
 
+// Checks that the user inputted an end move that exists in the piece at the Vec start set of legal moves
 bool Human::makeHumanMove(Vec start, Vec end){
-
-    for (int i = 0; !legalMoves.empty(); ++i) {
+    for (size_t i = 0; i < legalMoves.size(); ++i) {
         if (legalMoves[i][0] == start && legalMoves[i][1] == end) {
             cb->notify(start, end); // notifies chessboard to make the actual move (update td will be in chessboard's move function)
+            legalMoves.clear();
             return true;
         }
     }
     return false;
-
 }
+
+

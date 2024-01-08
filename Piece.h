@@ -1,11 +1,10 @@
-// #include "Observer.h"
+#include "Observer.h"
 #include <vector>
 #include "Vec.h"
-#include <memory>
 using namespace std;
 
 class ChessBoard;
-// class Vec;
+class Vec;
 class Observer;
 
 // queen 
@@ -53,7 +52,7 @@ class Piece{
 		public: 
 			// this will respond according to how p moved
 			void resetMoves();
-			// void addLegalMove(Vec end, bool white);  // Not sure if we even need anymore
+			void addLegalMove(Vec end, bool white); 
 			void addTestMove(Vec end);
 			// Directly edits possibleMoves
 			virtual void getPossibleMoves(vector<vector<shared_ptr<Piece>>> gb) = 0; 
@@ -70,7 +69,6 @@ class Piece{
 			shared_ptr<Piece> pieceAt(vector<vector<shared_ptr<Piece>>> gb, Vec coordinate);
 			bool isEmptyPiece(shared_ptr<Piece> p);
 			bool inBounds(Vec coordinate);
-			vector<Vec> returnPossibleMoves();
 };
 
 

@@ -1,34 +1,57 @@
 #include "Computer.h"
-#include "Level.h"
-#include <random>
 
-Computer::Computer(bool colour, unique_ptr<Observer> cb, int userLevel) : Player{colour, std::move(cb)}, userLevel{userLevel} {
-    if (userLevel == 1) {level = make_unique<LevelOne>();}
+// function to randomly select a vector from the level's moves
+// info was sourced from https://en.cppreference.com/w/cpp/numeric/random
+vector<Vec> selectRandomMove(vector<vector<Vec>> &vectors) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<size_t> outerDist(0, vectors.size() - 1);
+    size_t outerIndex = outerDist(gen);
+    return {vectors[outerIndex]};
+}
+
+// Computer Constructor 
+Computer::Computer(bool colour, shared_ptr<ChessBoardObserver> cb, int userLevel) : Player{colour, cb}, userLevel{userLevel} {
+    if (userLevel == 1) {level = make_unique<LevelOne>();} 
     else if (userLevel == 2) {level = make_unique<LevelTwo>();}
     else if (userLevel == 3) {level = make_unique<LevelThree>();}
     else if (userLevel == 4) {level = make_unique<LevelFour>();}
 }
 
-vector<vector<Vec>> Computer::selectMove() {
+// computer player chooses a move 
+Vec Computer::makeComputerMove() {
+
+    // gets all the moves based on its level 
+    vector<vector<Vec>> levelsMoves = level->createMoves(legalMoves, captureMoves, checkMoves, checkMateMoves, avoidCaptureMoves);
+
+
+    // if there are any moves based on the level 
+    if (!levelsMoves.empty()) {
+        vector<Vec> selectedMove = selectRandomMove(levelsMoves);
+        cb->notify(selectedMove[0], selectedMove[1]);
+        captureMoves.clear();
+        checkMoves.clear(); 
+        checkMateMoves.clear(); 
+        avoidCaptureMoves.clear();
+        legalMoves.clear();
+        cout << "MOVE: " << selectedMove[0] << ' ' << selectedMove[1] << endl;
+        return selectedMove[1];
+    // otherwise just pick a legal move 
+    } else {
+        vector<Vec> onlyLegalMove = selectRandomMove(legalMoves);
+        cb->notify(onlyLegalMove[0], onlyLegalMove[1]);
+        captureMoves.clear();
+        checkMoves.clear();
+        checkMateMoves.clear();
+        avoidCaptureMoves.clear();
+        legalMoves.clear();
+        cout << "MOVE: " << onlyLegalMove[0] << ' ' << onlyLegalMove[1] << endl;
+        return onlyLegalMove[1];
+    }
 
 }
 
-// DONE
-void Computer::makeComputerMove(bool white, int userLevel){
-
-    vector<vector<Vec>> legalMoves = level->createMoves( );
-        // n = l->createMove(*this);
-    }
-
-    // // get the legal moves for the player
-    // vector<vector<Vec>> legalMoves = getLegalMoves(turn);
-    vector<Vec> move; // there are two Vecs [start, end]
-    // vector<vector<Vec>> levelMoves = generateAllLevelMoves(legalMoves, level);
-
-    if (turn){
-        move = playerWhite->selectMove(legalMoves); // we do not have a selectMove
-    } else {
-        move = playerBlack->selectMove(legalMoves);
-    }
-    notify(move[0], move[1]);
+// gets the level of the computer player 
+int Computer::getLevel() {
+    return userLevel;
 }

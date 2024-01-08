@@ -1,43 +1,35 @@
-
+#include "Game.h"
 #include <vector>
 #include <iostream>
 #include <memory>
-#include "Game.h" // Because we are creating an actual Game object
-
-
+#include "King.h"
+#include "Pawn.h"
 using namespace std;
 
-class Piece; // Because we are not directly access fields/functions of Piece, a forward declaration suffices
-class Observer; // Same reasonin
+class Piece;
 class Vec;
 class Player;
 class TextDisplay;
 class GraphicsDisplay;
-
-
 
 // CASTLE MOVE
 // to make a castle move -> validate that we are moving a king two spaces to the left or right -> have a function that returns true or false so if it is a castle move we know to move the rook as well
 
 // remember that we want to make DEEP copies of pieces so then we need UNIQUE pointers to make sure that we don't accidentally make shallow copies
 
-//td is observer, chessboard is subject
-
-class ChessBoard: public Observer {
+class ChessBoard: public Observer{
     vector<vector<shared_ptr<Piece>>> gb;
     vector<vector<unique_ptr<Piece>>> eb;
     unique_ptr<Observer> playerWhite;
     unique_ptr<Observer> playerBlack;
-    unique_ptr<TextDisplay> td;
-    unique_ptr<GraphicsDisplay> gd;
+    unique_ptr<TextDisplay> td; 
+    unique_ptr<GraphicsDisplay> gd; 
     Game game;
     bool bCheck;
     bool wCheck;
     bool turn; // true is for white, false is for black
     Vec bKing;
     Vec wKing;
-    unique_ptr<TextDisplay> tdOutput; //TODO: i dont really understand why we have a pointer to display observer td, but we need
-    // one for td pointer
     public:
         // returns the type of a piece at that coordinate
         char getType(Vec coordinate);
@@ -61,7 +53,7 @@ class ChessBoard: public Observer {
         ChessBoard();
 
         // setUp players
-        void setupPlayers(unique_ptr<Observer> pWhite, unique_ptr<Observer> pblack);
+        void setupPlayers(unique_ptr<Player> white, unique_ptr<Player> black);
 
         void regMove(Vec start, Vec end);
 
@@ -76,10 +68,9 @@ class ChessBoard: public Observer {
         void updateKingCoord(Vec end, bool white);
 
         // change the gameboard based on validated move
-        void notify(Vec start, Vec end) override; //TODO: what are we notifying for here????
+        void notify(Vec start, Vec end) override;
 
-        void testMove(Vec start, Vec end);
-        // Why was it override before? void testMove(Vec start, Vec end) override;
+        void testMove(Vec start, Vec end) override;
 
         // checks if the king is in check -> ie. any of the opponents legal moves capture king
         bool isCheck(bool white);
@@ -117,13 +108,7 @@ class ChessBoard: public Observer {
 
         // Check if it is a valid board
         bool boardIsValid();
-
-        bool isCheckmateMove(Vec start, Vec end);
-        bool isCheckMove(Vec start, Vec end);
-        bool isCaptureMove(Vec start, Vec end);
-
-
-        friend ostream& operator<<(ChessBoard& cb, ostream& out);
-
+    
 };
 
+ostream& operator<<(ChessBoard& cb, ostream& out);

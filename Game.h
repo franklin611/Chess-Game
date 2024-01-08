@@ -1,16 +1,25 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
+#include <iostream>
+using namespace std;
+
 class Game {
-    float blackScore;
-    float whiteScore;
+    float blackScore; // Score of the Black team
+    float whiteScore; // Score of the White team
     public:
+        // default constructor 
         Game();
-        void updateWhite(bool half);
+
+        // Update the whiteScore field
+        void updateWhite(bool half); 
+
+        // Update the blackScore field
         void updateBlack(bool half);
+
+        // Output operator for the scores of the current game
         friend ostream &operator<<(ostream &out, const Game &g);
 
-        // the dtor here doesn't need to be explicitly written out, we just use compiler provided one by not writing signature at all
-}
+};
 
 #endif
