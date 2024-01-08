@@ -1,0 +1,16 @@
+setup
++ k a1
++ K h7
++ K b7
+done
+setup
++ k a1
++ K h7
++ P b8
++ p g1
+done
+setup
++ k a1
++ R a2
++ K b7
+done
