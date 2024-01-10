@@ -11,7 +11,7 @@ GraphicsDisplay::GraphicsDisplay() : w{make_unique<Xwindow>(800, 800)}, dim{800/
 // and we call it in our chessboard constructor to draw colours on the display. We do this multiple times to ensure that it is loaded
 void GraphicsDisplay::Blank() {
     dim =800/8;
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 1; ++i) {
         int x_pos = 0;
         int y_pos = 0;
         for (int i = 0; i < 8; ++i) {
