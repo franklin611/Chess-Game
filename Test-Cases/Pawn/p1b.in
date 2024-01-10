@@ -1,0 +1,19 @@
+setup 
++ k e1
++ K h1
++ p b2
+= white
+done
+game human human
+move b2 b3
+move e1 d1
+move b3 b4
+move d1 e1
+move b4 b5
+move e1 d1
+move b5 b6
+move d1 e1
+move b6 b7
+move e1 d1
+move b7 b8
+move d1 e1
