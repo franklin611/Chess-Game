@@ -212,15 +212,15 @@ void ChessBoard::castleMove(Vec start, Vec end){
     // keep the y coordinate the same to get the correct rook
     rookCoord.setY(end.getY());
 
-    if (endX == startX - 2){
+    if (endX == startX - 3){
         rookCoord.setX(0);
         Vec endCoord = Vec(end.getX() + 1, end.getY());
         regMove(rookCoord, endCoord);
-    } else if (endX == startX + 3){
+    } else if (endX == startX + 2){
         rookCoord.setX(7);
         Vec endCoord = Vec(end.getX() - 1, end.getY());
         regMove(rookCoord, endCoord);
-    }
+    } 
 }
 
 // verifies a legal move is a castle move and notifies the display
@@ -233,22 +233,22 @@ void ChessBoard::isCastleMove(Vec start, Vec end){
     // keep the y coordinate the same to get the correct rook
     rookCoord.setY(end.getY());
 
-    // castle right
-    if ((gb[endRow][endCol]->getType() == 'K' || gb[endRow][endCol]->getType() == 'k')  && (col == endCol - 3)){
+    
+    if ((gb[endRow][endCol]->getType() == 'K' || gb[endRow][endCol]->getType() == 'k')  && (col == endCol - 2)){ // castle right White
         Vec endCoord = Vec(end.getX() - 1, end.getY());
         rookCoord.setX(7);
         char rook = gb[rookCoord.getY()][rookCoord.getX()]->getType();
         char endPiece = gb[endCoord.getY()][endCoord.getX()]->getType();
         td->notifyMoves(rookCoord, rook, endCoord, endPiece, checkString());
         gd->notifyMoves(rookCoord, rook, endCoord, endPiece, checkString());
-    } else if ((gb[endRow][endCol]->getType() == 'K' || gb[endRow][endCol]->getType() == 'k')  && (col == endCol + 2)){
+    } else if ((gb[endRow][endCol]->getType() == 'K' || gb[endRow][endCol]->getType() == 'k')  && (col == endCol + 3)){ // castle Left White
         Vec endCoord = Vec(end.getX() + 1, end.getY());
         rookCoord.setX(0);
         char rook = gb[rookCoord.getY()][rookCoord.getX()]->getType();
         char endPiece = gb[endCoord.getY()][endCoord.getX()]->getType();
         td->notifyMoves(rookCoord, rook, endCoord, endPiece, checkString());
         gd->notifyMoves(rookCoord, rook, endCoord, endPiece, checkString());
-    }
+    } 
 }
 
 // removes the captured piece from the board from en passant

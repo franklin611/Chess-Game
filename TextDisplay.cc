@@ -39,16 +39,25 @@ void TextDisplay::notify(bool white) {
 }
 
 ostream &operator<<(ostream &out, const TextDisplay &td) {
-    int num = 8;
-    // Outer loop prints backwards, from max to 0 because our actual gameboard is inverted from an actual chessboard
-    // In our gameboard, Vec{0,0} is the Right white rook from the White King
-    for (int i = td.theDisplay.size() - 1; i >= 0; --i) {
+    // int num = 8;
+    // // Outer loop prints backwards, from max to 0 because our actual gameboard is inverted from an actual chessboard
+    // // In our gameboard, Vec{0,0} is the Right white rook from the White King
+    // for (int i = td.theDisplay.size() - 1; i >= 0; --i) {
+    //     out << to_string(num) + ' ';
+    //     for (size_t j = 0; j < td.theDisplay.size(); ++j) {
+    //         out << td.theDisplay[i][j];
+    //     }
+    //     out << endl; // since each row printed on newline
+    //     --num;
+    // }
+    int num = 0;
+    for (int i = 0 ; i < td.theDisplay.size(); ++i) {
         out << to_string(num) + ' ';
         for (size_t j = 0; j < td.theDisplay.size(); ++j) {
             out << td.theDisplay[i][j];
         }
         out << endl; // since each row printed on newline
-        --num;
+        ++num;
     }
     out << endl;
     out << "  abcdefgh" << endl;
