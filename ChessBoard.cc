@@ -850,14 +850,14 @@ void ChessBoard::defaultBoard() {
     setupWithChar('b', Vec{5, 7}); // Black
 
     // Setup Kings
-    setupWithChar('K', Vec{3,0}); // White King
-    setupWithChar('k', Vec{3, 7}); // Black King
+    setupWithChar('K', Vec{4,0}); // White King
+    setupWithChar('k', Vec{4, 7}); // Black King
     setWhiteKing(Vec{3,0});
     setBlackKing(Vec{3, 7});
 
     // Setup Queens
-    setupWithChar('Q', Vec{4,0}); // White Queen
-    setupWithChar('q', Vec{4, 7}); // Black Queen
+    setupWithChar('Q', Vec{3,0}); // White Queen
+    setupWithChar('q', Vec{3, 7}); // Black Queen
 
     // set the legal moves for the pieces of the current turn
     for (vector<shared_ptr<Piece>> vec : gb) {
