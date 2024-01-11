@@ -1,4 +1,4 @@
-*.d
-*.o
+*.pdf
+*.cc
 chess
-test.in
+
