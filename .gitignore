@@ -1,4 +1,4 @@
 *.pdf
 *.cc
+*.h
 chess
-
