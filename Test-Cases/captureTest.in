@@ -1,8 +1,0 @@
-setup
-+ K a1
-+ k b7
-+ P c7
-done
-game human human
-move a1 a2
-move b7 c7
